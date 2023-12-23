@@ -1,8 +1,6 @@
 import { Pie } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
     BarElement,
     ArcElement,
     Title,
@@ -11,8 +9,6 @@ import {
 } from 'chart.js';
 
 ChartJS.register(
-    // CategoryScale,
-    // LinearScale,
     BarElement,
     ArcElement,
     Title,
