@@ -352,18 +352,25 @@ const Dashboard = () => {
             <h1 className="mb-4">Budget Summary for {convertToMonthYear(month)}</h1>
             <SummaryForm onUpdate={handleUpdate} />
             <SummaryCard summaryData={budgetSummary} />
-
-            <Container className="mt-4 p-4">
-                <PlotContainer>
-                    <BudgetVsActualBarChart summaryData={budgetSummary} />
-                </PlotContainer>
-                <PlotContainer>
-                    <RemainingFromBudgetBarChart summaryData={budgetSummary} />
-                </PlotContainer>
-                <PlotContainer>
-                    <SpendPerCategoryPieChart summaryData={budgetSummary} />
-                </PlotContainer>
-            </Container>
+            {
+                budgetSummary.length > 0 ?
+                    <Container className="mt-4 p-4">
+                        <PlotContainer>
+                            <BudgetVsActualBarChart summaryData={budgetSummary} />
+                        </PlotContainer>
+                        <PlotContainer>
+                            <RemainingFromBudgetBarChart summaryData={budgetSummary} />
+                        </PlotContainer>
+                        <PlotContainer>
+                            <SpendPerCategoryPieChart summaryData={budgetSummary} />
+                        </PlotContainer>
+                    </Container>
+                    :
+                    <>
+                        <h2 className="mt-5">No data for this month</h2>
+                        <p>Please add some budgets and transactions to see the summary.</p>
+                    </>
+            }
         </>
     );
 };
