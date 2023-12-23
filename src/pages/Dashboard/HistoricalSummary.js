@@ -25,10 +25,20 @@ const SpendPerCategoryPieChart = () => {
 }
 
 const HistoricalSummary = () => {
+    const PlotContainer = ({ children }) => (
+        <Card className="border-0 shadow-lg mb-3">
+            {children}
+        </Card>
+    );
+
     return (
         <div>
             <h1>Historical Summary</h1>
-            <SpendPerCategoryPieChart />
+            <Container className="mt-4 p-4">
+                <PlotContainer>
+                    <SpendPerCategoryPieChart />
+                </PlotContainer>
+            </Container>
         </div>
     )
 }
