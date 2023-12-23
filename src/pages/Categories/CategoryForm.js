@@ -28,6 +28,13 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
 
     const handleChange = e => {
         const { name, value } = e.target
+        if (name === 'income') {
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: !prevData.income
+            }))
+            return
+        }
         setFormData(prevData => ({
             ...prevData,
             [name]: value
@@ -92,6 +99,7 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
             <Form.Group className='mb-3'>
                 <Form.Check
                     type='switch'
+                    name='income'
                     label='Income'
                     checked={formData.income}
                     onChange={handleChange}
