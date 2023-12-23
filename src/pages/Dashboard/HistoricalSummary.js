@@ -33,18 +33,17 @@ const SpendVsIncomeLineChart = () => {
             .get('/api/transactions/spend_vs_income_by_month/')
             .then(response => {
                 // sort by increasing month
-                response.data.spend.sort((a, b) => a.date__month - b.date__month)
-                response.data.income.sort((a, b) => a.date__month - b.date__month)
-                setLabels(response.data.spend.map(d => d.date__month))
+                response.data.sort((a, b) => a.month - b.month)
+                setLabels(response.data.map(d => d.month))
                 setDatasets([
                     {
-                        data: response.data.spend.map(d => d.total),
+                        data: response.data.map(d => d.spend),
                         label: 'Spend',
                         borderColor: 'rgb(255, 99, 132)',
                         backgroundColor: 'rgba(255, 99, 132, 0.5)',
                     },
                     {
-                        data: response.data.income.map(d => d.total),
+                        data: response.data.map(d => d.income),
                         label: 'Income',
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.5)',
