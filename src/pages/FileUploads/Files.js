@@ -23,7 +23,7 @@ const Files = () => {
         api
             .delete(`/api/uploads/${fileId}/`)
             .then(response => {
-                setFiles(files.filter(file => file.id !== fileId))
+                fetchData({ page: 1 })
             })
             .catch(error => {
                 console.error('Error deleting transaction:', error)
