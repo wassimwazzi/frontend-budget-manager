@@ -24,7 +24,7 @@ const Transactions = () => {
 
   useEffect(() => {
     api
-      .get('/api/categories/?paginate=false')
+      .get('/api/categories/?paginate=false&sort=category&order=asc')
       .then(response => {
         setCategories(response.data)
       })
