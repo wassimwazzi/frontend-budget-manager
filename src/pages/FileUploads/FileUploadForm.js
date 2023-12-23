@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api';
 import Status from '../../components/Status'
+import handleDownload from '../../utils/handleDownload';
 import { Form, Button, InputGroup } from 'react-bootstrap'
 
 const FileUploadForm = ({ onUpdate }) => {
@@ -38,20 +39,23 @@ const FileUploadForm = ({ onUpdate }) => {
     };
 
     return (
-        <Form className='mb-3' onSubmit={handleUpload}>
-            <InputGroup>
+        <Form className='m-3' onSubmit={handleUpload}>
+            <InputGroup className="mb-3">
                 <Form.Group controlId="formFile" className="mr-3">
                     <Form.Control type="file" onChange={handleFileChange} required accept='.csv' />
                 </Form.Group>
                 <Button variant="primary" type='submit' disabled={uploading}>
-                    Upload File
+                    {uploading ? 'Uploading...' : 'Upload File'}
                 </Button>
-                <Status
-                    successMessage={successMessage}
-                    errorMessage={errorMessage}
-                    loading={uploading}
-                />
+                <Button className="ml-3" variant="outline-secondary" onClick={() => handleDownload('/api/uploads/template/', 'template.csv')}>
+                    Download Template
+                </Button>
             </InputGroup>
+            <Status
+                successMessage={successMessage}
+                errorMessage={errorMessage}
+                loading={uploading}
+            />
         </Form>
     );
 };

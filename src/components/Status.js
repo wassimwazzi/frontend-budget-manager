@@ -13,7 +13,7 @@ const FadeOut = ({ children, delay = 10_000 }) => {
     }, [delay]);
 
     return (
-        <Fade in={show}>
+        <Fade in={show} unmountOnExit={true}>
             <div>{children}</div>
         </Fade>
     );
