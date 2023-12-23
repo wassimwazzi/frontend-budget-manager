@@ -27,7 +27,7 @@ const Login = () => {
         window.location.href = '/'
       })
       .catch(error => {
-        console.error('Error:', error)
+        console.error('Error:',  error.response)
         // Display error message to user
       })
   }

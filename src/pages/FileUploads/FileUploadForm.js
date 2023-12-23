@@ -32,7 +32,7 @@ const FileUploadForm = ({ onUpdate }) => {
                 setSuccessMessage(null);
                 setErrorMessage('Error uploading file.');
                 setUploading(false);
-                console.error('Error uploading file:', error);
+                console.error('Error uploading file:', error.response);
                 onUpdate()
             });
     };
@@ -41,7 +41,7 @@ const FileUploadForm = ({ onUpdate }) => {
         <Form className='mb-3' onSubmit={handleUpload}>
             <InputGroup>
                 <Form.Group controlId="formFile" className="mr-3">
-                    <Form.Control type="file" onChange={handleFileChange} required />
+                    <Form.Control type="file" onChange={handleFileChange} required accept='.csv' />
                 </Form.Group>
                 <Button variant="primary" type='submit' disabled={uploading}>
                     Upload File

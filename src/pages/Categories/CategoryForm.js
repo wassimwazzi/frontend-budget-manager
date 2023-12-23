@@ -21,7 +21,7 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
                     setFormData(response.data)
                 })
                 .catch(error => {
-                    console.error('Error fetching category data:', error)
+                    console.error('Error fetching category data:',  error.response)
                 })
         }
     }, [categoryId])

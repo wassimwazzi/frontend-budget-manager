@@ -26,7 +26,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
           })
         })
         .catch(error => {
-          console.error('Error fetching transaction data:', error)
+          console.error('Error fetching transaction data:',  error.response)
         })
     }
   }, [transactionId])

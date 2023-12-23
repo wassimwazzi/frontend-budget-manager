@@ -333,7 +333,7 @@ const Dashboard = () => {
                 })).sort((a, b) => a.ratio - b.ratio))
             })
             .catch(error => {
-                console.error('Error fetching budget summary:', error)
+                console.error('Error fetching budget summary:',  error.response)
             })
     }, [month])
 

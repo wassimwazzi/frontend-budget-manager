@@ -26,7 +26,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
                     })
                 })
                 .catch(error => {
-                    console.error('Error fetching budget data:', error)
+                    console.error('Error fetching budget data:',  error.response)
                 })
         }
     }, [budgetId])

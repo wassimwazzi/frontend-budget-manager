@@ -29,7 +29,7 @@ const Transactions = () => {
         setCategories(response.data)
       })
       .catch(error => {
-        console.error('Error fetching currency data:', error)
+        console.error('Error fetching currency data:', error.response)
       })
     api
       .get('/api/currencies/?paginate=false')
@@ -37,7 +37,7 @@ const Transactions = () => {
         setCurrencies(response.data)
       })
       .catch(error => {
-        console.error('Error fetching currency data:', error)
+        console.error('Error fetching currency data:', error.response)
       })
   }, [])
 
@@ -64,7 +64,7 @@ const Transactions = () => {
         setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
       })
       .catch(error => {
-        console.error('Error fetching data:', error)
+        console.error('Error fetching data:', error.response)
       })
   }
 
@@ -84,7 +84,7 @@ const Transactions = () => {
         setTransactions(transactions.filter(transaction => transaction.id !== transactionId))
       })
       .catch(error => {
-        console.error('Error deleting transaction:', error)
+        console.error('Error deleting transaction:', error.response)
       })
   }
 
@@ -103,7 +103,7 @@ const Transactions = () => {
         setInferring(false)
         setInferranceSuccessMessage(null)
         setInferranceErrorMessage('Error infering categories')
-        console.error('Error infering categories:', error)
+        console.error('Error infering categories:', error.response)
       })
   }
 

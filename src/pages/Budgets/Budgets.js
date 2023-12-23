@@ -24,7 +24,7 @@ const Budgets = () => {
                 setCategories(response.data)
             })
             .catch(error => {
-                console.error('Error fetching currency data:', error)
+                console.error('Error fetching currency data:', error.response)
             })
         api
             .get('/api/currencies/?paginate=false')
@@ -32,7 +32,7 @@ const Budgets = () => {
                 setCurrencies(response.data)
             })
             .catch(error => {
-                console.error('Error fetching currency data:', error)
+                console.error('Error fetching currency data:', error.response)
             })
     }, [])
 
@@ -56,7 +56,7 @@ const Budgets = () => {
                 setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
             })
             .catch(error => {
-                console.error('Error fetching data:', error)
+                console.error('Error fetching data:', error.response)
             })
     }
 
@@ -76,7 +76,7 @@ const Budgets = () => {
                 setBudgets(budgets.filter(budget => budget.id !== budgetId))
             })
             .catch(error => {
-                console.error('Error deleting transaction:', error)
+                console.error('Error deleting transaction:', error.response)
             })
     }
 
