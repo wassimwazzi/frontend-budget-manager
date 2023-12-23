@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { useHistory } from 'react-router-dom'
-import { Form, Button, Container } from 'react-bootstrap'
+import { Form, Button, Container, Alert } from 'react-bootstrap'
 import { useState } from 'react'
 
 const Login = () => {
@@ -8,6 +7,7 @@ const Login = () => {
     username: '',
     password: ''
   })
+  const [error, setError] = useState(false)
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -27,14 +27,15 @@ const Login = () => {
         window.location.href = '/'
       })
       .catch(error => {
-        console.error('Error:',  error.response)
-        // Display error message to user
+        console.error('Error:', error.response)
+        setError(true)
       })
   }
 
   return (
     <Container className='mt-4'>
       <h1>Login</h1>
+      {error && <Alert variant='danger'>Invalid username password combination</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId='username'>
           <Form.Label>Username</Form.Label>
@@ -56,6 +57,9 @@ const Login = () => {
         </Form.Group>
         <Button variant='primary' type='submit' className='mt-2'>
           Submit
+        </Button>
+        <Button variant='secondary' className='mt-2 ml-2' href='/signup'>
+          Sign Up
         </Button>
       </Form>
     </Container>

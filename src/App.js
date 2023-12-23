@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './pages/Layout'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Login from './pages/Login/Login'
+import SignUp from './pages/Login/SignUp'
 import Transactions from './pages/Transactions/Transactions'
 import Categories from './pages/Categories/Categories'
 import Budgets from './pages/Budgets/Budgets'
@@ -14,6 +15,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<SignUp />} />
         <Route path='/' element={<Layout />}>
           <Route path='/' element={<Dashboard />} />
           <Route path='/transactions' element={<Transactions />} />
