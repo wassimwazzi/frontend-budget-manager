@@ -206,7 +206,7 @@ const SummaryCard = ({ summaryData }) => {
                         <Col md={4}>
                             <Card className="border-0">
                                 <Card.Body style={{ borderBottom: '2px solid black' }}>
-                                    <p className="lead">Your total budget:</p>
+                                    <p className="lead">Your budget:</p>
                                     <h3 className="display-4">
                                         ${totalBudget}
                                         <span id="totalBudget"></span>
