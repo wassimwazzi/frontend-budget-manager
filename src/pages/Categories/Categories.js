@@ -35,7 +35,7 @@ const Categories = () => {
                 setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
             })
             .catch(error => {
-                console.error('Error fetching data:',  error.response)
+                console.error('Error fetching data:', error.response)
             })
     }
 
@@ -52,20 +52,16 @@ const Categories = () => {
         api
             .delete(`/api/categories/${categoryId}/`)
             .then(response => {
-                setCategories(categories.filter(category => category.id !== categoryId))
+                setCategories(categories => categories.filter(category => category.id !== categoryId))
             })
             .catch(error => {
-                console.error('Error deleting category:',  error.response)
+                console.error('Error deleting category:', error.response)
             })
     }
 
     const handleFormUpdate = updatedCategory => {
         // Update categories list after adding/editing
-        updatedCategory.actions = (
-            <button onClick={() => handleEdit(updatedCategory.id)} className='btn btn-primary'>
-                Edit
-            </button>
-        )
+        updatedCategory.actions = getActionButtons(updatedCategory.id)
         if (editCategoryId) {
             const updatedCategories = categories.map(category =>
                 category.id === updatedCategory.id

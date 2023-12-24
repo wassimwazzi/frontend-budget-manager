@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
-import { Form, Button, Alert, InputGroup } from 'react-bootstrap'
+import { Form, Button, InputGroup } from 'react-bootstrap'
 import Status from '../../components/Status'
 
 const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) => {

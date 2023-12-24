@@ -73,7 +73,7 @@ const Budgets = () => {
         api
             .delete(`/api/budgets/${budgetId}/`)
             .then(response => {
-                setBudgets(budgets.filter(budget => budget.id !== budgetId))
+                setBudgets(budgets => (budgets.filter(budget => budget.id !== budgetId)))
             })
             .catch(error => {
                 console.error('Error deleting transaction:', error.response)

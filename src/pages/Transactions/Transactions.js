@@ -81,7 +81,9 @@ const Transactions = () => {
     api
       .delete(`/api/transactions/${transactionId}/`)
       .then(response => {
-        setTransactions(transactions.filter(transaction => transaction.id !== transactionId))
+        setTransactions(transactions => (
+          transactions.filter(transaction => transaction.id !== transactionId)
+        ))
       })
       .catch(error => {
         console.error('Error deleting transaction:', error.response)
