@@ -9,6 +9,30 @@ import Categories from './pages/Categories/Categories'
 import Budgets from './pages/Budgets/Budgets'
 import Files from './pages/FileUploads/Files'
 import NotFound from './pages/NotFound'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  ArcElement
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const App = () => {
   return (

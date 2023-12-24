@@ -1,28 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Card } from 'react-bootstrap'
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import PieChart from '../../components/PieChart'
 import api from '../../api'
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
 
 const SpendVsIncomeLineChart = () => {
     const [labels, setLabels] = useState([])

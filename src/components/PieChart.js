@@ -1,20 +1,4 @@
 import { Pie } from 'react-chartjs-2';
-import {
-    Chart as ChartJS,
-    BarElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
-
-ChartJS.register(
-    BarElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend
-);
 
 const HSLToRGB = (h, s, l) => {
     s /= 100;

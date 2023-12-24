@@ -1,28 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Container, Card, Row, Col } from 'react-bootstrap'
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js';
 import { Bar, Pie } from 'react-chartjs-2';
 import PieChart from '../../components/PieChart';
 import api from '../../api'
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    ArcElement,
-    Title,
-    Tooltip,
-    Legend
-);
 
 const SummaryForm = ({ onUpdate }) => {
     const initialFormData = Object.freeze({
