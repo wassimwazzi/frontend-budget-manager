@@ -97,7 +97,7 @@ const Transactions = () => {
         setInferring(false)
         setInferranceSuccessMessage('Categories successfully inferred')
         setInferranceErrorMessage(null)
-        fetchData({ page: 1 })
+        fetchData({ page: 1, sort: 'date', order: 'desc' })
       })
       .catch(error => {
         setInferring(false)

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
 import { Form, Button, Alert, InputGroup } from 'react-bootstrap'
+import Status from '../../components/Status'
 
 const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
           })
         })
         .catch(error => {
-          console.error('Error fetching transaction data:',  error.response)
+          console.error('Error fetching transaction data:', error.response)
         })
     }
   }, [transactionId])
@@ -159,18 +160,10 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
         </Form.Group>
       </InputGroup>
 
-
-      {successMessage && (
-        <Alert variant='success' className='mt-3'>
-          {successMessage}
-        </Alert>
-      )}
-
-      {errorMessage && (
-        <Alert variant='danger' className='mt-3'>
-          {errorMessage}
-        </Alert>
-      )}
+      <Status
+        successMessage={successMessage}
+        errorMessage={errorMessage}
+      />
 
       <div className='mb-3'>
         <Button type='submit' variant='primary'>
