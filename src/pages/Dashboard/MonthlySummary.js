@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Container, Card, Row, Col } from 'react-bootstrap'
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import PieChart from '../../components/PieChart';
 import api from '../../api'
 
