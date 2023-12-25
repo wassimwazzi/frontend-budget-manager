@@ -27,6 +27,12 @@ const SpendVsIncomeLineChart = () => {
                         label: 'Income',
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    },
+                    {
+                        data: response.data.map(d => d.income - d.spend),
+                        label: 'Net',
+                        borderColor: 'rgb(255, 205, 86)',
+                        backgroundColor: 'rgba(255, 205, 86, 0.5)',
                     }
                 ])
             })
@@ -34,6 +40,18 @@ const SpendVsIncomeLineChart = () => {
                 console.error('Error fetching data:', error.response)
             })
     }, [])
+
+    const annotation = {
+        type: 'line',
+        mode: 'horizontal',
+        scaleID: 'y',
+        yMin: 0,
+        yMax: 0,
+        value: 0,
+        borderColor: 'rgb(201, 203, 207)',
+        borderWidth: 3,
+        borderDash: [5, 5],
+    };
 
     const options = {
         responsive: true,
@@ -44,7 +62,12 @@ const SpendVsIncomeLineChart = () => {
             title: {
                 display: true,
                 text: 'Spend vs Income by Month',
-            }
+            },
+            annotation: {
+                annotations: {
+                    annotation,
+                },
+            },
         },
     };
 
