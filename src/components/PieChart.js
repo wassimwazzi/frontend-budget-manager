@@ -26,6 +26,7 @@ const getColorArray = (numColors) => {
 const PieChart = ({ datasets, labels, title }) => {
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
@@ -52,8 +53,10 @@ const PieChart = ({ datasets, labels, title }) => {
     };
 
     return (
-        <Pie data={chartData} options={options} />
-    );
+        <div style={{ height: '100vh', width: 'auto' }}>
+            <Pie data={chartData} options={options} />
+        </div>
+        );
 };
 
 export default PieChart;
