@@ -154,14 +154,10 @@ const HistoricalSummary = () => {
     return (
         <>
             <h1 className="mb-4">Historical Summary</h1>
-            <PlotContainer title="Monthly Spend Per Category">
-                <MonthlySpendPerCategoryBarChart />
-            </PlotContainer>
-            <PlotContainer title="Spend Per Category">
-                <SpendPerCategoryPieChart />
-            </PlotContainer>
-            <PlotContainer title="Spend vs Income Per Month">
-                <SpendVsIncomeLineChart />
+            <PlotContainer>
+                <SpendVsIncomeLineChart title={'Spend vs Income Per Month'} />
+                <SpendPerCategoryPieChart title={'Total Spend Per Category'} />
+                <MonthlySpendPerCategoryBarChart title={'Monthly Spend Per Category'} />
             </PlotContainer>
         </>
     )

@@ -277,22 +277,13 @@ const MonthlySummary = () => {
             <h1 className="mb-4">Summary for {convertToMonthYear(month)}</h1>
             <SummaryForm onUpdate={handleUpdate} />
             <SummaryCard summaryData={budgetSummary} />
-            {/* <PlotContainer title="Summary Table" className="mt-4">
-                <SummaryTable data={budgetSummary} />
-            </PlotContainer> */}
             {
                 budgetSummary.length > 0 ?
-                    <div className="mt-4">
-                        <PlotContainer title="Budget vs Spend">
-                            <BudgetVsActualBarChart summaryData={budgetSummary} />
-                        </PlotContainer>
-                        <PlotContainer title="Remaining from Budget">
-                            <RemainingFromBudgetBarChart summaryData={budgetSummary} />
-                        </PlotContainer>
-                        <PlotContainer title="Spend Per Category">
-                            <SpendPerCategoryPieChart summaryData={budgetSummary} />
-                        </PlotContainer>
-                    </div>
+                    <PlotContainer className="mt-4" titles={['Budget vs Spend', 'Remaining from Budget', 'Spend Per Category']}>
+                        <BudgetVsActualBarChart summaryData={budgetSummary} />
+                        <RemainingFromBudgetBarChart summaryData={budgetSummary} />
+                        <SpendPerCategoryPieChart summaryData={budgetSummary} />
+                    </PlotContainer>
                     :
                     <>
                         <h2 className="mt-5">No data for this month</h2>
