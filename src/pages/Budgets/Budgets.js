@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import api from '../../api'
 import BudgetForm from './BudgetForm'
 import Table from '../../components/table/Table'
+import Status from '../../components/Status'
 
 const Budgets = () => {
     const [budgets, setBudgets] = useState([])
@@ -9,6 +10,8 @@ const Budgets = () => {
     const [categories, setCategories] = useState([])
     const [currencies, setCurrencies] = useState([])
     const [totalPages, setTotalPages] = useState(1)
+    const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
+    const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
     const getActionButtons = budgetId => (
         <>
@@ -70,13 +73,17 @@ const Budgets = () => {
         if (!shouldDelete) {
             return
         }
+        setDeleteSucessMessage(null)
+        setDeleteErrorMessage(null)
         api
             .delete(`/api/budgets/${budgetId}/`)
             .then(response => {
                 setBudgets(budgets => (budgets.filter(budget => budget.id !== budgetId)))
+                setDeleteSucessMessage('Budget successfully deleted.')
             })
             .catch(error => {
                 console.error('Error deleting transaction:', error.response)
+                setDeleteErrorMessage('Error deleting budget.')
             })
     }
 
@@ -108,6 +115,7 @@ const Budgets = () => {
                 onUpdate={handleFormUpdate}
             />
 
+            <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
             <Table
                 columns={columns}
                 data={budgets}

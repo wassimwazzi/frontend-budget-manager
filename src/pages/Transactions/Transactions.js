@@ -14,6 +14,8 @@ const Transactions = () => {
   const [inferring, setInferring] = useState(false)
   const [inferranceSuccessMessage, setInferranceSuccessMessage] = useState(null)
   const [inferranceErrorMessage, setInferranceErrorMessage] = useState(null)
+  const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
   const getActionButtons = transactionId => (
     <>
@@ -78,15 +80,19 @@ const Transactions = () => {
     if (!shouldDelete) {
       return
     }
+    setDeleteSucessMessage(null)
+    setDeleteErrorMessage(null)
     api
       .delete(`/api/transactions/${transactionId}/`)
       .then(response => {
         setTransactions(transactions => (
           transactions.filter(transaction => transaction.id !== transactionId)
         ))
+        setDeleteSucessMessage('Transaction successfully deleted.')
       })
       .catch(error => {
         console.error('Error deleting transaction:', error.response)
+        setDeleteErrorMessage('Error deleting transaction.')
       })
   }
 
@@ -144,6 +150,7 @@ const Transactions = () => {
         <Status loading={inferring} successMessage={inferranceSuccessMessage} errorMessage={inferranceErrorMessage} />
       </div>
 
+      <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
       <Table
         columns={columns}
         data={transactions}

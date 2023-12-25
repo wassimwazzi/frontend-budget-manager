@@ -3,11 +3,14 @@ import api from '../../api'
 import CategoryForm from './CategoryForm'
 import Table from '../../components/table/Table'
 import { Button } from 'react-bootstrap'
+import Status from '../../components/Status'
 
 const Categories = () => {
     const [categories, setCategories] = useState([])
     const [editCategoryId, setEditCategoryId] = useState(null)
     const [totalPages, setTotalPages] = useState(1)
+    const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
+    const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
     const getActionButtons = categoryId => (
         <>
@@ -49,13 +52,17 @@ const Categories = () => {
         if (!shouldDelete) {
             return
         }
+        setDeleteSucessMessage(null)
+        setDeleteErrorMessage(null)
         api
             .delete(`/api/categories/${categoryId}/`)
             .then(response => {
                 setCategories(categories => categories.filter(category => category.id !== categoryId))
+                setDeleteSucessMessage('Category successfully deleted.')
             })
             .catch(error => {
                 console.error('Error deleting category:', error.response)
+                setDeleteErrorMessage('Error deleting category.')
             })
     }
 
@@ -83,6 +90,7 @@ const Categories = () => {
                 categoryId={editCategoryId}
                 onUpdate={handleFormUpdate}
             />
+            <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
 
             <Table
                 columns={columns}
