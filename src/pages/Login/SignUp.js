@@ -1,4 +1,4 @@
-import api from '../../api'
+import { nonAuthenticatedApi as api } from '../../api'
 import { Form, Button, Container, Alert } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 

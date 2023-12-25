@@ -1,17 +1,27 @@
 import axios from 'axios';
-const baseURL = process.env.SERVER_BASE_URL || 'http://localhost:8000';
+const baseURL = process.env.REACT_APP_SERVER_BASE_URL || 'http://localhost:8000';
 console.log('baseURL', baseURL);
 const api = axios.create({
   baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Token ${localStorage.getItem('authToken')}` // Read the token from localStorage before each request
+    // Authorization: `Token ${localStorage.getItem('authToken')}` // Read the token from localStorage before each request
   }
 });
+
+const nonAuthenticatedApi = axios.create({
+  baseURL: baseURL,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+});
+
+export { nonAuthenticatedApi };
 
 // Add a request interceptor
 api.interceptors.request.use(
   (config) => {
+
     // Modify the request config here (if needed)
     const authToken = localStorage.getItem('authToken');
     if (authToken) {
