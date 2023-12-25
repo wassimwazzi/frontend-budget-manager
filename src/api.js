@@ -1,6 +1,8 @@
 import axios from 'axios';
+const baseURL = process.env.SERVER_BASE_URL || 'http://localhost:8000';
+console.log('baseURL', baseURL);
 const api = axios.create({
-  baseURL: process.env.SERVER_BASE_URL || 'http://localhost:8000',
+  baseURL: baseURL,
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Token ${localStorage.getItem('authToken')}` // Read the token from localStorage before each request

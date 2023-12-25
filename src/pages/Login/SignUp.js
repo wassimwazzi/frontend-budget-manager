@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from '../../api'
 import { Form, Button, Container, Alert } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 
@@ -46,7 +46,7 @@ const SignUp = () => {
   const handleSubmit = e => {
     e.preventDefault()
 
-    axios
+    api
       .post('/signup/', formData)
       .then(response => {
         window.location.href = '/login'

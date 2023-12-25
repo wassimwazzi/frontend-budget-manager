@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from '../../api'
 import { Form, Button, Container, Alert } from 'react-bootstrap'
 import { useState } from 'react'
 import Status from '../../components/Status'
@@ -22,7 +22,7 @@ const Login = () => {
     e.preventDefault()
     setErrorMessage(null)
 
-    axios
+    api
       .post('/api/token/', formData)
       .then(response => {
         localStorage.setItem('authToken', response.data.token)
