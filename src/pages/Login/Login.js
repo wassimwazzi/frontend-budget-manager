@@ -1,13 +1,14 @@
 import axios from 'axios'
 import { Form, Button, Container, Alert } from 'react-bootstrap'
 import { useState } from 'react'
+import Status from '../../components/Status'
 
 const Login = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   })
-  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(false)
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -19,6 +20,7 @@ const Login = () => {
 
   const handleSubmit = e => {
     e.preventDefault()
+    setErrorMessage(null)
 
     axios
       .post('/api/token/', formData)
@@ -28,33 +30,35 @@ const Login = () => {
       })
       .catch(error => {
         console.error('Error:', error.response)
-        setError(true)
+        setErrorMessage('Invalid username password combination')
       })
   }
 
   return (
     <Container className='mt-4'>
       <h1>Login</h1>
-      {error && <Alert variant='danger'>Invalid username password combination</Alert>}
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId='username'>
+        <Form.Group controlId='username' className='mb-3'>
           <Form.Label>Username</Form.Label>
           <Form.Control
             type='text'
             name='username'
             value={formData.username}
             onChange={handleChange}
+            required
           />
         </Form.Group>
-        <Form.Group controlId='password'>
+        <Form.Group controlId='password' className='mb-3'>
           <Form.Label>Password</Form.Label>
           <Form.Control
             type='password'
             name='password'
             value={formData.password}
             onChange={handleChange}
+            required
           />
         </Form.Group>
+        <Status errorMessage={errorMessage} />
         <Button variant='primary' type='submit' className='mt-2'>
           Submit
         </Button>

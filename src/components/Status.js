@@ -26,7 +26,7 @@ const Status = ({ loading, successMessage, errorMessage }) => {
     if (successMessage) {
         return (
             <FadeOut>
-                <div className='alert alert-success mx-3' role='alert'>
+                <div className='alert alert-success' role='alert'>
                     {successMessage}
                 </div>
             </FadeOut>
@@ -35,7 +35,7 @@ const Status = ({ loading, successMessage, errorMessage }) => {
     if (errorMessage) {
         return (
             <FadeOut>
-                <div className='alert alert-danger mx-3' role='alert'>
+                <div className='alert alert-danger' role='alert'>
                     {errorMessage}
                 </div>
             </FadeOut>
