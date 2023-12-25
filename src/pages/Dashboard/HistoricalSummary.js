@@ -112,7 +112,6 @@ const MonthlySpendPerCategoryBarChart = () => {
                 // get unique months
                 const months = [...new Set(response.data.map(d => d.month))]
                 const colors = getColorArray(categories.length);
-                console.log(colors);
                 // create a dataset for each category
                 const datasets = categories.map((category, index) => ({
                     label: category,

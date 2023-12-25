@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import api from '../../api'
 import FileUploadForm from './FileUploadForm'
 import Table from '../../components/table/Table'
+import Status from '../../components/Status'
 
 const Files = () => {
     const [files, setFiles] = useState([])
     const [totalPages, setTotalPages] = useState(1)
+    const [numDeletedFilesMessage, setNumDeletedFilesMessage] = useState(null)
 
     const columns = [
         'date',
@@ -20,11 +22,12 @@ const Files = () => {
         if (!shouldDelete) {
             return
         }
+        setNumDeletedFilesMessage(null)
         api
             .delete(`/api/uploads/${fileId}/`)
             .then(response => {
                 const deleted_transaction_count = response.data.transaction_count
-                window.alert(`File successfully deleted. ${deleted_transaction_count} associated transactions were deleted.`)
+                setNumDeletedFilesMessage(`File successfully deleted. ${deleted_transaction_count} associated transactions were deleted.`)
                 fetchData({ page: 1 })
             })
             .catch(error => {
@@ -59,6 +62,7 @@ const Files = () => {
                 onUpdate={handleFormUpdate}
             />
 
+            <Status successMessage={numDeletedFilesMessage} />
             <Table
                 columns={columns}
                 data={files}
