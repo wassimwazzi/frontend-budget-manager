@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Card } from 'react-bootstrap'
 import { Line } from 'react-chartjs-2';
 import PieChart from '../../components/PieChart'
+import PlotContainer from '../../components/PlotContainer'
 import api from '../../api'
 
 const SpendVsIncomeLineChart = () => {
@@ -75,24 +75,16 @@ const SpendPerCategoryPieChart = () => {
 }
 
 const HistoricalSummary = () => {
-    const PlotContainer = ({ children }) => (
-        <Card className="border-0 shadow-lg mb-3">
-            {children}
-        </Card>
-    );
-
     return (
-        <div>
-            <h1>Historical Summary</h1>
-            <Container className="mt-4 p-4">
-                <PlotContainer>
-                    <SpendPerCategoryPieChart />
-                </PlotContainer>
-                <PlotContainer>
-                    <SpendVsIncomeLineChart />
-                </PlotContainer>
-            </Container>
-        </div>
+        <>
+            <h1 className="mb-4">Historical Summary</h1>
+            <PlotContainer title="Spend Per Category">
+                <SpendPerCategoryPieChart />
+            </PlotContainer>
+            <PlotContainer title="Spend vs Income Per Month">
+                <SpendVsIncomeLineChart />
+            </PlotContainer>
+        </>
     )
 }
 

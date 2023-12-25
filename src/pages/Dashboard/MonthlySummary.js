@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Container, Card, Row, Col } from 'react-bootstrap'
+import { Form, Card, Row, Col } from 'react-bootstrap'
 import { Bar } from 'react-chartjs-2';
 import PieChart from '../../components/PieChart';
+import PlotContainer from '../../components/PlotContainer';
 import api from '../../api'
 
 
@@ -198,7 +199,7 @@ const SummaryCard = ({ summaryData }) => {
     const totalRemaining = summaryData.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
     // className="border-0 shadow-lg"
     return (
-        <Container className="mt-5">
+        <div className="mt-5">
             <Card border='0' className="shadow-lg">
                 <Card.Body>
                     <Card.Title as="h2">Spending Summary</Card.Title>
@@ -242,7 +243,7 @@ const SummaryCard = ({ summaryData }) => {
                     </Row>
                 </Card.Body>
             </Card>
-        </Container>
+        </div>
     );
 };
 
@@ -269,12 +270,6 @@ const MonthlySummary = () => {
         setMonth(formData.month)
     }
 
-    const PlotContainer = ({ children }) => (
-        <Card className="border-0 shadow-lg mb-3">
-            {children}
-        </Card>
-    );
-
     return (
         <>
             <h1 className="mb-4">Summary for {convertToMonthYear(month)}</h1>
@@ -282,17 +277,17 @@ const MonthlySummary = () => {
             <SummaryCard summaryData={budgetSummary} />
             {
                 budgetSummary.length > 0 ?
-                    <Container className="mt-4 p-4">
-                        <PlotContainer>
+                    <div className="mt-4">
+                        <PlotContainer title="Budget vs Spend">
                             <BudgetVsActualBarChart summaryData={budgetSummary} />
                         </PlotContainer>
-                        <PlotContainer>
+                        <PlotContainer title="Remaining from Budget">
                             <RemainingFromBudgetBarChart summaryData={budgetSummary} />
                         </PlotContainer>
-                        <PlotContainer>
+                        <PlotContainer title="Spend Per Category">
                             <SpendPerCategoryPieChart summaryData={budgetSummary} />
                         </PlotContainer>
-                    </Container>
+                    </div>
                     :
                     <>
                         <h2 className="mt-5">No data for this month</h2>
