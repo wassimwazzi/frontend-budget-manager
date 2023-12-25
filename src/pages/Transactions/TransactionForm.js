@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
 import { Form, Button, InputGroup } from 'react-bootstrap'
+import { getCurrentDay } from '../../utils/dateUtils'
 import Status from '../../components/Status'
 
 const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) => {
   const [formData, setFormData] = useState({
-    date: '',
+    date: getCurrentDay(),
     code: '',
     description: '',
     category: '',

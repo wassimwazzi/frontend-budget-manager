@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Card, Row, Col } from 'react-bootstrap'
 import { Bar } from 'react-chartjs-2';
+import { getCurrentMonth } from '../../utils/dateUtils';
 import PieChart from '../../components/PieChart';
 import PlotContainer from '../../components/PlotContainer';
 import api from '../../api'
@@ -39,16 +40,6 @@ const SummaryForm = ({ onUpdate }) => {
     )
 
 };
-
-function getCurrentMonth() {
-    // month in YYYY-MM format
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    // Months are zero-based, so we add 1 to get the current month
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-
-    return `${year}-${month}`;
-}
 
 function convertToMonthYear(yyyyMM) {
     const [year, month] = yyyyMM.split('-');

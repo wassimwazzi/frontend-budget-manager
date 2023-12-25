@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
 import { Form, InputGroup, FormControl, Button, Alert } from 'react-bootstrap'
+import { getCurrentMonth } from '../../utils/dateUtils'
 import Status from '../../components/Status'
 
 const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
     const initialFormData = Object.freeze({
         amount: '',
         currency: '',
-        start_date: '',
+        start_date: getCurrentMonth(),
         category: '',
     })
     const [formData, setFormData] = useState(initialFormData)
