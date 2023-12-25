@@ -83,13 +83,16 @@ const SummaryTable = ({ data }) => {
         actual: data.reduce((acc, row) => acc + row.actual, 0).toFixed(2),
         remaining: data.reduce((acc, row) => acc + row.remaining, 0).toFixed(2),
     }
+    const getColorForRatio = (ratio) => {
+        // color scale from red to green, with yellow in the middle
+        // low ratio -> red
+        // high ratio -> green
+        const red = Math.floor(255 * 2 * (1 - (ratio)));
+        const green = Math.floor(255 * 2 * ratio);
+        const blue = 0;
 
-    const getColorForRatio = ratio => {
-        // 0 means you are over the budget, 1 means you are under the budget, 0.5 means you are at the budget
-        const green = Math.floor(255 * ratio);
-        const red = 255 - green;
-        return [red, green, 0];
-    }
+        return [red, green, blue];
+    };
 
     const getRowColor = row => {
         const ratio = row.ratio;
