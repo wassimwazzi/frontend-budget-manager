@@ -13,7 +13,7 @@ const SpendVsIncomeLineChart = () => {
             .get('/api/transactions/spend_vs_income_by_month/')
             .then(response => {
                 // sort by increasing month
-                response.data.sort((a, b) => a.month - b.month)
+                response.data.sort((a, b) => a.month.localeCompare(b.month))
                 setLabels(response.data.map(d => d.month))
                 setDatasets([
                     {
