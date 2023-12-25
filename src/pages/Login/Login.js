@@ -58,7 +58,7 @@ const Login = () => {
         <Button variant='primary' type='submit' className='mt-2'>
           Submit
         </Button>
-        <Button variant='secondary' className='mt-2 ml-2' href='/signup'>
+        <Button variant='secondary' className='mt-2 ms-2' href='/signup'>
           Sign Up
         </Button>
       </Form>

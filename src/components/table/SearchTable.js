@@ -46,7 +46,7 @@ const SearchTable = ({ columns, onSearch }) => {
               <Form.Select
                 value={selectedColumn}
                 onChange={event => setSelectedColumn(event.target.value)}
-                className='ml-2 rounded-lg border-secondary'
+                className='ms-2 rounded-lg border-secondary'
               >
                 {columns.map(column => (
                   <option key={column} value={column}>
@@ -58,13 +58,13 @@ const SearchTable = ({ columns, onSearch }) => {
               <Button
                 variant="primary"
                 type="submit"
-                className='ml-2'
+                className='ms-2'
               >
                 Search
               </Button>
 
               {searchTerms.length > 0 && (
-                <Button variant="secondary" onClick={handleClearSearch} className='ml-2'>
+                <Button variant="secondary" onClick={handleClearSearch} className='ms-2'>
                   Clear All
                 </Button>
               )}
@@ -72,7 +72,7 @@ const SearchTable = ({ columns, onSearch }) => {
             </InputGroup>
             <InputGroup>
               {searchTerms.map((search, index) => (
-                <InputGroup.Text key={index} className='rounded-lg bg-transparent text-black mr-2'>
+                <InputGroup.Text key={index} className='rounded-lg bg-transparent text-black me-2'>
                   {search.column}: {search.term}
                   <Button
                     variant="link"

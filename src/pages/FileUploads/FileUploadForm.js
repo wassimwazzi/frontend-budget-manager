@@ -41,13 +41,13 @@ const FileUploadForm = ({ onUpdate }) => {
     return (
         <Form className='m-3' onSubmit={handleUpload}>
             <InputGroup className="mb-3">
-                <Form.Group controlId="formFile" className="mr-3">
+                <Form.Group controlId="formFile" className="me-3">
                     <Form.Control type="file" onChange={handleFileChange} required accept='.csv' />
                 </Form.Group>
                 <Button variant="primary" type='submit' disabled={uploading}>
                     {uploading ? 'Uploading...' : 'Upload File'}
                 </Button>
-                <Button className="ml-3" variant="outline-secondary" onClick={() => handleDownload('/api/uploads/template/', 'template.csv')}>
+                <Button className="ms-3" variant="outline-secondary" onClick={() => handleDownload('/api/uploads/template/', 'template.csv')}>
                     Download Template
                 </Button>
             </InputGroup>

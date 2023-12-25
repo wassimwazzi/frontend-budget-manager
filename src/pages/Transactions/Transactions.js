@@ -18,7 +18,7 @@ const Transactions = () => {
   const getActionButtons = transactionId => (
     <>
       <button onClick={() => handleEdit(transactionId)} className='btn btn-primary'>Edit</button>
-      <button onClick={() => handleDelete(transactionId)} className='btn btn-danger ml-2'>Delete</button>
+      <button onClick={() => handleDelete(transactionId)} className='btn btn-danger ms-2'>Delete</button>
     </>
   )
 

@@ -38,7 +38,7 @@ const Files = () => {
             .then(({ data }) => {
                 setFiles(data.results.map(file => ({
                     ...file,
-                    actions: <button onClick={() => handleDelete(file.id)} className='btn btn-danger ml-2'>Delete</button>
+                    actions: <button onClick={() => handleDelete(file.id)} className='btn btn-danger ms-2'>Delete</button>
                 })))
                 setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
             })

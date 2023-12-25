@@ -12,7 +12,7 @@ const Categories = () => {
     const getActionButtons = categoryId => (
         <>
             <Button onClick={() => handleEdit(categoryId)} className='btn btn-primary'>Edit</Button>
-            <Button onClick={() => handleDelete(categoryId)} className='btn btn-danger ml-2'>Delete</Button>
+            <Button onClick={() => handleDelete(categoryId)} className='btn btn-danger ms-2'>Delete</Button>
         </>
     )
 

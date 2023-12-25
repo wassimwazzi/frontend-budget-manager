@@ -13,7 +13,7 @@ const Budgets = () => {
     const getActionButtons = budgetId => (
         <>
             <button onClick={() => handleEdit(budgetId)} className='btn btn-primary'>Edit</button>
-            <button onClick={() => handleDelete(budgetId)} className='btn btn-danger ml-2'>Delete</button>
+            <button onClick={() => handleDelete(budgetId)} className='btn btn-danger ms-2'>Delete</button>
         </>
     )
 

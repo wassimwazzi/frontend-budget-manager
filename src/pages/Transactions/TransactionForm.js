@@ -49,10 +49,14 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
       amount: '',
       currency: ''
     })
+    setSuccessMessage(null)
+    setErrorMessage(null)
   }
 
   const handleSubmit = e => {
     e.preventDefault()
+    setErrorMessage(null)
+    setSuccessMessage(null)
 
     const apiUrl = transactionId
       ? `/api/transactions/${transactionId}/`
@@ -66,13 +70,21 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
       .then(response => {
         const action = transactionId ? 'updated' : 'created'
         setSuccessMessage(`Transasction successfully ${action}!`)
-        setErrorMessage(null)
         onUpdate(response.data)
         handleClear()
       })
       .catch(error => {
-        setSuccessMessage(null)
-        setErrorMessage(error.response.data)
+        if (error.response.status === 400) {
+          // make error message bullet list
+          let errorMessage = ''
+          for (const key in error.response.data) {
+            errorMessage += `${key}: ${error.response.data[key]}\n`
+          }
+          setErrorMessage(errorMessage)
+        }
+        else {
+          setErrorMessage('An error occurred. Please try again later.')
+        }
         console.error('Error submitting transaction data:', error.response.data)
       })
   }
@@ -114,8 +126,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
 
       <Form.Group className='mb-3'>
         <Form.Label>Category:</Form.Label>
-        <Form.Control
-          as='select'
+        <Form.Select
           name='category'
           value={formData.category}
           onChange={handleChange}
@@ -127,11 +138,11 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
               {category.category}
             </option>
           ))}
-        </Form.Control>
+        </Form.Select>
       </Form.Group>
 
       <InputGroup className='mb-3'>
-        <Form.Group className='mr-3'>
+        <Form.Group className='me-3'>
           <Form.Label>Amount:</Form.Label>
           <Form.Control
             type='number'
@@ -143,8 +154,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
         </Form.Group>
         <Form.Group className='mb-3'>
           <Form.Label>Currency:</Form.Label>
-          <Form.Control
-            as='select'
+          <Form.Select
             name='currency'
             value={formData.currency}
             onChange={handleChange}
@@ -156,7 +166,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
                 {currency.code}
               </option>
             ))}
-          </Form.Control>
+          </Form.Select>
         </Form.Group>
       </InputGroup>
 
@@ -173,7 +183,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
           type='button'
           onClick={handleClear}
           variant='secondary'
-          className='ml-2'
+          className='ms-2'
         >
           Clear
         </Button>

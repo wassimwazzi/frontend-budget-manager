@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
 import { Form, Button, Alert } from 'react-bootstrap'
+import Status from '../../components/Status'
 
 const CategoryForm = ({ categoryId, onUpdate }) => {
     const initialFormData = Object.freeze({
@@ -21,7 +22,7 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
                     setFormData(response.data)
                 })
                 .catch(error => {
-                    console.error('Error fetching category data:',  error.response)
+                    console.error('Error fetching category data:', error.response)
                 })
         }
     }, [categoryId])
@@ -47,6 +48,8 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
 
     const handleSubmit = e => {
         e.preventDefault()
+        setErrorMessage(null)
+        setSuccessMessage(null)
 
         const apiUrl = categoryId
             ? `/api/categories/${categoryId}/`
@@ -60,13 +63,20 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
             .then(response => {
                 const action = categoryId ? 'updated' : 'created'
                 setSuccessMessage(`Category successfully ${action}!`)
-                setErrorMessage(null)
                 onUpdate(response.data)
                 handleClear()
             })
             .catch(error => {
-                setSuccessMessage(null)
-                setErrorMessage('Error submitting category data')
+                if (error.response.status === 400) {
+                    // make error message bullet list
+                    let errorMessage = ''
+                    for (const key in error.response.data) {
+                        errorMessage += `${key}: ${error.response.data[key]}\n`
+                    }
+                    setErrorMessage(errorMessage)
+                } else {
+                    setErrorMessage('Error submitting category data')
+                }
                 console.error('Error submitting category data:', error.response.data)
             })
     }
@@ -106,21 +116,10 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
                 />
             </Form.Group>
 
-            {
-                successMessage && (
-                    <Alert variant='success' className='mt-3'>
-                        {successMessage}
-                    </Alert>
-                )
-            }
-
-            {
-                errorMessage && (
-                    <Alert variant='danger' className='mt-3'>
-                        {errorMessage}
-                    </Alert>
-                )
-            }
+            <Status
+                successMessage={successMessage}
+                errorMessage={errorMessage}
+            />
 
             <div className='mb-3'>
                 <Button type='submit' variant='primary'>
@@ -130,7 +129,7 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
                     type='button'
                     onClick={handleClear}
                     variant='secondary'
-                    className='ml-2'
+                    className='ms-2'
                 >
                     Clear
                 </Button>

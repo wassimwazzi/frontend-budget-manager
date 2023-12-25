@@ -151,7 +151,7 @@ const SignUp = () => {
         <Button variant='primary' type='submit' className='mt-2' disabled={!confirmMatch}>
           Submit
         </Button>
-        <Button variant='secondary' className='mt-2 ml-2' href='/login'>
+        <Button variant='secondary' className='mt-2 ms-2' href='/login'>
           Login
         </Button>
       </Form>

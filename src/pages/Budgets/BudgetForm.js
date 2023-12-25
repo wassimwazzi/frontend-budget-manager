@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
 import { Form, InputGroup, FormControl, Button, Alert } from 'react-bootstrap'
+import Status from '../../components/Status'
 
 const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
     const initialFormData = Object.freeze({
@@ -26,7 +27,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
                     })
                 })
                 .catch(error => {
-                    console.error('Error fetching budget data:',  error.response)
+                    console.error('Error fetching budget data:', error.response)
                 })
         }
     }, [budgetId])
@@ -45,6 +46,8 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
 
     const handleSubmit = e => {
         e.preventDefault()
+        setErrorMessage(null)
+        setSuccessMessage(null)
 
         const apiUrl = budgetId
             ? `/api/budgets/${budgetId}/`
@@ -59,13 +62,21 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
             .then(response => {
                 const action = budgetId ? 'updated' : 'created'
                 setSuccessMessage(`Budget successfully ${action}!`)
-                setErrorMessage(null)
                 onUpdate(response.data)
                 handleClear()
             })
             .catch(error => {
-                setSuccessMessage(null)
-                setErrorMessage('Error submitting budget data. Make sure you have not already created a budget for this month.')
+                if (error.response.status === 400) {
+                    // make error message bullet list
+                    let errorMessage = ''
+                    for (const key in error.response.data) {
+                        errorMessage += `${key}: ${error.response.data[key]}\n`
+                    }
+                    setErrorMessage(errorMessage)
+                }
+                else {
+                    setErrorMessage('Error submitting budget data. Make sure you have not already created a budget for this month.')
+                }
                 console.error('Error submitting budget data:', error.response.data)
             })
     }
@@ -85,8 +96,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
 
             <Form.Group className='mb-3'>
                 <Form.Label>Category:</Form.Label>
-                <Form.Control
-                    as='select'
+                <Form.Select
                     name='category'
                     value={formData.category.id}
                     onChange={handleChange}
@@ -99,11 +109,11 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
                             </option>
                         ))
                     }
-                </Form.Control>
+                </Form.Select>
             </Form.Group>
 
             <InputGroup className='mb-3'>
-                <Form.Group className='mr-3'>
+                <Form.Group className='me-3'>
                     <Form.Label>Amount:</Form.Label>
                     <Form.Control
                         type='number'
@@ -115,8 +125,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
                 </Form.Group>
                 <Form.Group className='mb-3'>
                     <Form.Label>Currency:</Form.Label>
-                    <Form.Control
-                        as='select'
+                    <Form.Select
                         name='currency'
                         value={formData.currency}
                         onChange={handleChange}
@@ -128,25 +137,14 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
                                 {currency.code}
                             </option>
                         ))}
-                    </Form.Control>
+                    </Form.Select>
                 </Form.Group>
             </InputGroup>
 
-            {
-                successMessage && (
-                    <Alert variant='success' className='mt-3'>
-                        {successMessage}
-                    </Alert>
-                )
-            }
-
-            {
-                errorMessage && (
-                    <Alert variant='danger' className='mt-3'>
-                        {errorMessage}
-                    </Alert>
-                )
-            }
+            <Status
+                successMessage={successMessage}
+                errorMessage={errorMessage}
+            />
 
             <div className='mb-3'>
                 <Button type='submit' variant='primary'>
@@ -156,7 +154,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
                     type='button'
                     onClick={handleClear}
                     variant='secondary'
-                    className='ml-2'
+                    className='ms-2'
                 >
                     Clear
                 </Button>
