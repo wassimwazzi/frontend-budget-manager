@@ -64,12 +64,19 @@ function convertToMonthYear(yyyyMM) {
 }
 
 const SummaryTable = ({ data }) => {
+    const sigmoid = x => 1 / (1 + Math.exp(-x));
+
     const cols = [
         'category',
         'budget',
         'actual',
         'remaining'
     ]
+    const tableData = data.map(row => ({
+        ...row,
+        ratio: row.budget === 0 ? 0 : (row.remaining > 0 ? sigmoid(row.remaining / row.budget) : sigmoid(-1 * row.actual / row.budget))
+    })).sort((a, b) => a.ratio - b.ratio)
+
     const totalsRow = {
         category: 'Total',
         budget: data.reduce((acc, row) => acc + row.budget, 0).toFixed(2),
@@ -100,7 +107,7 @@ const SummaryTable = ({ data }) => {
                 </tr>
             </thead>
             <tbody>
-                {data.map((row, index) => (
+                {tableData.map((row, index) => (
                     <tr key={index}>
                         {cols.map(column => (
                             <td key={`${index}-${column}`} style={{ backgroundColor: getRowColor(row) }}>
@@ -202,7 +209,6 @@ const SummaryCard = ({ summaryData }) => {
     const totalBudget = summaryData.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
     const totalSpend = summaryData.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
     const totalRemaining = summaryData.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
-    // className="border-0 shadow-lg"
     return (
         <div className="mt-5">
             <Card border='0' className="shadow-lg">
@@ -255,16 +261,12 @@ const SummaryCard = ({ summaryData }) => {
 const MonthlySummary = () => {
     const [budgetSummary, setBudgetSummary] = useState([])
     const [month, setMonth] = useState(getCurrentMonth())
-    const sigmoid = x => 1 / (1 + Math.exp(-x));
 
     useEffect(() => {
         api
             .get('/api/budgets/summary/?month=' + month)
             .then(response => {
-                setBudgetSummary(response.data.map(row => ({
-                    ...row,
-                    ratio: row.budget === 0 ? 0 : (row.remaining > 0 ? sigmoid(row.remaining / row.budget) : sigmoid(-1 * row.actual / row.budget))
-                })).sort((a, b) => a.ratio - b.ratio))
+                setBudgetSummary(response.data)
             })
             .catch(error => {
                 console.error('Error fetching budget summary:', error.response)
