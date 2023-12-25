@@ -1,0 +1,38 @@
+/* Add the following styles to your CSS */
+.horizontal-accordion {
+  display: flex;
+}
+
+.accordion-panel {
+  flex: 1;
+  overflow: hidden;
+  cursor: pointer;
+  transition: flex 0.3s ease;
+  border: 1px solid #ccc;
+  margin-right: 5px; /* Adjust the spacing between panels as needed */
+  background-color: #f0f0f0;
+}
+
+.panel-header {
+  background-color: #f0f0f0;
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+.panel-header.active {
+    color: var(--bs-accordion-active-color);
+    background-color: var(--bs-accordion-active-bg);
+}
+
+.panel-content {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.accordion-panel.active {
+  flex: 4; /* Adjust the width of the active panel as needed */
+}

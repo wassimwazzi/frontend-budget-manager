@@ -72,16 +72,10 @@ const SummaryTable = ({ data }) => {
     ]
     const totalsRow = {
         category: 'Total',
-        budget: data.reduce((acc, row) => acc + row.budget, 0),
-        actual: data.reduce((acc, row) => acc + row.actual, 0),
-        remaining: data.reduce((acc, row) => acc + row.remaining, 0)
+        budget: data.reduce((acc, row) => acc + row.budget, 0).toFixed(2),
+        actual: data.reduce((acc, row) => acc + row.actual, 0).toFixed(2),
+        remaining: data.reduce((acc, row) => acc + row.remaining, 0).toFixed(2),
     }
-
-    const getRowColor = row => {
-        const ratio = row.ratio;
-        const color = getColorForRatio(ratio);
-        return `#${color[0].toString(16).padStart(2, '0')}${color[1].toString(16).padStart(2, '0')}${color[2].toString(16).padStart(2, '0')}`;
-    };
 
     const getColorForRatio = ratio => {
         // 0 means you are over the budget, 1 means you are under the budget, 0.5 means you are at the budget
@@ -89,12 +83,19 @@ const SummaryTable = ({ data }) => {
         const red = 255 - green;
         return [red, green, 0];
     }
+
+    const getRowColor = row => {
+        const ratio = row.ratio;
+        const color = getColorForRatio(ratio);
+        return `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.6)`
+    };
+
     return (
-        <table className='table' style={{ border: '1px solid #ddd' }}>
+        <table className='table' style={{ border: '0px solid #ddd' }}>
             <thead>
-                <tr style={{ backgroundColor: '#e0e9f0' }}>
+                <tr>
                     {cols.map(column => (
-                        <th key={column}>{column}</th>
+                        <th key={column} style={{ backgroundColor: '#e0e9f0' }}>{column}</th>
                     ))}
                 </tr>
             </thead>
@@ -110,7 +111,9 @@ const SummaryTable = ({ data }) => {
                 ))}
                 <tr key={'total'} style={{ backgroundColor: '#e0e9f0' }}>
                     {cols.map(column => (
-                        <td key={`total-${column}`}>{totalsRow[column]}</td>
+                        <td key={`total-${column}`} style={{ backgroundColor: '#e0e9f0' }} >
+                            {totalsRow[column]}
+                        </td>
                     ))}
                 </tr>
             </tbody>
@@ -279,10 +282,11 @@ const MonthlySummary = () => {
             <SummaryCard summaryData={budgetSummary} />
             {
                 budgetSummary.length > 0 ?
-                    <PlotContainer className="mt-4" titles={['Budget vs Spend', 'Remaining from Budget', 'Spend Per Category']}>
-                        <BudgetVsActualBarChart summaryData={budgetSummary} />
-                        <RemainingFromBudgetBarChart summaryData={budgetSummary} />
-                        <SpendPerCategoryPieChart summaryData={budgetSummary} />
+                    <PlotContainer className="mt-4">
+                        <SummaryTable data={budgetSummary} title={'Summary Table'} />
+                        <BudgetVsActualBarChart summaryData={budgetSummary} title={'Budget vs Spend'} />
+                        <RemainingFromBudgetBarChart summaryData={budgetSummary} title={'Remaining from Budget'} />
+                        <SpendPerCategoryPieChart summaryData={budgetSummary} title={'Spend Per Category'} />
                     </PlotContainer>
                     :
                     <>
