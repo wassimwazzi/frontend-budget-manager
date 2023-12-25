@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Line } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
 import PieChart from '../../components/PieChart'
 import PlotContainer from '../../components/PlotContainer'
 import api from '../../api'
+import getColorArray from '../../utils/getColorArray';
 
 const SpendVsIncomeLineChart = () => {
     const [labels, setLabels] = useState([])
@@ -44,7 +45,6 @@ const SpendVsIncomeLineChart = () => {
     const annotation = {
         type: 'line',
         mode: 'horizontal',
-        scaleID: 'y',
         yMin: 0,
         yMax: 0,
         value: 0,
@@ -97,10 +97,66 @@ const SpendPerCategoryPieChart = () => {
     )
 }
 
+const MonthlySpendPerCategoryBarChart = () => {
+    const [labels, setLabels] = useState([])
+    const [datasets, setDatasets] = useState([])
+
+    useEffect(() => {
+        api
+            .get('/api/transactions/spend_by_category/', { params: { monthly: true } })
+            .then(response => {
+                // sort by increasing month
+                response.data.sort((a, b) => a.month.localeCompare(b.month))
+                // get unique categories
+                const categories = [...new Set(response.data.map(d => d.category))]
+                // get unique months
+                const months = [...new Set(response.data.map(d => d.month))]
+                const colors = getColorArray(categories.length);
+                console.log(colors);
+                // create a dataset for each category
+                const datasets = categories.map((category, index) => ({
+                    label: category,
+                    data: months.map(month => {
+                        const data = response.data.find(d => d.category === category && d.month === month)
+                        return data ? data.total : 0
+                    }),
+                    borderColor: `rgb(${colors[index][0]}, ${colors[index][1]}, ${colors[index][2]})`,
+                    backgroundColor: `rgba(${colors[index][0]}, ${colors[index][1]}, ${colors[index][2]}, 0.5)`,
+                }))
+                setLabels(months)
+                setDatasets(datasets)
+
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error.response)
+            })
+    }, [])
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Monthly Spend Per Category',
+            },
+        },
+    };
+
+    return (
+        <Bar data={{ labels, datasets }} options={options} />
+    )
+}
+
 const HistoricalSummary = () => {
     return (
         <>
             <h1 className="mb-4">Historical Summary</h1>
+            <PlotContainer title="Monthly Spend Per Category">
+                <MonthlySpendPerCategoryBarChart />
+            </PlotContainer>
             <PlotContainer title="Spend Per Category">
                 <SpendPerCategoryPieChart />
             </PlotContainer>
