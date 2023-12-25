@@ -26,6 +26,7 @@ const Login = () => {
       .post('/api/token/', formData)
       .then(response => {
         localStorage.setItem('authToken', response.data.token)
+        localStorage.setItem('username', formData.username)
         window.location.href = '/'
       })
       .catch(error => {

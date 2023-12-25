@@ -1,16 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link, Navigate, useLocation } from 'react-router-dom';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
 
 const Layout = () => {
   const location = useLocation();
 
-  // Function to handle logout
   const handleLogout = () => {
-    // Implement your logout logic here
-    // For example, remove the authToken from localStorage
     localStorage.removeItem('authToken');
-    // Redirect user back to the login page
     window.location.href = '/login';
   };
 
@@ -20,19 +18,25 @@ const Layout = () => {
     return <Navigate to="/login" />;
   }
 
+  const getUserName = () => {
+    return localStorage.getItem('username');
+  };
+
   const NavLink = ({ to, children }) => {
     const active = location.pathname === to;
-    const linkStyle = active ? {
-      borderBottom: '2px solid black',
-    } : {
-      textDecoration: 'none',
-      fontWeight: 'normal',
-    }
+    const linkStyle = active
+      ? {
+        borderBottom: '2px solid black',
+      }
+      : {
+        textDecoration: 'none',
+        fontWeight: 'normal',
+      };
     return (
       <Nav.Link as={Link} to={to} className={active ? 'active' : ''}>
         <span style={linkStyle}>{children}</span>
       </Nav.Link>
-    )
+    );
   };
 
   return (
@@ -50,9 +54,18 @@ const Layout = () => {
             <NavLink to="/uploads">Upload Transactions</NavLink>
           </Nav>
           <Nav>
-            <Nav.Link onClick={handleLogout} className="text-muted">
-              Logout
-            </Nav.Link>
+            <Dropdown
+              className='me-4 pe-4'
+            >
+              <Dropdown.Toggle variant="link">
+                <FontAwesomeIcon icon={faUser} />
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item disabled>{getUserName()}</Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
