@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Table as BootstrapTable } from 'react-bootstrap';
 import SearchTable from "./SearchTable";
 import TabeleNavigator from "./TableNavigator";
 
@@ -58,7 +59,7 @@ const Table = ({ data, columns, fetchData, totalPages }) => {
                 columns={columns}
                 onSearch={handleSearch}
             />
-            <table className='table table-striped'>
+            <BootstrapTable striped responsive>
                 <thead>
                     <tr>
                         {columns.map(column => (
@@ -80,7 +81,7 @@ const Table = ({ data, columns, fetchData, totalPages }) => {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </BootstrapTable>
             <TabeleNavigator totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
     );

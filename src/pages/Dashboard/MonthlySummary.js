@@ -100,9 +100,11 @@ const SummaryTable = ({ data }) => {
             </thead>
             <tbody>
                 {data.map((row, index) => (
-                    <tr key={index} style={{ backgroundColor: getRowColor(row) }}>
+                    <tr key={index}>
                         {cols.map(column => (
-                            <td key={`${index}-${column}`}>{row[column]}</td>
+                            <td key={`${index}-${column}`} style={{ backgroundColor: getRowColor(row) }}>
+                                {row[column]}
+                            </td>
                         ))}
                     </tr>
                 ))}
@@ -275,6 +277,9 @@ const MonthlySummary = () => {
             <h1 className="mb-4">Summary for {convertToMonthYear(month)}</h1>
             <SummaryForm onUpdate={handleUpdate} />
             <SummaryCard summaryData={budgetSummary} />
+            {/* <PlotContainer title="Summary Table" className="mt-4">
+                <SummaryTable data={budgetSummary} />
+            </PlotContainer> */}
             {
                 budgetSummary.length > 0 ?
                     <div className="mt-4">

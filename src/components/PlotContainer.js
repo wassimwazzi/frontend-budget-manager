@@ -1,8 +1,8 @@
 import React from "react";
 import { Accordion, Card } from "react-bootstrap";
 
-const PlotContainer = ({ title, children }) => (
-    <Accordion defaultActiveKey="0">
+const PlotContainer = ({ title, children, ...props }) => (
+    <Accordion defaultActiveKey="0" {...props}>
         <Card className="border-0 shadow-lg mb-3">
             <Accordion.Item eventKey="0">
                 <Accordion.Header>
