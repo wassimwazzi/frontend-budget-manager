@@ -27,6 +27,7 @@ const Layout = () => {
     const linkStyle = active
       ? {
         borderBottom: '2px solid black',
+        fontWeight: 'bold',
       }
       : {
         textDecoration: 'none',
@@ -43,11 +44,16 @@ const Layout = () => {
     <Container>
       <Navbar expand="lg" variant="light" className="mb-4 border-bottom">
         <Navbar.Brand as={Link} to="/">
-          <span style={{ fontWeight: 'bold' }}>Budget Manager</span>
+          <img
+            src={`${process.env.PUBLIC_URL}/favicon.ico`}
+            alt="App Icon"
+            style={{ height: '5rem', marginRight: '10px' }}
+          />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
+            <NavLink to="/">Dashboard</NavLink>
             <NavLink to="/transactions">Transactions</NavLink>
             <NavLink to="/categories">Categories</NavLink>
             <NavLink to="/budgets">Budgets</NavLink>
