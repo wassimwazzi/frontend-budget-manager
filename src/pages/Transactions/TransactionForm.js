@@ -4,7 +4,7 @@ import { Form, Button, InputGroup } from 'react-bootstrap'
 import { getCurrentDay } from '../../utils/dateUtils'
 import Status from '../../components/Status'
 
-const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) => {
+const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) => {
   const [formData, setFormData] = useState({
     date: getCurrentDay(),
     code: '',
@@ -63,7 +63,6 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
       setErrorMessage('Please enter a description or code.')
       return
     }
-
     const apiUrl = transactionId
       ? `/api/transactions/${transactionId}/`
       : '/api/transactions/'
@@ -77,6 +76,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
         const action = transactionId ? 'updated' : 'created'
         handleClear()
         setSuccessMessage(`Transasction successfully ${action}!`)
+        onSubmit(response.data)
       })
       .catch(error => {
         if (error.response?.status === 400) {
@@ -94,7 +94,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
         else {
           setErrorMessage('An error occurred. Please try again later.')
         }
-        console.error('Error submitting transaction data:', error.response?.data)
+        console.error('Error submitting transaction data:', error.response)
       })
   }
 
