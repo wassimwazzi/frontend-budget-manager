@@ -47,7 +47,7 @@ const Layout = () => {
           <img
             src={`${process.env.PUBLIC_URL}/favicon.ico`}
             alt="App Icon"
-            style={{ height: '5rem', marginRight: '10px' }}
+            style={{ height: '5rem' }}
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
