@@ -9,7 +9,7 @@ const SearchTable = ({ columns, onSearch }) => {
 
   useEffect(() => {
     onSearch(searchTerms);
-  }, [searchTerms]);
+  }, [searchTerms, onSearch]);
 
   const handleSearch = (e) => {
     e.preventDefault();

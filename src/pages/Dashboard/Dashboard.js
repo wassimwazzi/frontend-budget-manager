@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Container, Row, Col } from 'react-bootstrap';
+import { Tabs, Tab, Container } from 'react-bootstrap';
 import MonthlySummary from "./MonthlySummary";
 import HistoricalSummary from "./HistoricalSummary";
 

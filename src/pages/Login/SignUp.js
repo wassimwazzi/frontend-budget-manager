@@ -39,7 +39,7 @@ const SignUp = () => {
     handleChange(e)
     setPasswordLengthValid(e.target.value.length >= 8)
     setPasswordContainsNumber(/\d/.test(e.target.value))
-    setPasswordContainsSpecial(/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(e.target.value))
+    setPasswordContainsSpecial(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(e.target.value))
     setConfirmMatch(e.target.value === formData.confirm_password)
   }
 

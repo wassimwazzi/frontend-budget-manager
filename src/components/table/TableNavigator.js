@@ -6,7 +6,7 @@ const TableNavigator = ({ totalPages, onPageChange }) => {
 
     useEffect(() => {
         onPageChange(page)
-    }, [page])
+    }, [page, onPageChange])
 
     const handleFirst = () => {
         setPage(1)

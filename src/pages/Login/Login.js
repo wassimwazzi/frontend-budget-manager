@@ -1,5 +1,5 @@
 import {nonAuthenticatedApi as api} from '../../api'
-import { Form, Button, Container, Alert } from 'react-bootstrap'
+import { Form, Button, Container } from 'react-bootstrap'
 import { useState } from 'react'
 import Status from '../../components/Status'
 

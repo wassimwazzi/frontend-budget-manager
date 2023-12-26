@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
-import { Form, Button, Alert } from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap'
 import Status from '../../components/Status'
 
 const CategoryForm = ({ categoryId, onUpdate }) => {
