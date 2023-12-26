@@ -61,7 +61,16 @@ const Transactions = () => {
       .then(({ data }) => {
         setTransactions(data.results.map(transaction => ({
           ...transaction,
-          category: transaction.category.category,
+          category: (
+            transaction.inferred_category ?
+              <div style={{ display: 'flex' }}>
+                <span>{transaction.category.category}</span>
+                <span className='badge bg-success ms-4'>
+                  <i className='bi bi-check2' > Inferred </i>
+                </span>
+              </div>
+              : transaction.category.category
+          ),
           actions: getActionButtons(transaction.id)
         })))
         setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
@@ -92,7 +101,6 @@ const Transactions = () => {
         setDeleteErrorMessage('Error deleting transaction.')
       })
   }
-
 
   const inferCategories = () => {
     setInferring(true)
@@ -129,7 +137,6 @@ const Transactions = () => {
     }
     setEditTransactionId(null)
   }
-
   return (
     <>
       <h1>Transactions</h1>
@@ -149,6 +156,8 @@ const Transactions = () => {
       </div>
 
       <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
+
+
       <Table
         columns={columns}
         data={transactions}
