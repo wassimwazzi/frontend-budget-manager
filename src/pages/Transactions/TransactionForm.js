@@ -83,7 +83,11 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
           // make error message bullet list
           let errorMessage = ''
           for (const key in error.response.data) {
-            errorMessage += `${key}: ${error.response.data[key]}\n`
+            if (key in formData) {
+              errorMessage += `${key}: ${error.response.data[key]}\n`
+            } else {
+              errorMessage += `${error.response.data[key]}\n`
+            }
           }
           setErrorMessage(errorMessage)
         }
