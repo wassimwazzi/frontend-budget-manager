@@ -13,12 +13,12 @@ const Categories = () => {
     const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
     const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
-    const getActionButtons = categoryId => (
+    const getActionButtons = useCallback(categoryId => (
         <>
             <Button onClick={() => handleEdit(categoryId)} className='btn btn-primary'>Edit</Button>
             <DeleteButton handleDelete={() => handleDelete(categoryId)} />
         </>
-    )
+    ), [])
 
     const columns = [
         'description',
@@ -41,7 +41,7 @@ const Categories = () => {
             .catch(error => {
                 console.error('Error fetching data:', error.response)
             })
-    }, [])
+    }, [getActionButtons])
 
     const handleEdit = categoryId => {
         setEditCategoryId(categoryId)
