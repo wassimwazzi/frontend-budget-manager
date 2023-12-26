@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Outlet, Link, Navigate, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

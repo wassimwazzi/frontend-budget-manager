@@ -23,7 +23,7 @@ const SummaryForm = ({ onUpdate }) => {
 
     useEffect(() => {
         onUpdate(formData)
-    }, [formData])
+    }, [formData, onUpdate])
 
     return (
         <Form>

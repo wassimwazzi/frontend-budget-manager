@@ -33,7 +33,7 @@ const Table = ({ data, columns, fetchData, totalPages }) => {
             }
         });
         fetchData(params);
-    }, [sortColumn, sortAsc, searches, currentPage]);
+    }, [sortColumn, sortAsc, searches, currentPage, fetchData]);
 
     const handleSearch = (searches) => {
         setSearches(searches);

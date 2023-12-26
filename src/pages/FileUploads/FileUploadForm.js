@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import api from '../../api';
 import Status from '../../components/Status'
 import handleDownload from '../../utils/handleDownload';
