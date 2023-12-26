@@ -12,7 +12,7 @@ const PlotContainer = ({ children, ...props }) => {
             alwaysOpen
         >
             {children.map((child, index) => (
-                <Card className="border-0 shadow-lg mb-3">
+                <Card className="border-0 shadow-lg mb-3" key={index}>
                     <Accordion.Item eventKey={`${index}`}>
                         <Accordion.Header>
                             <h5 className="mb-0">

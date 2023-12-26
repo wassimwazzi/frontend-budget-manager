@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import api from '../../api'
 import TransactionForm from './TransactionForm'
 import Table from '../../components/table/Table'
@@ -18,12 +18,12 @@ const Transactions = () => {
   const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
   const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
-  const getActionButtons = transactionId => (
+  const getActionButtons = useCallback(transactionId => (
     <>
       <button onClick={() => handleEdit(transactionId)} className='btn btn-primary'>Edit</button>
       <DeleteButton handleDelete={() => handleDelete(transactionId)} />
     </>
-  )
+  ), [])
 
   useEffect(() => {
     api
@@ -55,7 +55,7 @@ const Transactions = () => {
     'actions'
   ]
 
-  const fetchData = (params) => {
+  const fetchData = useCallback((params) => {
     api
       .get('/api/transactions/', { params })
       .then(({ data }) => {
@@ -69,7 +69,7 @@ const Transactions = () => {
       .catch(error => {
         console.error('Error fetching data:', error.response)
       })
-  }
+  }, [getActionButtons])
 
   const handleEdit = transactionId => {
     setEditTransactionId(transactionId)
@@ -102,7 +102,7 @@ const Transactions = () => {
         setInferring(false)
         setInferranceSuccessMessage('Categories successfully inferred')
         setInferranceErrorMessage(null)
-        fetchData({ page: 1, sort: 'date', order: 'desc' })
+        // fetchData({ page: 1, sort: 'date', order: 'desc' })
       })
       .catch(error => {
         setInferring(false)

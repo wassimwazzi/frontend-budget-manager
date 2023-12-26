@@ -84,7 +84,6 @@ const SpendPerCategoryPieChart = () => {
         api
             .get('/api/transactions/spend_by_category/')
             .then(response => {
-                console.log(response.data)
                 setLabels(response.data.map(d => d.category))
                 setDatasets([{ data: response.data.map(d => d.total), label: 'Total' }])
             })

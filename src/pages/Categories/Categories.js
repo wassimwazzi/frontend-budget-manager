@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import api from '../../api'
 import CategoryForm from './CategoryForm'
 import Table from '../../components/table/Table'
@@ -27,21 +27,21 @@ const Categories = () => {
         'actions'
     ]
 
-    const fetchData = (params) => {
+    const fetchData = useCallback((params) => {
         api
             .get('/api/categories/', { params })
             .then(({ data }) => {
-                setCategories(data.results.map(category => ({
-                    ...category,
-                    income: category.income ? 'Yes' : 'No',
-                    actions: getActionButtons(category.id)
-                })))
+                // setCategories(data.results.map(category => ({
+                //     ...category,
+                //     income: category.income ? 'Yes' : 'No',
+                //     actions: getActionButtons(category.id)
+                // })))
                 setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)
             })
-    }
+    }, [])
 
     const handleEdit = categoryId => {
         setEditCategoryId(categoryId)

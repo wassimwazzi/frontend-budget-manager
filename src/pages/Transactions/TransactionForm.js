@@ -59,6 +59,11 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
     setErrorMessage(null)
     setSuccessMessage(null)
 
+    if (!formData.description && !formData.code) {
+      setErrorMessage('Please enter a description or code.')
+      return
+    }
+
     const apiUrl = transactionId
       ? `/api/transactions/${transactionId}/`
       : '/api/transactions/'
@@ -110,7 +115,6 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
           name='code'
           value={formData.code}
           onChange={handleChange}
-          required
         />
       </Form.Group>
 
@@ -121,7 +125,6 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
           name='description'
           value={formData.description}
           onChange={handleChange}
-          required
         />
       </Form.Group>
 

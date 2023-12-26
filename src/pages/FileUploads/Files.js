@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import api from '../../api'
 import FileUploadForm from './FileUploadForm'
 import Table from '../../components/table/Table'
@@ -18,34 +18,40 @@ const Files = () => {
         'actions'
     ]
 
-    const handleDelete = fileId => {
+    const handleDelete = useCallback(fileId => {
         setNumDeletedFilesMessage(null)
         api
             .delete(`/api/uploads/${fileId}/`)
             .then(response => {
                 const deleted_transaction_count = response.data.transaction_count
                 setNumDeletedFilesMessage(`File successfully deleted. ${deleted_transaction_count} associated transactions were deleted.`)
-                fetchData({ page: 1 })
+                setFiles(files => files.filter(file => file.id !== fileId))
             })
             .catch(error => {
                 console.error('Error deleting transaction:', error.response)
             })
-    }
+    }, [])
 
-    const fetchData = (params) => {
+    const getActionButtons = useCallback(fileId => (
+        <>
+            <DeleteButton handleDelete={() => handleDelete(fileId)} />
+        </>
+    ), [handleDelete])
+
+    const fetchData = useCallback((params) => {
         api
             .get('/api/uploads/', { params })
             .then(({ data }) => {
                 setFiles(data.results.map(file => ({
                     ...file,
-                    actions: <DeleteButton handleDelete={() => handleDelete(file.id)} />
+                    actions: getActionButtons(file.id)
                 })))
                 setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)
             })
-    }
+    }, [getActionButtons])
 
     const handleFormUpdate = () => {
         fetchData({ page: 1 })

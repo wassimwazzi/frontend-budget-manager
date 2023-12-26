@@ -34,7 +34,7 @@ const PieChart = ({ datasets, labels, title }) => {
         <div style={{ height: '100vh', width: 'auto' }}>
             <Pie data={chartData} options={options} />
         </div>
-        );
+    );
 };
 
 export default PieChart;

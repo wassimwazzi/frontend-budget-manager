@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import api from '../../api'
 import BudgetForm from './BudgetForm'
 import Table from '../../components/table/Table'
@@ -14,12 +14,12 @@ const Budgets = () => {
     const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
     const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
-    const getActionButtons = budgetId => (
+    const getActionButtons = useCallback(budgetId => (
         <>
             <button onClick={() => handleEdit(budgetId)} className='btn btn-primary'>Edit</button>
             <DeleteButton handleDelete={() => handleDelete(budgetId)} />
         </>
-    )
+    ), [])
 
     useEffect(() => {
         api
@@ -48,7 +48,7 @@ const Budgets = () => {
         'actions'
     ]
 
-    const fetchData = (params) => {
+    const fetchData = useCallback((params) => {
         api
             .get('/api/budgets/', { params })
             .then(({ data }) => {
@@ -62,7 +62,7 @@ const Budgets = () => {
             .catch(error => {
                 console.error('Error fetching data:', error.response)
             })
-    }
+    }, [getActionButtons])
 
     const handleEdit = budgetId => {
         setEditBudgetId(budgetId)
