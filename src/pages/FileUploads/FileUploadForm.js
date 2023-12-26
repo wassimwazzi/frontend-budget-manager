@@ -4,7 +4,7 @@ import Status from '../../components/Status'
 import handleDownload from '../../utils/handleDownload';
 import { Form, Button, InputGroup } from 'react-bootstrap'
 
-const FileUploadForm = ({ onUpdate }) => {
+const FileUploadForm = ({ onSubmit }) => {
     const [file, setFile] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -27,14 +27,14 @@ const FileUploadForm = ({ onUpdate }) => {
                 setErrorMessage(null);
                 setFile(null);
                 setUploading(false);
-                onUpdate()
+                onSubmit()
             })
             .catch((error) => {
                 setSuccessMessage(null);
                 setErrorMessage('Error uploading file.');
                 setUploading(false);
                 console.error('Error uploading file:', error.response);
-                onUpdate()
+                onSubmit()
             });
     };
 

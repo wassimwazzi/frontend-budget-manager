@@ -109,7 +109,7 @@ const Budgets = () => {
                 budgetId={editBudgetId}
                 categories={categories}
                 currencies={currencies}
-                onUpdate={handleFormUpdate}
+                onSubmit={handleFormUpdate}
             />
 
             <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />

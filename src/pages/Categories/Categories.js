@@ -85,7 +85,7 @@ const Categories = () => {
 
             <CategoryForm
                 categoryId={editCategoryId}
-                onUpdate={handleFormUpdate}
+                onSubmit={handleFormUpdate}
             />
             <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
 
