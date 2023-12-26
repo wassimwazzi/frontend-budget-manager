@@ -4,6 +4,7 @@ import TransactionForm from './TransactionForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
 import { Button } from 'react-bootstrap'
+import { DeleteButton } from '../../components/ActionButtons'
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([])
@@ -20,7 +21,7 @@ const Transactions = () => {
   const getActionButtons = transactionId => (
     <>
       <button onClick={() => handleEdit(transactionId)} className='btn btn-primary'>Edit</button>
-      <button onClick={() => handleDelete(transactionId)} className='btn btn-danger ms-2'>Delete</button>
+      <DeleteButton handleDelete={() => handleDelete(transactionId)} />
     </>
   )
 
@@ -76,10 +77,6 @@ const Transactions = () => {
   }
 
   const handleDelete = transactionId => {
-    const shouldDelete = window.confirm("Are you sure?");
-    if (!shouldDelete) {
-      return
-    }
     setDeleteSucessMessage(null)
     setDeleteErrorMessage(null)
     api

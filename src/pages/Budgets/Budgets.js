@@ -3,6 +3,7 @@ import api from '../../api'
 import BudgetForm from './BudgetForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
+import { DeleteButton } from '../../components/ActionButtons'
 
 const Budgets = () => {
     const [budgets, setBudgets] = useState([])
@@ -16,7 +17,7 @@ const Budgets = () => {
     const getActionButtons = budgetId => (
         <>
             <button onClick={() => handleEdit(budgetId)} className='btn btn-primary'>Edit</button>
-            <button onClick={() => handleDelete(budgetId)} className='btn btn-danger ms-2'>Delete</button>
+            <DeleteButton handleDelete={() => handleDelete(budgetId)} />
         </>
     )
 
@@ -69,10 +70,6 @@ const Budgets = () => {
     }
 
     const handleDelete = budgetId => {
-        const shouldDelete = window.confirm("Are you sure?");
-        if (!shouldDelete) {
-            return
-        }
         setDeleteSucessMessage(null)
         setDeleteErrorMessage(null)
         api

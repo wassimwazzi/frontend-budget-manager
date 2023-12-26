@@ -3,6 +3,7 @@ import api from '../../api'
 import FileUploadForm from './FileUploadForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
+import { DeleteButton } from '../../components/ActionButtons'
 
 const Files = () => {
     const [files, setFiles] = useState([])
@@ -18,10 +19,6 @@ const Files = () => {
     ]
 
     const handleDelete = fileId => {
-        const shouldDelete = window.confirm("Are you sure? This will delete the file and all associated transactions.");
-        if (!shouldDelete) {
-            return
-        }
         setNumDeletedFilesMessage(null)
         api
             .delete(`/api/uploads/${fileId}/`)
@@ -41,7 +38,7 @@ const Files = () => {
             .then(({ data }) => {
                 setFiles(data.results.map(file => ({
                     ...file,
-                    actions: <button onClick={() => handleDelete(file.id)} className='btn btn-danger ms-2'>Delete</button>
+                    actions: <DeleteButton handleDelete={() => handleDelete(file.id)} />
                 })))
                 setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
             })

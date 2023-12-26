@@ -4,6 +4,7 @@ import CategoryForm from './CategoryForm'
 import Table from '../../components/table/Table'
 import { Button } from 'react-bootstrap'
 import Status from '../../components/Status'
+import { DeleteButton } from '../../components/ActionButtons'
 
 const Categories = () => {
     const [categories, setCategories] = useState([])
@@ -15,7 +16,7 @@ const Categories = () => {
     const getActionButtons = categoryId => (
         <>
             <Button onClick={() => handleEdit(categoryId)} className='btn btn-primary'>Edit</Button>
-            <Button onClick={() => handleDelete(categoryId)} className='btn btn-danger ms-2'>Delete</Button>
+            <DeleteButton handleDelete={() => handleDelete(categoryId)} />
         </>
     )
 
@@ -48,9 +49,6 @@ const Categories = () => {
     }
 
     const handleDelete = categoryId => {
-        const shouldDelete = window.confirm("Are you sure?");
-        if (!shouldDelete) {
-            return
         }
         setDeleteSucessMessage(null)
         setDeleteErrorMessage(null)
