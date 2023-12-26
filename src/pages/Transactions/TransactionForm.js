@@ -75,12 +75,11 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
     })
       .then(response => {
         const action = transactionId ? 'updated' : 'created'
-        setSuccessMessage(`Transasction successfully ${action}!`)
-        onUpdate(response.data)
         handleClear()
+        setSuccessMessage(`Transasction successfully ${action}!`)
       })
       .catch(error => {
-        if (error.response.status === 400) {
+        if (error.response?.status === 400) {
           // make error message bullet list
           let errorMessage = ''
           for (const key in error.response.data) {
@@ -91,7 +90,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onUpdate }) =>
         else {
           setErrorMessage('An error occurred. Please try again later.')
         }
-        console.error('Error submitting transaction data:', error.response.data)
+        console.error('Error submitting transaction data:', error.response?.data)
       })
   }
 
