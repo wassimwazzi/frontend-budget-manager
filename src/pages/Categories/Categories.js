@@ -31,11 +31,11 @@ const Categories = () => {
         api
             .get('/api/categories/', { params })
             .then(({ data }) => {
-                // setCategories(data.results.map(category => ({
-                //     ...category,
-                //     income: category.income ? 'Yes' : 'No',
-                //     actions: getActionButtons(category.id)
-                // })))
+                setCategories(data.results.map(category => ({
+                    ...category,
+                    income: category.income ? 'Yes' : 'No',
+                    actions: getActionButtons(category.id)
+                })))
                 setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
             })
             .catch(error => {
