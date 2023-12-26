@@ -102,7 +102,7 @@ const Transactions = () => {
         setInferring(false)
         setInferranceSuccessMessage('Categories successfully inferred')
         setInferranceErrorMessage(null)
-        // fetchData({ page: 1, sort: 'date', order: 'desc' })
+        fetchData({ page: 1, sort: 'date', order: 'desc' })
       })
       .catch(error => {
         setInferring(false)
@@ -117,12 +117,13 @@ const Transactions = () => {
     updatedTransaction.actions = getActionButtons(updatedTransaction.id)
     updatedTransaction.category = updatedTransaction.category.category
     if (editTransactionId) {
-      const updatedTransactions = transactions.map(transaction =>
-        transaction.id === updatedTransaction.id
-          ? updatedTransaction
-          : transaction
-      )
-      setTransactions(updatedTransactions)
+      setTransactions(transactions => (
+        transactions.map(transaction =>
+          transaction.id === updatedTransaction.id
+            ? updatedTransaction
+            : transaction
+        )
+      ))
     } else {
       setTransactions([updatedTransaction, ...transactions])
     }
@@ -137,7 +138,7 @@ const Transactions = () => {
         transactionId={editTransactionId}
         categories={categories}
         currencies={currencies}
-        onUpdate={handleFormUpdate}
+        onSubmit={handleFormUpdate}
       />
 
       <div className='d-flex mb-3'>

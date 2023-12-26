@@ -3,7 +3,7 @@ import api from '../../api'
 import { Form, Button } from 'react-bootstrap'
 import Status from '../../components/Status'
 
-const CategoryForm = ({ categoryId, onUpdate }) => {
+const CategoryForm = ({ categoryId, onSubmit }) => {
     const initialFormData = Object.freeze({
         income: false,
         category: '',
@@ -63,7 +63,7 @@ const CategoryForm = ({ categoryId, onUpdate }) => {
             .then(response => {
                 const action = categoryId ? 'updated' : 'created'
                 setSuccessMessage(`Category successfully ${action}!`)
-                onUpdate(response.data)
+                onSubmit(response.data)
                 handleClear()
             })
             .catch(error => {

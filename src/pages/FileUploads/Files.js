@@ -62,7 +62,7 @@ const Files = () => {
             <h1>Files</h1>
 
             <FileUploadForm
-                onUpdate={handleFormUpdate}
+                onSubmit={handleFormUpdate}
             />
 
             <Status successMessage={numDeletedFilesMessage} />

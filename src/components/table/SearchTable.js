@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, InputGroup, FormControl, Form, Card } from 'react-bootstrap';
 
-// const SearchTable = ({ columns, addSearch, removeSearch, clearSearch }) => {
 const SearchTable = ({ columns, onSearch }) => {
   const [searchTerms, setSearchTerms] = useState([]);
   const [newSearchTerm, setNewSearchTerm] = useState('');
-  const [selectedColumn, setSelectedColumn] = useState(columns[0]);
+  const [selectedColumn, setSelectedColumn] = useState('');
 
   useEffect(() => {
     onSearch(searchTerms);
@@ -47,12 +46,18 @@ const SearchTable = ({ columns, onSearch }) => {
                 value={selectedColumn}
                 onChange={event => setSelectedColumn(event.target.value)}
                 className='ms-2 rounded-lg border-secondary'
+                required
               >
-                {columns.map(column => (
-                  <option key={column} value={column}>
-                    {column}
+                <>
+                  <option value="" disabled>
+                    Select a column
                   </option>
-                ))}
+                  {columns.slice().sort().map(column => (
+                    <option key={column} value={column}>
+                      {column}
+                    </option>
+                  ))}
+                </>
               </Form.Select>
 
               <Button

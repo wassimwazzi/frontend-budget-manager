@@ -4,7 +4,7 @@ import { Form, InputGroup, FormControl, Button } from 'react-bootstrap'
 import { getCurrentMonth } from '../../utils/dateUtils'
 import Status from '../../components/Status'
 
-const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
+const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
     const initialFormData = Object.freeze({
         amount: '',
         currency: '',
@@ -63,7 +63,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onUpdate }) => {
             .then(response => {
                 const action = budgetId ? 'updated' : 'created'
                 setSuccessMessage(`Budget successfully ${action}!`)
-                onUpdate(response.data)
+                onSubmit(response.data)
                 handleClear()
             })
             .catch(error => {
