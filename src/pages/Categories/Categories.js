@@ -49,7 +49,6 @@ const Categories = () => {
     }
 
     const handleDelete = categoryId => {
-        }
         setDeleteSucessMessage(null)
         setDeleteErrorMessage(null)
         api
