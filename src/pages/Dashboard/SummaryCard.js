@@ -78,13 +78,17 @@ const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadow
 
 const getGradientColors = (num = 0) => {
     if (num < 0) {
-        return ['#FF5858', '#FF0000']
+        // Negative Case: Red to Dark Red
+        return ['#FE0101', '#C30A0A'];
     } else if (num > 0) {
-        return ['#4CAF50', '#087f23']
+        // Positive Case: Green to Dark Green
+        return ['#11F32F', '#07B31E'];
     } else {
-        return ['#FFB800', '#FFD600']
+        // Neutral Case: Yellow to Dark Yellow
+        return ['#CEDF97', '#B5BC75'];
     }
-}
+};
+
 
 const CardValue = ({ title, amount, color = 'black' }) => (
     <div style={{ borderBottom: `2px solid ${color}`, paddingBottom: '10px' }}>
@@ -196,7 +200,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                         </GradientCard>
                     </Col>
                     <Col md={4}>
-                        <GradientCard gradientColors={getGradientColors(totalRemaining)} boxShadowColor={getGradientColors(totalRemaining)[0]}>
+                        <GradientCard gradientColors={getGradientColors(totalRemaining)} boxShadowColor={getGradientColors(totalRemaining)[1]}>
                             <Card className="border-0">
                                 <Card.Body >
                                     <TrendBlock>
@@ -240,7 +244,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                         </GradientCard>
                     </Col>
                     <Col md={6}>
-                        <GradientCard gradientColors={getGradientColors(savings)} boxShadowColor={getGradientColors(savings)[0]}>
+                        <GradientCard gradientColors={getGradientColors(savings)} boxShadowColor={getGradientColors(savings)[1]}>
                             <Card className="border-0">
                                 <Card.Body>
                                     <TrendBlock>
