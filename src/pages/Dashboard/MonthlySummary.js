@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Card, Row, Col } from 'react-bootstrap'
+import { Form, Card, Row, Col, Table } from 'react-bootstrap'
 import { Bar } from 'react-chartjs-2';
 import { getCurrentMonth } from '../../utils/dateUtils';
 import PieChart from '../../components/PieChart';
@@ -92,7 +92,7 @@ const SummaryTable = ({ data }) => {
     };
 
     return (
-        <table className='table' style={{ border: '0px solid #ddd' }}>
+        <Table responsive style={{ border: '0px solid #ddd' }}>
             <thead>
                 <tr>
                     {cols.map(column => (
@@ -118,7 +118,7 @@ const SummaryTable = ({ data }) => {
                     ))}
                 </tr>
             </tbody>
-        </table>
+        </Table>
     )
 }
 
@@ -279,7 +279,9 @@ const MonthlySummary = () => {
             {
                 budgetSummary.length > 0 ?
                     <PlotContainer className="mt-4">
-                        <SummaryTable data={budgetSummary} title={'Summary Table'} />
+                        <div className='table-responsive'>
+                            <SummaryTable data={budgetSummary} title={'Summary Table'} />
+                        </div>
                         <BudgetVsActualBarChart summaryData={budgetSummary} title={'Budget vs Spend'} />
                         <RemainingFromBudgetBarChart summaryData={budgetSummary} title={'Remaining from Budget'} />
                         <SpendPerCategoryPieChart summaryData={budgetSummary} title={'Spend Per Category'} />
