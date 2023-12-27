@@ -1,9 +1,14 @@
-export const getCurrentMonth = () => {
+export const getCurrentMonth = (monthOffset = 0) => {
     // month in YYYY-MM format
     const currentDate = new Date();
-    const year = currentDate.getFullYear();
+    let year = currentDate.getFullYear();
     // Months are zero-based, so we add 1 to get the current month
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    let month = (currentDate.getMonth() + monthOffset);
+    year += Math.floor(month / 12);
+    month = month % 12;
+    // Months are zero-based, so we add 1 to get the current month
+    month = (month + 1).toString().padStart(2, '0');
+
     return `${year}-${month}`;
 };
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Form, Card, Row, Col, Table } from 'react-bootstrap'
 import { Bar } from 'react-chartjs-2';
 import { getCurrentMonth } from '../../utils/dateUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowTrendUp, faArrowTrendDown } from '@fortawesome/free-solid-svg-icons';
 import PieChart from '../../components/PieChart';
 import PlotContainer from '../../components/PlotContainer';
 import api from '../../api'
@@ -122,7 +124,7 @@ const SummaryTable = ({ data }) => {
     )
 }
 
-const BudgetVsActualBarChart = ({ summaryData }) => {
+const BudgetVsActualBarChart = ({ budgetSummaryData }) => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -132,21 +134,21 @@ const BudgetVsActualBarChart = ({ summaryData }) => {
             },
         },
     };
-    const labels = summaryData.map(item => item.category);
-    summaryData.sort((a, b) => b.budget - a.budget);
+    const labels = budgetSummaryData.map(item => item.category);
+    budgetSummaryData.sort((a, b) => b.budget - a.budget);
 
     const data = {
         labels,
         datasets: [
             {
                 label: 'Budget',
-                data: summaryData.map(item => item.budget),
+                data: budgetSummaryData.map(item => item.budget),
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 maxBarThickness: 75,
             },
             {
                 label: 'Actual Spend',
-                data: summaryData.map(item => item.actual),
+                data: budgetSummaryData.map(item => item.actual),
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
                 maxBarThickness: 75,
             },
@@ -161,7 +163,7 @@ const BudgetVsActualBarChart = ({ summaryData }) => {
     );
 };
 
-const RemainingFromBudgetBarChart = ({ summaryData }) => {
+const RemainingFromBudgetBarChart = ({ budgetSummaryData }) => {
     const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -171,15 +173,15 @@ const RemainingFromBudgetBarChart = ({ summaryData }) => {
             },
         },
     };
-    const labels = summaryData.map(item => item.category);
-    summaryData.sort((a, b) => b.remaining - a.remaining);
+    const labels = budgetSummaryData.map(item => item.category);
+    budgetSummaryData.sort((a, b) => b.remaining - a.remaining);
 
     const data = {
         labels,
         datasets: [
             {
                 label: 'Remaining',
-                data: summaryData.map(item => item.remaining),
+                data: budgetSummaryData.map(item => item.remaining),
                 backgroundColor: 'rgba(75, 192, 192, 0.5)',
                 maxBarThickness: 150,
             }
@@ -193,23 +195,105 @@ const RemainingFromBudgetBarChart = ({ summaryData }) => {
     );
 }
 
-const SpendPerCategoryPieChart = ({ summaryData }) => {
-    const labels = summaryData.map(item => item.category);
-    const totalSpend = summaryData.reduce((acc, row) => acc + row.actual, 0);
+const SpendPerCategoryPieChart = ({ budgetSummaryData }) => {
+    const labels = budgetSummaryData.map(item => item.category);
+    const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0);
     const datasets = [
         {
             label: 'Actual Spend',
-            data: summaryData.map(item => Math.round(item.actual * 100 / totalSpend)),
+            data: budgetSummaryData.map(item => Math.round(item.actual * 100 / totalSpend)),
         }
     ]
 
     return <PieChart datasets={datasets} labels={labels} title={'% of Total Spend per Category'} />
 }
 
-const SummaryCard = ({ summaryData }) => {
-    const totalBudget = summaryData.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
-    const totalSpend = summaryData.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
-    const totalRemaining = summaryData.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
+const SummaryCard = ({ budgetSummaryData, month }) => {
+    const totalBudget = budgetSummaryData.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
+    const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
+    const totalRemaining = budgetSummaryData.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
+    const [transactionSummary, setTransactionSummary] = useState({})
+    const [lastMonthBudgetTotals, setLastMonthBudgetTotals] = useState({})
+
+    useEffect(() => {
+        const [currentYear, currentMonth] = month.split('-').map(Number);
+        const currentDate = new Date(currentYear, currentMonth - 1);
+
+        // Subtract one month
+        currentDate.setMonth(currentDate.getMonth() - 1);
+
+        // Get the new year and month
+        const newYear = currentDate.getFullYear();
+        const newMonth = currentDate.getMonth() + 1;
+        const lastMonth = `${newYear}-${newMonth.toString().padStart(2, '0')}`;
+        api
+            .get('/api/budgets/summary/?month=' + lastMonth)
+            .then(response => {
+                const lastMonthTotalBudget = response.data.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
+                const lastMonthTotalSpend = response.data.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
+                const lastMonthTotalRemaining = response.data.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
+                setLastMonthBudgetTotals({
+                    budget: lastMonthTotalBudget,
+                    spend: lastMonthTotalSpend,
+                    remaining: lastMonthTotalRemaining,
+                })
+            })
+            .catch(error => {
+                console.error('Error fetching budget summary:', error.response)
+            })
+    }, [month])
+
+    const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
+        const diff = current - previous;
+        const diffPercent = Math.round(diff * 100 / previous);
+        const diffAbs = Math.abs(diff);
+        const diffAbsPercent = Math.abs(diffPercent);
+        // if positiveIsGood is true, then a positive diff is good, otherwise a negative diff is good
+        const isGood = positiveIsGood ? diff > 0 : diff < 0;
+        const icon = diff > 0 ? faArrowTrendUp : faArrowTrendDown;
+
+        return (
+            <span className="text-muted">
+                {
+                    isGood ?
+                        <FontAwesomeIcon icon={icon} className="text-success" />
+                        :
+                        <FontAwesomeIcon icon={icon} className="text-danger" />
+                }
+                {' '} <strong>{diffAbsPercent}%</strong> ({diffAbs.toFixed(2)})
+                {text}
+            </span>
+        );
+    };
+
+    const TrendBlock = ({ children }) => (
+        // used to make sure the trend block is always the same height, and align card body bottom borders
+        <div style={{ display: 'block', height: '30px' }}>
+            {children}
+        </div>
+    );
+
+    useEffect(() => {
+        api
+            .get('/api/transactions/summary/')
+            .then(response => {
+                /* Looks like:
+                {
+                    "monthly_average": {
+                        "income": 0.0,
+                        "spend": 0.0
+                    },
+                }
+                */
+                setTransactionSummary(response.data)
+            })
+            .catch(error => {
+                console.error('Error fetching transaction summary:', error.response)
+            })
+    }, [budgetSummaryData])
+
+
+
     return (
         <div className="mt-5">
             <Card border='0' className="shadow-lg">
@@ -219,6 +303,7 @@ const SummaryCard = ({ summaryData }) => {
                         <Col md={4}>
                             <Card className="border-0">
                                 <Card.Body style={{ borderBottom: '2px solid black' }}>
+                                    <TrendBlock />
                                     <p className="lead">Your budget:</p>
                                     <h3 className="display-4">
                                         ${totalBudget}
@@ -230,6 +315,16 @@ const SummaryCard = ({ summaryData }) => {
                         <Col md={4}>
                             <Card className="border-0">
                                 <Card.Body style={{ borderBottom: '2px solid black' }}>
+                                    <TrendBlock>
+                                        {transactionSummary.monthly_average && (
+                                            <Trend
+                                                current={totalSpend}
+                                                previous={transactionSummary.monthly_average.spend}
+                                                positiveIsGood={false}
+                                                text={' from average'}
+                                            />
+                                        )}
+                                    </TrendBlock>
                                     <p className="lead">Your spend:</p>
                                     <h3 className="display-4">
                                         ${totalSpend}
@@ -243,7 +338,18 @@ const SummaryCard = ({ summaryData }) => {
                                 <Card.Body style={{
                                     borderBottom: totalRemaining < 0 ? '2px solid red' : '2px solid green',
                                 }}>
+                                    <TrendBlock>
+                                        {transactionSummary.monthly_average?.income && (
+                                            <Trend
+                                                current={totalRemaining}
+                                                previous={lastMonthBudgetTotals.remaining}
+                                                positiveIsGood={true}
+                                                text={' from last month'}
+                                            />
+                                        )}
+                                    </TrendBlock>
                                     <p className="lead">Your remaining amount:</p>
+
                                     <h3 className="display-4" style={{
                                         color: totalRemaining < 0 ? 'red' : 'green',
                                     }}>
@@ -255,7 +361,7 @@ const SummaryCard = ({ summaryData }) => {
                     </Row>
                 </Card.Body>
             </Card>
-        </div>
+        </div >
     );
 };
 
@@ -282,14 +388,14 @@ const MonthlySummary = () => {
         <>
             <h1 className="mb-4">Summary for {convertToMonthYear(month)}</h1>
             <SummaryForm onUpdate={handleUpdate} />
-            <SummaryCard summaryData={budgetSummary} />
+            <SummaryCard budgetSummaryData={budgetSummary} month={month} />
             {
                 budgetSummary.length > 0 ?
                     <PlotContainer className="mt-4">
                         <SummaryTable data={budgetSummary} title={'Summary Table'} />
-                        <BudgetVsActualBarChart summaryData={budgetSummary} title={'Budget vs Spend'} />
-                        <RemainingFromBudgetBarChart summaryData={budgetSummary} title={'Remaining from Budget'} />
-                        <SpendPerCategoryPieChart summaryData={budgetSummary} title={'Spend Per Category'} />
+                        <BudgetVsActualBarChart budgetSummaryData={budgetSummary} title={'Budget vs Spend'} />
+                        <RemainingFromBudgetBarChart budgetSummaryData={budgetSummary} title={'Remaining from Budget'} />
+                        <SpendPerCategoryPieChart budgetSummaryData={budgetSummary} title={'Spend Per Category'} />
                     </PlotContainer>
                     :
                     <>
