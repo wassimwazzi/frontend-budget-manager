@@ -33,7 +33,7 @@ const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
     );
 };
 
-const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadowColor = 'rgba(0, 0, 0, 0.1)' }) => {
+const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadowColor }) => {
     // allow gradientPos to be a string or an array
     if (typeof gradientPos === 'string') {
         gradientPos = [gradientPos];
@@ -64,7 +64,7 @@ const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadow
         <div style={{ height: '100%' }}>
             <div style={{
                 background: `#fff`,
-                boxShadow: `2px 10px 20px ${boxShadowColor}`,
+                boxShadow: `2px 10px 20px ${boxShadowColor || gradientColors[1]}`,
                 borderRadius: '7px',
                 position: 'relative',
                 textAlign: 'center',
@@ -88,7 +88,7 @@ const getGradientColors = (num = 0) => {
         return ['#11F32F', '#07B31E'];
     } else {
         // Neutral Case: Yellow to Dark Yellow
-        return ['#CEDF97', '#B5BC75'];
+        return ['#F6E337', '#BDB24F'];
     }
 };
 
