@@ -10,7 +10,7 @@ const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
         return <></>;
     }
     const diff = current - previous;
-    const diffPercent = previous > 0 ? Math.round(diff * 100 / previous) : 0;
+    const diffPercent = previous != 0 ? Math.round(diff * 100 / previous) : 0;
     const diffAbs = Math.abs(diff);
     const diffAbsPercent = Math.abs(diffPercent);
     let icon, className;
@@ -93,7 +93,6 @@ const getGradientColors = (num = 0) => {
 };
 
 const CardValue = ({ title, amount, color = 'black' }) => {
-    console.log(amount, typeof amount)
     return <div style={{ borderBottom: `2px solid ${color}`, paddingBottom: '10px' }}>
         <p className="lead">{title}</p>
         <h3 className="display-6" style={{ color: color }}>
@@ -170,7 +169,6 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
 
     const savings = transactionSummary.this_month?.income - transactionSummary.this_month?.spend;
 
-
     return (
         <div className="mt-5">
             <Card border='0'>
@@ -188,14 +186,12 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                             <Card className="border-0">
                                 <Card.Body>
                                     <TrendBlock>
-                                        {transactionSummary.monthly_average && (
-                                            <Trend
-                                                current={totalSpend}
-                                                previous={transactionSummary.monthly_average.spend}
-                                                positiveIsGood={false}
-                                                text={' from average'}
-                                            />
-                                        )}
+                                        <Trend
+                                            current={totalSpend}
+                                            previous={transactionSummary.monthly_average?.spend}
+                                            positiveIsGood={false}
+                                            text={' from average'}
+                                        />
                                     </TrendBlock>
                                     <CardValue title={'Spend'} amount={totalSpend} />
                                 </Card.Body>
@@ -207,14 +203,12 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                             <Card className="border-0">
                                 <Card.Body >
                                     <TrendBlock>
-                                        {lastMonthBudgetTotals.remaining && (
-                                            <Trend
-                                                current={totalRemaining}
-                                                previous={lastMonthBudgetTotals.remaining}
-                                                positiveIsGood={true}
-                                                text={' from last month'}
-                                            />
-                                        )}
+                                        <Trend
+                                            current={totalRemaining}
+                                            previous={lastMonthBudgetTotals.remaining}
+                                            positiveIsGood={true}
+                                            text={' from last month'}
+                                        />
                                     </TrendBlock>
                                     <CardValue
                                         title={'Remaining'}
@@ -232,14 +226,12 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                             <Card className="border-0">
                                 <Card.Body>
                                     <TrendBlock>
-                                        {transactionSummary.last_month && (
-                                            <Trend
-                                                current={transactionSummary.this_month?.income}
-                                                previous={transactionSummary.last_month?.income}
-                                                positiveIsGood={true}
-                                                text={' from last month'}
-                                            />
-                                        )}
+                                        <Trend
+                                            current={transactionSummary.this_month?.income}
+                                            previous={transactionSummary.last_month?.income}
+                                            positiveIsGood={true}
+                                            text={' from last month'}
+                                        />
                                     </TrendBlock>
                                     <CardValue title={'Income'} amount={transactionSummary.this_month?.income} />
                                 </Card.Body>
