@@ -260,7 +260,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                         :
                         <FontAwesomeIcon icon={icon} className="text-danger" />
                 }
-                {' '} <strong>{diffAbsPercent}%</strong> ({diffAbs.toFixed(2)})
+                {' '} <strong>{diffAbsPercent}%</strong> <i>({diffAbs.toFixed(2)})</i>
                 {text}
             </span>
         );
