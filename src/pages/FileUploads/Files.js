@@ -50,7 +50,7 @@ const Files = () => {
                     ...file,
                     actions: getActionButtons(file.id)
                 })))
-                setTotalPages(data.count === 0 ? 1 : Math.max(1, Math.ceil(data.count / data.results.length)))
+                setTotalPages(data.total_pages)
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)

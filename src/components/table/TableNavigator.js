@@ -1,64 +1,82 @@
-import React, { useState, useEffect } from 'react'
-import { Button } from 'react-bootstrap'
+import React, { useState, useEffect } from 'react';
+import { Button, Badge } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faAngleDoubleLeft,
+    faAngleLeft,
+    faAngleRight,
+    faAngleDoubleRight
+} from '@fortawesome/free-solid-svg-icons';
 
 const TableNavigator = ({ totalPages, onPageChange }) => {
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
-        onPageChange(page)
-    }, [page, onPageChange])
+        onPageChange(page);
+    }, [page, onPageChange]);
 
-    const handleFirst = () => {
-        setPage(1)
-    }
-
-    const handlePrevious = () => {
-        setPage(page - 1)
-    }
-
-    const handleNext = () => {
-        setPage(page + 1)
-    }
-
-    const handleLast = () => {
-        setPage(totalPages)
-    }
+    const getMiddlePages = () => {
+        const middlePages = [];
+        if (page - 2 > 0) {
+            middlePages.push(page - 2);
+        }
+        if (page - 1 > 0) {
+            middlePages.push(page - 1);
+        }
+        middlePages.push(page);
+        if (page + 1 <= totalPages) {
+            middlePages.push(page + 1);
+        }
+        if (page + 2 <= totalPages) {
+            middlePages.push(page + 2);
+        }
+        return middlePages;
+    };
 
     return (
-        <>
-            <div className='d-flex justify-content-between'>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className="btn-group" role="group" aria-label="Pagination">
                 <Button
-                    variant='outline-secondary'
-                    onClick={handleFirst}
+                    variant="outline-secondary"
+                    onClick={() => setPage(1)}
                 >
-                    First
+                    <FontAwesomeIcon icon={faAngleDoubleLeft} />
                 </Button>
                 <Button
-                    variant='outline-secondary'
-                    onClick={handlePrevious}
+                    variant="outline-secondary"
+                    onClick={() => setPage(page - 1)}
                     disabled={page === 1}
                 >
-                    Previous
+                    <FontAwesomeIcon icon={faAngleLeft} />
                 </Button>
+                {getMiddlePages().map((middlePage) => (
+                    <Button
+                        key={middlePage}
+                        variant={middlePage === page ? 'primary' : 'outline-secondary'}
+                        onClick={() => setPage(middlePage)}
+                    >
+                        {middlePage}
+                    </Button>
+                ))}
                 <Button
-                    variant='outline-secondary'
-                    onClick={handleNext}
+                    variant="outline-secondary"
+                    onClick={() => setPage(page + 1)}
                     disabled={page === totalPages}
                 >
-                    Next
+                    <FontAwesomeIcon icon={faAngleRight} />
                 </Button>
                 <Button
-                    variant='outline-secondary'
-                    onClick={handleLast}
+                    variant="outline-secondary"
+                    onClick={() => setPage(totalPages)}
                 >
-                    Last
+                    <FontAwesomeIcon icon={faAngleDoubleRight} />
                 </Button>
             </div>
-            <p>
-                Page {page} of {totalPages}
-            </p>
-        </>
-    )
-}
+            <Badge className="mt-2" bg='light' text='dark' pill>
+                Total Pages: {totalPages}
+            </Badge>
+        </div>
+    );
+};
 
-export default TableNavigator
+export default TableNavigator;

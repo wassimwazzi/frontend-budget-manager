@@ -72,6 +72,7 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
                 columns={searchColumns ? searchColumns : columns.filter(column => column !== 'actions')}
                 onSearch={handleSearch}
             />
+
             <BootstrapTable striped responsive>
                 <thead>
                     <tr>
@@ -100,6 +101,7 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
                     ))}
                 </tbody>
             </BootstrapTable>
+
             <TabeleNavigator totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
     );
