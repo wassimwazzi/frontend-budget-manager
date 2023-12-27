@@ -3,12 +3,14 @@ import api from '../../api'
 import FileUploadForm from './FileUploadForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import { DeleteButton } from '../../components/ActionButtons'
 
 const Files = () => {
     const [files, setFiles] = useState([])
     const [totalPages, setTotalPages] = useState(1)
     const [numDeletedFilesMessage, setNumDeletedFilesMessage] = useState(null)
+    const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
     const columns = [
         'date',
@@ -20,6 +22,7 @@ const Files = () => {
 
     const handleDelete = useCallback(fileId => {
         setNumDeletedFilesMessage(null)
+        setDeleteErrorMessage(null)
         api
             .delete(`/api/uploads/${fileId}/`)
             .then(response => {
@@ -29,6 +32,7 @@ const Files = () => {
             })
             .catch(error => {
                 console.error('Error deleting transaction:', error.response)
+                setDeleteErrorMessage(extractErrorMessageFromResponse(error))
             })
     }, [])
 
@@ -65,7 +69,7 @@ const Files = () => {
                 onSubmit={handleFormUpdate}
             />
 
-            <Status successMessage={numDeletedFilesMessage} />
+            <Status successMessage={numDeletedFilesMessage} errorMessage={deleteErrorMessage} />
             <Table
                 columns={columns}
                 data={files}

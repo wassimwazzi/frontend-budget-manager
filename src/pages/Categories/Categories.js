@@ -4,6 +4,7 @@ import CategoryForm from './CategoryForm'
 import Table from '../../components/table/Table'
 import { Button } from 'react-bootstrap'
 import Status from '../../components/Status'
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import { DeleteButton } from '../../components/ActionButtons'
 
 const Categories = () => {
@@ -59,7 +60,7 @@ const Categories = () => {
             })
             .catch(error => {
                 console.error('Error deleting category:', error.response)
-                setDeleteErrorMessage('Error deleting category.')
+                setDeleteErrorMessage(extractErrorMessageFromResponse(error))
             })
     }
 

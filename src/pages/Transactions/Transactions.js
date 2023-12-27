@@ -3,6 +3,7 @@ import api from '../../api'
 import TransactionForm from './TransactionForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import { Button } from 'react-bootstrap'
 import { DeleteButton } from '../../components/ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -101,7 +102,7 @@ const Transactions = () => {
       })
       .catch(error => {
         console.error('Error deleting transaction:', error.response)
-        setDeleteErrorMessage('Error deleting transaction.')
+        setDeleteErrorMessage(extractErrorMessageFromResponse(error))
       })
   }
 

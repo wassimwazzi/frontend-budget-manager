@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import api from '../../api'
 import { Form, Button } from 'react-bootstrap'
 import Status from '../../components/Status'
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
 const CategoryForm = ({ categoryId, onSubmit }) => {
     const initialFormData = Object.freeze({
@@ -67,20 +68,7 @@ const CategoryForm = ({ categoryId, onSubmit }) => {
                 handleClear()
             })
             .catch(error => {
-                if (error.response.status === 400) {
-                    // make error message bullet list
-                    let errorMessage = ''
-                    for (const key in error.response.data) {
-                        if (key in formData) {
-                            errorMessage += `${key}: ${error.response.data[key]}\n`
-                        } else {
-                            errorMessage += `${error.response.data[key]}\n`
-                        }
-                    }
-                    setErrorMessage(errorMessage)
-                } else {
-                    setErrorMessage('Error submitting category data')
-                }
+                setErrorMessage(extractErrorMessageFromResponse(error, formData))
                 console.error('Error submitting category data:', error.response.data)
             })
     }

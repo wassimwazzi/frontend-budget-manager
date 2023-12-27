@@ -4,6 +4,7 @@ import BudgetForm from './BudgetForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
 import { DeleteButton } from '../../components/ActionButtons'
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
 const Budgets = () => {
     const [budgets, setBudgets] = useState([])
@@ -28,7 +29,7 @@ const Budgets = () => {
                 setCategories(response.data)
             })
             .catch(error => {
-                console.error('Error fetching currency data:', error.response)
+                console.error('Error fetching categories data:', error.response)
             })
         api
             .get('/api/currencies/?paginate=false')
@@ -79,8 +80,8 @@ const Budgets = () => {
                 setDeleteSucessMessage('Budget successfully deleted.')
             })
             .catch(error => {
-                console.error('Error deleting transaction:', error.response)
-                setDeleteErrorMessage('Error deleting budget.')
+                console.error('Error deleting budget:', error.response)
+                setDeleteErrorMessage(extractErrorMessageFromResponse(error))
             })
     }
 
