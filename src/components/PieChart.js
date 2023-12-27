@@ -31,8 +31,8 @@ const PieChart = ({ datasets, labels, title }) => {
     };
 
     return (
-        <div style={{ height: '100vh', width: 'auto' }}>
-            <Pie data={chartData} options={options} />
+        <div style={{ overflow: 'auto' }}>
+            <Pie data={chartData} options={options} style={{ minHeight: '500px', minWidth: '300px' }} />
         </div>
     );
 };

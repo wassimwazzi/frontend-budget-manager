@@ -125,6 +125,7 @@ const SummaryTable = ({ data }) => {
 const BudgetVsActualBarChart = ({ summaryData }) => {
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
@@ -153,13 +154,17 @@ const BudgetVsActualBarChart = ({ summaryData }) => {
     };
 
     return (
-        <Bar data={data} options={options} />
+        // prevent overflow of the chart
+        <div style={{ overflowX: 'auto' }}>
+            <Bar data={data} options={options} style={{ minHeight: '400px', minWidth: '300px' }} />
+        </div>
     );
 };
 
 const RemainingFromBudgetBarChart = ({ summaryData }) => {
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
@@ -182,7 +187,9 @@ const RemainingFromBudgetBarChart = ({ summaryData }) => {
     };
 
     return (
-        <Bar data={data} options={options} />
+        <div style={{ overflowX: 'auto' }}>
+            <Bar data={data} options={options} style={{ minHeight: '400px', minWidth: '300px' }} />
+        </div>
     );
 }
 
