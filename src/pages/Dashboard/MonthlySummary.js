@@ -103,23 +103,27 @@ const SummaryTable = ({ data }) => {
             </thead>
             <tbody>
                 {tableData.map((row, index) => (
-                    <tr key={index}>
+                    <tr key={index} style={{ boxShadow: `1px 1px 50px ${getRowColor(row)}` }}>
                         {cols.map(column => (
-                            <td key={`${index}-${column}`} style={{ backgroundColor: getRowColor(row) }}>
+                            <td key={`${index}-${column}`} style={{
+                                backgroundColor: getRowColor(row),
+                                boxShadow: `1px 1px 50px ${getRowColor(row)}`,
+                                display: 'table-cell',
+                            }}>
                                 {row[column]}
                             </td>
                         ))}
                     </tr>
                 ))}
-                <tr key={'total'} style={{ backgroundColor: '#e0e9f0' }}>
+                <tr key={'total'}>
                     {cols.map(column => (
-                        <td key={`total-${column}`} style={{ backgroundColor: '#e0e9f0' }} >
+                        <td key={`total-${column}`} style={{ backgroundColor: '#e0e9f0', }}>
                             {totalsRow[column]}
                         </td>
                     ))}
                 </tr>
             </tbody>
-        </Table>
+        </Table >
     )
 }
 
