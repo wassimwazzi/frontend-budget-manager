@@ -92,19 +92,20 @@ const getGradientColors = (num = 0) => {
     }
 };
 
-const CardValue = ({ title, amount, color = 'black' }) => (
-    <div style={{ borderBottom: `2px solid ${color}`, paddingBottom: '10px' }}>
+const CardValue = ({ title, amount, color = 'black' }) => {
+    console.log(amount, typeof amount)
+    return <div style={{ borderBottom: `2px solid ${color}`, paddingBottom: '10px' }}>
         <p className="lead">{title}</p>
         <h3 className="display-6" style={{ color: color }}>
-            ${amount}
+            ${amount ? parseFloat(amount).toFixed(2) : '0.00'}
         </h3>
     </div>
-)
+}
 
 const SummaryCard = ({ budgetSummaryData, month }) => {
-    const totalBudget = budgetSummaryData.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
-    const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
-    const totalRemaining = budgetSummaryData.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
+    const totalBudget = budgetSummaryData.reduce((acc, row) => acc + row.budget, 0);
+    const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0);
+    const totalRemaining = budgetSummaryData.reduce((acc, row) => acc + row.remaining, 0);
     const [transactionSummary, setTransactionSummary] = useState({})
     const [lastMonthBudgetTotals, setLastMonthBudgetTotals] = useState({})
 
@@ -122,9 +123,9 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
         api
             .get('/api/budgets/summary/?month=' + lastMonth)
             .then(response => {
-                const lastMonthTotalBudget = response.data.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
-                const lastMonthTotalSpend = response.data.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
-                const lastMonthTotalRemaining = response.data.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
+                const lastMonthTotalBudget = response.data.reduce((acc, row) => acc + row.budget, 0);
+                const lastMonthTotalSpend = response.data.reduce((acc, row) => acc + row.actual, 0);
+                const lastMonthTotalRemaining = response.data.reduce((acc, row) => acc + row.remaining, 0);
                 setLastMonthBudgetTotals({
                     budget: lastMonthTotalBudget,
                     spend: lastMonthTotalSpend,
@@ -259,7 +260,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                     </TrendBlock>
                                     <CardValue
                                         title={'Savings'}
-                                        amount={savings.toFixed(2)}
+                                        amount={savings}
                                         color={getGradientColors(savings)[1]}
                                     />
                                 </Card.Body>
