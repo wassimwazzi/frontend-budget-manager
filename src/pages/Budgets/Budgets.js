@@ -15,10 +15,10 @@ const Budgets = () => {
     const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
     const getActionButtons = useCallback(budgetId => (
-        <>
+        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
             <button onClick={() => handleEdit(budgetId)} className='btn btn-primary'>Edit</button>
             <DeleteButton handleDelete={() => handleDelete(budgetId)} />
-        </>
+        </div>
     ), [])
 
     useEffect(() => {

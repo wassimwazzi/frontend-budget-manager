@@ -14,10 +14,10 @@ const Categories = () => {
     const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
     const getActionButtons = useCallback(categoryId => (
-        <>
+        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
             <Button onClick={() => handleEdit(categoryId)} className='btn btn-primary'>Edit</Button>
             <DeleteButton handleDelete={() => handleDelete(categoryId)} />
-        </>
+        </div>
     ), [])
 
     const columns = [

@@ -21,10 +21,10 @@ const Transactions = () => {
   const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
 
   const getActionButtons = useCallback(transactionId => (
-    <>
+    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
       <button onClick={() => handleEdit(transactionId)} className='btn btn-primary'>Edit</button>
       <DeleteButton handleDelete={() => handleDelete(transactionId)} />
-    </>
+    </div>
   ), [])
 
   useEffect(() => {
