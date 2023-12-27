@@ -28,6 +28,18 @@ const Transactions = () => {
     </div>
   ), [])
 
+  const getInferredCategory = useCallback(inferredCategory => (
+    inferredCategory ? (
+      <div style={{ textAlign: 'center' }}>
+        <FontAwesomeIcon icon={faCircleCheck} style={{ color: 'green' }} size='lg' />
+      </div>
+    ) : (
+      <div style={{ textAlign: 'center' }}>
+        <FontAwesomeIcon icon={faMinus} size='lg' />
+      </div>
+    )
+  ), [])
+
   useEffect(() => {
     api
       .get('/api/categories/?paginate=false&sort=category&order=asc')
@@ -66,15 +78,7 @@ const Transactions = () => {
         setTransactions(data.results.map(transaction => ({
           ...transaction,
           category: transaction.category.category,
-          inferred_category: transaction.inferred_category ? (
-            <div style={{ textAlign: 'center' }}>
-              <FontAwesomeIcon icon={faCircleCheck} style={{ color: 'green' }} size='lg' />
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center' }}>
-              <FontAwesomeIcon icon={faMinus} size='lg' />
-            </div>
-          ),
+          inferred_category: getInferredCategory(transaction.inferred_category),
           actions: getActionButtons(transaction.id)
         })))
         setTotalPages(data.total_pages)
@@ -128,6 +132,7 @@ const Transactions = () => {
     // Update transactions list after adding/editing
     updatedTransaction.actions = getActionButtons(updatedTransaction.id)
     updatedTransaction.category = updatedTransaction.category.category
+    updatedTransaction.inferred_category = getInferredCategory(updatedTransaction.inferred_category)
     if (editTransactionId) {
       setTransactions(transactions => (
         transactions.map(transaction =>
