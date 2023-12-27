@@ -3,7 +3,7 @@ import { Table as BootstrapTable } from 'react-bootstrap';
 import SearchTable from "./SearchTable";
 import TabeleNavigator from "./TableNavigator";
 
-const Table = ({ data, columns, fetchData, totalPages }) => {
+const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
     const [searches, setSearches] = useState([]);
     const [currentData, setCurrentData] = useState(data);
     const [sortColumn, setSortColumn] = useState(columns[0]);
@@ -56,20 +56,23 @@ const Table = ({ data, columns, fetchData, totalPages }) => {
     return (
         <div>
             <SearchTable
-                columns={columns}
+                columns={searchColumns ? searchColumns : columns.filter(column => column !== 'actions')}
                 onSearch={handleSearch}
             />
             <BootstrapTable striped responsive>
                 <thead>
                     <tr>
-                        {columns.map(column => (
-                            column !== 'actions' ?
-                                <th key={column} onClick={() => handleSort(column)} style={{ cursor: 'pointer' }}>
-                                    {column === sortColumn ? (sortAsc ? `${column} ▲` : `${column} ▼`) : column}
-                                </th>
-                                :
-                                <th key={column} colSpan={currentData[0] ? currentData[0].actions.length : 1}></th>
-                        ))}
+                        {columns.map(column => {
+                            let columnTitle = column.replace('_', ' ');
+                            return (
+                                column !== 'actions' ?
+                                    <th key={column} onClick={() => handleSort(column)} style={{ cursor: 'pointer' }}>
+                                        {column === sortColumn ? (sortAsc ? `${columnTitle} ▲` : `${columnTitle} ▼`) : columnTitle}
+                                    </th>
+                                    :
+                                    <th key={column} colSpan={currentData[0] ? currentData[0].actions.length : 1}></th>
+                            )
+                        })}
                     </tr>
                 </thead>
                 <tbody>
