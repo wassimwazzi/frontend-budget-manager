@@ -86,7 +86,7 @@ const Transactions = () => {
       .catch(error => {
         console.error('Error fetching data:', error.response)
       })
-  }, [getActionButtons])
+  }, [getActionButtons, getInferredCategory])
 
   const handleEdit = transactionId => {
     setEditTransactionId(transactionId)
@@ -146,6 +146,7 @@ const Transactions = () => {
     }
     setEditTransactionId(null)
   }
+
   return (
     <>
       <h1>Transactions</h1>

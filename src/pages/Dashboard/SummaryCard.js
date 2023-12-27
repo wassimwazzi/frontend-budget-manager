@@ -10,7 +10,7 @@ const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
         return <></>;
     }
     const diff = current - previous;
-    const diffPercent = previous != 0 ? Math.round(diff * 100 / previous) : 0;
+    const diffPercent = previous !== 0 ? Math.round(diff * 100 / previous) : 0;
     const diffAbs = Math.abs(diff);
     const diffAbsPercent = Math.abs(diffPercent);
     let icon, className;
