@@ -10,7 +10,7 @@ const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
         return <></>;
     }
     const diff = current - previous;
-    const diffPercent = previous > 0 ? Math.round(diff * 100 / previous) : 0;
+    const diffPercent = previous != 0 ? Math.round(diff * 100 / previous) : 0;
     const diffAbs = Math.abs(diff);
     const diffAbsPercent = Math.abs(diffPercent);
     let icon, className;
@@ -33,7 +33,7 @@ const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
     );
 };
 
-const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadowColor = 'rgba(0, 0, 0, 0.1)' }) => {
+const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadowColor }) => {
     // allow gradientPos to be a string or an array
     if (typeof gradientPos === 'string') {
         gradientPos = [gradientPos];
@@ -64,7 +64,7 @@ const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadow
         <div style={{ height: '100%' }}>
             <div style={{
                 background: `#fff`,
-                boxShadow: `2px 10px 20px ${boxShadowColor}`,
+                boxShadow: `2px 10px 20px ${boxShadowColor || gradientColors[1]}`,
                 borderRadius: '7px',
                 position: 'relative',
                 textAlign: 'center',
@@ -88,23 +88,23 @@ const getGradientColors = (num = 0) => {
         return ['#11F32F', '#07B31E'];
     } else {
         // Neutral Case: Yellow to Dark Yellow
-        return ['#CEDF97', '#B5BC75'];
+        return ['#F6E337', '#BDB24F'];
     }
 };
 
-const CardValue = ({ title, amount, color = 'black' }) => (
-    <div style={{ borderBottom: `2px solid ${color}`, paddingBottom: '10px' }}>
+const CardValue = ({ title, amount, color = 'black' }) => {
+    return <div style={{ borderBottom: `2px solid ${color}`, paddingBottom: '10px' }}>
         <p className="lead">{title}</p>
         <h3 className="display-6" style={{ color: color }}>
-            ${amount}
+            ${amount ? parseFloat(amount).toFixed(2) : '0.00'}
         </h3>
     </div>
-)
+}
 
 const SummaryCard = ({ budgetSummaryData, month }) => {
-    const totalBudget = budgetSummaryData.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
-    const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
-    const totalRemaining = budgetSummaryData.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
+    const totalBudget = budgetSummaryData.reduce((acc, row) => acc + row.budget, 0);
+    const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0);
+    const totalRemaining = budgetSummaryData.reduce((acc, row) => acc + row.remaining, 0);
     const [transactionSummary, setTransactionSummary] = useState({})
     const [lastMonthBudgetTotals, setLastMonthBudgetTotals] = useState({})
 
@@ -122,9 +122,9 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
         api
             .get('/api/budgets/summary/?month=' + lastMonth)
             .then(response => {
-                const lastMonthTotalBudget = response.data.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
-                const lastMonthTotalSpend = response.data.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
-                const lastMonthTotalRemaining = response.data.reduce((acc, row) => acc + row.remaining, 0).toFixed(2);
+                const lastMonthTotalBudget = response.data.reduce((acc, row) => acc + row.budget, 0);
+                const lastMonthTotalSpend = response.data.reduce((acc, row) => acc + row.actual, 0);
+                const lastMonthTotalRemaining = response.data.reduce((acc, row) => acc + row.remaining, 0);
                 setLastMonthBudgetTotals({
                     budget: lastMonthTotalBudget,
                     spend: lastMonthTotalSpend,
@@ -169,7 +169,6 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
 
     const savings = transactionSummary.this_month?.income - transactionSummary.this_month?.spend;
 
-
     return (
         <div className="mt-5">
             <Card border='0'>
@@ -187,14 +186,12 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                             <Card className="border-0">
                                 <Card.Body>
                                     <TrendBlock>
-                                        {transactionSummary.monthly_average && (
-                                            <Trend
-                                                current={totalSpend}
-                                                previous={transactionSummary.monthly_average.spend}
-                                                positiveIsGood={false}
-                                                text={' from average'}
-                                            />
-                                        )}
+                                        <Trend
+                                            current={totalSpend}
+                                            previous={transactionSummary.monthly_average?.spend}
+                                            positiveIsGood={false}
+                                            text={' from average'}
+                                        />
                                     </TrendBlock>
                                     <CardValue title={'Spend'} amount={totalSpend} />
                                 </Card.Body>
@@ -206,14 +203,12 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                             <Card className="border-0">
                                 <Card.Body >
                                     <TrendBlock>
-                                        {lastMonthBudgetTotals.remaining && (
-                                            <Trend
-                                                current={totalRemaining}
-                                                previous={lastMonthBudgetTotals.remaining}
-                                                positiveIsGood={true}
-                                                text={' from last month'}
-                                            />
-                                        )}
+                                        <Trend
+                                            current={totalRemaining}
+                                            previous={lastMonthBudgetTotals.remaining}
+                                            positiveIsGood={true}
+                                            text={' from last month'}
+                                        />
                                     </TrendBlock>
                                     <CardValue
                                         title={'Remaining'}
@@ -231,14 +226,12 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                             <Card className="border-0">
                                 <Card.Body>
                                     <TrendBlock>
-                                        {transactionSummary.last_month && (
-                                            <Trend
-                                                current={transactionSummary.this_month?.income}
-                                                previous={transactionSummary.last_month?.income}
-                                                positiveIsGood={true}
-                                                text={' from last month'}
-                                            />
-                                        )}
+                                        <Trend
+                                            current={transactionSummary.this_month?.income}
+                                            previous={transactionSummary.last_month?.income}
+                                            positiveIsGood={true}
+                                            text={' from last month'}
+                                        />
                                     </TrendBlock>
                                     <CardValue title={'Income'} amount={transactionSummary.this_month?.income} />
                                 </Card.Body>
@@ -259,7 +252,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                     </TrendBlock>
                                     <CardValue
                                         title={'Savings'}
-                                        amount={savings.toFixed(2)}
+                                        amount={savings}
                                         color={getGradientColors(savings)[1]}
                                     />
                                 </Card.Body>
