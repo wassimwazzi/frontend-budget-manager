@@ -30,12 +30,38 @@ const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
     );
 };
 
-const GradientCard = ({ gradientColors, children }) => {
+const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadowColor = 'rgba(0, 0, 0, 0.1)' }) => {
+    // allow gradientPos to be a string or an array
+    if (typeof gradientPos === 'string') {
+        gradientPos = [gradientPos];
+    }
+    // for each of top, bottom, left, right, if it's true, add a gradient block to that side
+    const GradientBlock = ({ pos }) => {
+        const gradientCssProps = {
+            display: 'block',
+            position: 'absolute',
+            content: '""',
+            background: `linear-gradient(82.59deg, ${gradientColors[0]} 0%, ${gradientColors[1]} 100%)`,
+        };
+        if (pos === 'top' || pos === 'bottom') {
+            gradientCssProps.left = '0';
+            gradientCssProps.width = '100%';
+            gradientCssProps.height = '10px';
+        }
+        if (pos === 'left' || pos === 'right') {
+            gradientCssProps.top = '0';
+            gradientCssProps.height = '100%';
+            gradientCssProps.width = '10px';
+        }
+        gradientCssProps[pos] = '0';
+        return <div style={gradientCssProps}></div>;
+    };
+
     return (
-        <div className='c-dashboardInfo' style={{ height: '100%' }}>
-            <div className='wrap' style={{
+        <div style={{ height: '100%' }}>
+            <div style={{
                 background: `#fff`,
-                boxShadow: '2px 10px 20px rgba(0, 0, 0, 0.1)',
+                boxShadow: `2px 10px 20px ${boxShadowColor}`,
                 borderRadius: '7px',
                 position: 'relative',
                 textAlign: 'center',
@@ -43,16 +69,7 @@ const GradientCard = ({ gradientColors, children }) => {
                 padding: '40px 25px 20px',
                 height: '100%',
             }}>
-                <div className='after' style={{
-                    display: 'block',
-                    position: 'absolute',
-                    top: '0',
-                    left: '0',
-                    width: '100%',
-                    height: '10px',
-                    content: '""',
-                    background: `linear-gradient(82.59deg, ${gradientColors[0]} 0%, ${gradientColors[1]} 100%)`,
-                }}></div>
+                {gradientPos.map(p => <GradientBlock key={p} pos={p} />)}
                 {children}
             </div>
         </div>
@@ -77,7 +94,6 @@ const CardValue = ({ title, amount, color = 'black' }) => (
         </h3>
     </div>
 )
-
 
 const SummaryCard = ({ budgetSummaryData, month }) => {
     const totalBudget = budgetSummaryData.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
@@ -180,7 +196,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                         </GradientCard>
                     </Col>
                     <Col md={4}>
-                        <GradientCard gradientColors={getGradientColors(totalRemaining)}>
+                        <GradientCard gradientColors={getGradientColors(totalRemaining)} boxShadowColor={getGradientColors(totalRemaining)[0]}>
                             <Card className="border-0">
                                 <Card.Body >
                                     <TrendBlock>
@@ -224,7 +240,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                         </GradientCard>
                     </Col>
                     <Col md={6}>
-                        <GradientCard gradientColors={getGradientColors(savings)}>
+                        <GradientCard gradientColors={getGradientColors(savings)} boxShadowColor={getGradientColors(savings)[0]}>
                             <Card className="border-0">
                                 <Card.Body>
                                     <TrendBlock>
