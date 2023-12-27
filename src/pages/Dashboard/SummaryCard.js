@@ -92,7 +92,6 @@ const getGradientColors = (num = 0) => {
     }
 };
 
-
 const CardValue = ({ title, amount, color = 'black' }) => (
     <div style={{ borderBottom: `2px solid ${color}`, paddingBottom: '10px' }}>
         <p className="lead">{title}</p>
@@ -219,7 +218,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                     <CardValue
                                         title={'Remaining'}
                                         amount={totalRemaining}
-                                        color={totalRemaining < 0 ? 'red' : 'green'}
+                                        color={getGradientColors(totalRemaining)[1]}
                                     />
                                 </Card.Body>
                             </Card>
@@ -261,7 +260,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                     <CardValue
                                         title={'Savings'}
                                         amount={savings.toFixed(2)}
-                                        color={savings < 0 ? 'red' : 'green'}
+                                        color={getGradientColors(savings)[1]}
                                     />
                                 </Card.Body>
                             </Card>
