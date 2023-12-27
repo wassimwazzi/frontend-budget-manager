@@ -49,9 +49,6 @@ const FileUploadForm = ({ onSubmit }) => {
                 <Button variant="primary" type='submit' disabled={uploading}>
                     {uploading ? 'Uploading...' : 'Upload File'}
                 </Button>
-                {/* <Button className="ms-3" variant="outline-secondary" onClick={() => handleDownload('/api/uploads/template/', 'template.csv')}>
-                    Download Template
-                </Button> */}
                 <Button className="ms-3" variant="outline-secondary" onClick={() => handleDownload('/api/uploads/template/', 'template.csv')}>
                     <FontAwesomeIcon icon={faFileArrowDown} size='lg' />
                     <span className="ms-2">Download Template</span>
