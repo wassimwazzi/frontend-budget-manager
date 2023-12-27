@@ -3,6 +3,7 @@ import api from '../../api'
 import { Form, Button, InputGroup } from 'react-bootstrap'
 import { getCurrentDay } from '../../utils/dateUtils'
 import Status from '../../components/Status'
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
 const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -79,21 +80,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) =>
         onSubmit(response.data)
       })
       .catch(error => {
-        if (error.response?.status === 400) {
-          // make error message bullet list
-          let errorMessage = ''
-          for (const key in error.response.data) {
-            if (key in formData) {
-              errorMessage += `${key}: ${error.response.data[key]}\n`
-            } else {
-              errorMessage += `${error.response.data[key]}\n`
-            }
-          }
-          setErrorMessage(errorMessage)
-        }
-        else {
-          setErrorMessage('An error occurred. Please try again later.')
-        }
+        setErrorMessage(extractErrorMessageFromResponse(error, formData))
         console.error('Error submitting transaction data:', error.response)
       })
   }

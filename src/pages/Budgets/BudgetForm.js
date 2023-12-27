@@ -3,6 +3,7 @@ import api from '../../api'
 import { Form, InputGroup, FormControl, Button } from 'react-bootstrap'
 import { getCurrentMonth } from '../../utils/dateUtils'
 import Status from '../../components/Status'
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
 const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
     const initialFormData = Object.freeze({
@@ -67,21 +68,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
                 handleClear()
             })
             .catch(error => {
-                if (error.response.status === 400) {
-                    // make error message bullet list
-                    let errorMessage = ''
-                    for (const key in error.response.data) {
-                        if (key in formData) {
-                            errorMessage += `${key}: ${error.response.data[key]}\n`
-                        } else {
-                            errorMessage += `${error.response.data[key]}\n`
-                        }
-                    }
-                    setErrorMessage(errorMessage)
-                }
-                else {
-                    setErrorMessage('Error submitting budget data. Make sure you have not already created a budget for this month.')
-                }
+                setErrorMessage(extractErrorMessageFromResponse(error, formData, 'Error submitting budget data. Make sure you have not already created a budget for this month.'))
                 console.error('Error submitting budget data:', error.response.data)
             })
     }
