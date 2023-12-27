@@ -4,6 +4,81 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowTrendUp, faArrowTrendDown } from '@fortawesome/free-solid-svg-icons';
 import api from '../../api';
 
+const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
+    if (!current || !previous) {
+        return <></>;
+    }
+    const diff = current - previous;
+    const diffPercent = Math.round(diff * 100 / previous);
+    const diffAbs = Math.abs(diff);
+    const diffAbsPercent = Math.abs(diffPercent);
+    // if positiveIsGood is true, then a positive diff is good, otherwise a negative diff is good
+    const isGood = positiveIsGood ? diff > 0 : diff < 0;
+    const icon = diff > 0 ? faArrowTrendUp : faArrowTrendDown;
+
+    return (
+        <span className="text-muted">
+            {
+                isGood ?
+                    <FontAwesomeIcon icon={icon} className="text-success" />
+                    :
+                    <FontAwesomeIcon icon={icon} className="text-danger" />
+            }
+            {' '} <strong>{diffAbsPercent}%</strong> <i>({diffAbs.toFixed(2)})</i>
+            {text}
+        </span>
+    );
+};
+
+const GradientCard = ({ gradientColors, children }) => {
+    return (
+        <div className='c-dashboardInfo' style={{ height: '100%' }}>
+            <div className='wrap' style={{
+                background: `#fff`,
+                boxShadow: '2px 10px 20px rgba(0, 0, 0, 0.1)',
+                borderRadius: '7px',
+                position: 'relative',
+                textAlign: 'center',
+                overflow: 'hidden',
+                padding: '40px 25px 20px',
+                height: '100%',
+            }}>
+                <div className='after' style={{
+                    display: 'block',
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
+                    width: '100%',
+                    height: '10px',
+                    content: '""',
+                    background: `linear-gradient(82.59deg, ${gradientColors[0]} 0%, ${gradientColors[1]} 100%)`,
+                }}></div>
+                {children}
+            </div>
+        </div>
+    );
+};
+
+const getGradientColors = (num = 0) => {
+    if (num < 0) {
+        return ['#FF5858', '#FF0000']
+    } else if (num > 0) {
+        return ['#4CAF50', '#087f23']
+    } else {
+        return ['#FFB800', '#FFD600']
+    }
+}
+
+const CardValue = ({ title, amount, color = 'black' }) => (
+    <div style={{ borderBottom: `2px solid ${color}`, paddingBottom: '10px' }}>
+        <p className="lead">{title}</p>
+        <h3 className="display-6" style={{ color: color }}>
+            ${amount}
+        </h3>
+    </div>
+)
+
+
 const SummaryCard = ({ budgetSummaryData, month }) => {
     const totalBudget = budgetSummaryData.reduce((acc, row) => acc + row.budget, 0).toFixed(2);
     const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0).toFixed(2);
@@ -63,35 +138,9 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
             })
     }, [month])
 
-    const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
-        if (!current || !previous) {
-            return <></>;
-        }
-        const diff = current - previous;
-        const diffPercent = Math.round(diff * 100 / previous);
-        const diffAbs = Math.abs(diff);
-        const diffAbsPercent = Math.abs(diffPercent);
-        // if positiveIsGood is true, then a positive diff is good, otherwise a negative diff is good
-        const isGood = positiveIsGood ? diff > 0 : diff < 0;
-        const icon = diff > 0 ? faArrowTrendUp : faArrowTrendDown;
-
-        return (
-            <span className="text-muted">
-                {
-                    isGood ?
-                        <FontAwesomeIcon icon={icon} className="text-success" />
-                        :
-                        <FontAwesomeIcon icon={icon} className="text-danger" />
-                }
-                {' '} <strong>{diffAbsPercent}%</strong> <i>({diffAbs.toFixed(2)})</i>
-                {text}
-            </span>
-        );
-    };
-
-    const TrendBlock = ({ children }) => (
+    const TrendBlock = ({ children, ...props }) => (
         // used to make sure the trend block is always the same height, and align card body bottom borders
-        <div style={{ display: 'block', height: '50px', overflow: 'auto' }}>
+        <div {...props} style={{ display: 'block', height: '50px', overflow: 'auto', marginBottom: '10px' }}>
             {children}
         </div>
     );
@@ -101,25 +150,20 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
 
     return (
         <div className="mt-5">
-            <Card border='0' className="shadow-lg">
-                <Card.Body>
-                    <Card.Title as="h2">Spending Summary</Card.Title>
-                    <Row>
-                        <Col md={4}>
+            <Card border='0'>
+                <Row>
+                    <Col md={4}>
+                        <GradientCard gradientColors={getGradientColors()}>
+                            <Card.Body>
+                                <TrendBlock />
+                                <CardValue title={'Budget'} amount={totalBudget} />
+                            </Card.Body>
+                        </GradientCard>
+                    </Col>
+                    <Col md={4}>
+                        <GradientCard gradientColors={getGradientColors()}>
                             <Card className="border-0">
-                                <Card.Body style={{ borderBottom: '2px solid black' }}>
-                                    <TrendBlock />
-                                    <p className="lead">Your budget:</p>
-                                    <h3 className="display-4">
-                                        ${totalBudget}
-                                        <span id="totalBudget"></span>
-                                    </h3>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={4}>
-                            <Card className="border-0">
-                                <Card.Body style={{ borderBottom: '2px solid black' }}>
+                                <Card.Body>
                                     <TrendBlock>
                                         {transactionSummary.monthly_average && (
                                             <Trend
@@ -130,19 +174,15 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                             />
                                         )}
                                     </TrendBlock>
-                                    <p className="lead">Your spend:</p>
-                                    <h3 className="display-4">
-                                        ${totalSpend}
-                                        <span id="totalSpend"></span>
-                                    </h3>
+                                    <CardValue title={'Spend'} amount={totalSpend} />
                                 </Card.Body>
                             </Card>
-                        </Col>
-                        <Col md={4}>
+                        </GradientCard>
+                    </Col>
+                    <Col md={4}>
+                        <GradientCard gradientColors={getGradientColors(totalRemaining)}>
                             <Card className="border-0">
-                                <Card.Body style={{
-                                    borderBottom: totalRemaining < 0 ? '2px solid red' : '2px solid green',
-                                }}>
+                                <Card.Body >
                                     <TrendBlock>
                                         {lastMonthBudgetTotals.remaining && (
                                             <Trend
@@ -153,21 +193,21 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                             />
                                         )}
                                     </TrendBlock>
-                                    <p className="lead">Your remaining amount:</p>
-
-                                    <h3 className="display-4" style={{
-                                        color: totalRemaining < 0 ? 'red' : 'green',
-                                    }}>
-                                        ${totalRemaining}
-                                    </h3>
+                                    <CardValue
+                                        title={'Remaining'}
+                                        amount={totalRemaining}
+                                        color={totalRemaining < 0 ? 'red' : 'green'}
+                                    />
                                 </Card.Body>
                             </Card>
-                        </Col>
-                    </Row>
-                    <Row className="mt-5">
-                        <Col md={4}>
+                        </GradientCard>
+                    </Col>
+                </Row>
+                <Row className="mt-5">
+                    <Col md={6}>
+                        <GradientCard gradientColors={getGradientColors()}>
                             <Card className="border-0">
-                                <Card.Body style={{ borderBottom: '2px solid black' }}>
+                                <Card.Body>
                                     <TrendBlock>
                                         {transactionSummary.last_month && (
                                             <Trend
@@ -178,20 +218,15 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                             />
                                         )}
                                     </TrendBlock>
-                                    <p className="lead">Your income:</p>
-                                    <h3 className="display-4">
-                                        ${transactionSummary.this_month?.income}
-                                        <span id="totalBudget"></span>
-                                    </h3>
+                                    <CardValue title={'Income'} amount={transactionSummary.this_month?.income} />
                                 </Card.Body>
                             </Card>
-                        </Col>
-                        <Col md={4}>
+                        </GradientCard>
+                    </Col>
+                    <Col md={6}>
+                        <GradientCard gradientColors={getGradientColors(savings)}>
                             <Card className="border-0">
-                                <Card.Body style={{ borderBottom: `2px solid ${savings > 0 ? 'green' : 'red'}` }}>
-                                    {<>
-                                    </>
-                                    }
+                                <Card.Body>
                                     <TrendBlock>
                                         <Trend
                                             current={savings}
@@ -200,20 +235,16 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                             text={' from last month'}
                                         />
                                     </TrendBlock>
-                                    <p className="lead">
-                                        Your net savings:
-                                    </p>
-                                    <h3 className="display-4" style={{
-                                        color: savings < 0 ? 'red' : 'green',
-                                    }}>
-                                        ${savings.toFixed(2)}
-                                        <span id="totalBudget"></span>
-                                    </h3>
+                                    <CardValue
+                                        title={'Savings'}
+                                        amount={savings.toFixed(2)}
+                                        color={savings < 0 ? 'red' : 'green'}
+                                    />
                                 </Card.Body>
                             </Card>
-                        </Col>
-                    </Row>
-                </Card.Body>
+                        </GradientCard>
+                    </Col>
+                </Row>
             </Card>
         </div >
     );
