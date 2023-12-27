@@ -286,9 +286,7 @@ const MonthlySummary = () => {
             {
                 budgetSummary.length > 0 ?
                     <PlotContainer className="mt-4">
-                        <div className='table-responsive'>
-                            <SummaryTable data={budgetSummary} title={'Summary Table'} />
-                        </div>
+                        <SummaryTable data={budgetSummary} title={'Summary Table'} />
                         <BudgetVsActualBarChart summaryData={budgetSummary} title={'Budget vs Spend'} />
                         <RemainingFromBudgetBarChart summaryData={budgetSummary} title={'Remaining from Budget'} />
                         <SpendPerCategoryPieChart summaryData={budgetSummary} title={'Spend Per Category'} />
