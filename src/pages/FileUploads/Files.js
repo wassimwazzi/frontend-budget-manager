@@ -33,9 +33,9 @@ const Files = () => {
     }, [])
 
     const getActionButtons = useCallback(fileId => (
-        <>
+        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
             <DeleteButton handleDelete={() => handleDelete(fileId)} />
-        </>
+        </div>
     ), [handleDelete])
 
     const fetchData = useCallback((params) => {

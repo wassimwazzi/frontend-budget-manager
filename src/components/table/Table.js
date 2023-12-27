@@ -2,6 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Table as BootstrapTable } from 'react-bootstrap';
 import SearchTable from "./SearchTable";
 import TabeleNavigator from "./TableNavigator";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+
+const SortedColumn = ({ title, sortAsc }) => {
+    return (
+        <div style={{ display: 'flex', alignItems: 'space-between' }}>
+            <span>{title}</span>
+            <span style={{ marginLeft: '5px' }}>
+                <FontAwesomeIcon icon={sortAsc ? faChevronUp : faChevronDown} />
+            </span>
+        </div>
+    );
+};
 
 const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
     const [searches, setSearches] = useState([]);
@@ -66,11 +79,13 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
                             let columnTitle = column.replace('_', ' ');
                             return (
                                 column !== 'actions' ?
-                                    <th key={column} onClick={() => handleSort(column)} style={{ cursor: 'pointer' }}>
-                                        {column === sortColumn ? (sortAsc ? `${columnTitle} ▲` : `${columnTitle} ▼`) : columnTitle}
+                                    <th key={column} onClick={() => handleSort(column)} style={{ cursor: 'pointer' }} className='col-2'>
+                                        {column === sortColumn ? (
+                                            <SortedColumn title={columnTitle} sortAsc={sortAsc} />
+                                        ) : columnTitle}
                                     </th>
                                     :
-                                    <th key={column} colSpan={currentData[0] ? currentData[0].actions.length : 1}></th>
+                                    <th key={column} className='col-2'></th>
                             )
                         })}
                     </tr>
