@@ -3,6 +3,8 @@ import api from '../../api';
 import Status from '../../components/Status'
 import handleDownload from '../../utils/handleDownload';
 import { Form, Button, InputGroup } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 const FileUploadForm = ({ onSubmit }) => {
     const [file, setFile] = useState(null);
@@ -47,8 +49,12 @@ const FileUploadForm = ({ onSubmit }) => {
                 <Button variant="primary" type='submit' disabled={uploading}>
                     {uploading ? 'Uploading...' : 'Upload File'}
                 </Button>
-                <Button className="ms-3" variant="outline-secondary" onClick={() => handleDownload('/api/uploads/template/', 'template.csv')}>
+                {/* <Button className="ms-3" variant="outline-secondary" onClick={() => handleDownload('/api/uploads/template/', 'template.csv')}>
                     Download Template
+                </Button> */}
+                <Button className="ms-3" variant="outline-secondary" onClick={() => handleDownload('/api/uploads/template/', 'template.csv')}>
+                    <FontAwesomeIcon icon={faFileArrowDown} size='lg' />
+                    <span className="ms-2">Download Template</span>
                 </Button>
             </InputGroup>
             <Status
