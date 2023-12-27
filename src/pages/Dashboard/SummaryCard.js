@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowTrendUp, faArrowTrendDown } from '@fortawesome/free-solid-svg-icons';
+import { faSquareMinus } from '@fortawesome/free-regular-svg-icons';
 import api from '../../api';
 
 const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
@@ -9,21 +10,23 @@ const Trend = ({ current, previous, positiveIsGood = true, text = '' }) => {
         return <></>;
     }
     const diff = current - previous;
-    const diffPercent = Math.round(diff * 100 / previous);
+    const diffPercent = previous > 0 ? Math.round(diff * 100 / previous) : 0;
     const diffAbs = Math.abs(diff);
     const diffAbsPercent = Math.abs(diffPercent);
-    // if positiveIsGood is true, then a positive diff is good, otherwise a negative diff is good
-    const isGood = positiveIsGood ? diff > 0 : diff < 0;
-    const icon = diff > 0 ? faArrowTrendUp : faArrowTrendDown;
+    let icon, className;
+    if (diff === 0) {
+        icon = faSquareMinus;
+        className = 'text-muted';
+    } else {
+        // if positiveIsGood is true, then a positive diff is good, otherwise a negative diff is good
+        const isGood = positiveIsGood ? diff > 0 : diff < 0;
+        icon = diff > 0 ? faArrowTrendUp : faArrowTrendDown;
+        className = isGood ? 'text-success' : 'text-danger';
+    }
 
     return (
         <span className="text-muted">
-            {
-                isGood ?
-                    <FontAwesomeIcon icon={icon} className="text-success" />
-                    :
-                    <FontAwesomeIcon icon={icon} className="text-danger" />
-            }
+            <FontAwesomeIcon icon={icon} className={className} />
             {' '} <strong>{diffAbsPercent}%</strong> <i>({diffAbs.toFixed(2)})</i>
             {text}
         </span>
