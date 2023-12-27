@@ -5,6 +5,8 @@ import Table from '../../components/table/Table'
 import Status from '../../components/Status'
 import { Button } from 'react-bootstrap'
 import { DeleteButton } from '../../components/ActionButtons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleCheck, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([])
@@ -50,6 +52,7 @@ const Transactions = () => {
     'code',
     'description',
     'category',
+    'inferred_category',
     'amount',
     'currency',
     'actions'
@@ -61,15 +64,15 @@ const Transactions = () => {
       .then(({ data }) => {
         setTransactions(data.results.map(transaction => ({
           ...transaction,
-          category: (
-            transaction.inferred_category ?
-              <div style={{ display: 'flex' }}>
-                <span>{transaction.category.category}</span>
-                <span className='badge bg-success ms-4'>
-                  <i className='bi bi-check2' > Inferred </i>
-                </span>
-              </div>
-              : transaction.category.category
+          category: transaction.category.category,
+          inferred_category: transaction.inferred_category ? (
+            <div style={{ textAlign: 'center' }}>
+              <FontAwesomeIcon icon={faCircleCheck} style={{ color: 'green' }} size='lg' />
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center' }}>
+              <FontAwesomeIcon icon={faMinus} size='lg' />
+            </div>
           ),
           actions: getActionButtons(transaction.id)
         })))
@@ -163,6 +166,7 @@ const Transactions = () => {
         data={transactions}
         totalPages={totalPages}
         fetchData={fetchData}
+        searchColumns={['date', 'code', 'description', 'category', 'amount', 'currency']}
       />
     </>
   )

@@ -54,7 +54,7 @@ const SearchTable = ({ columns, onSearch }) => {
                   </option>
                   {columns.slice().sort().map(column => (
                     <option key={column} value={column}>
-                      {column}
+                      {column.replace('_', ' ')}
                     </option>
                   ))}
                 </>
