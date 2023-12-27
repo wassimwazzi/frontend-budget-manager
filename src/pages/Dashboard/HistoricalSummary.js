@@ -55,6 +55,7 @@ const SpendVsIncomeLineChart = () => {
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
@@ -72,7 +73,9 @@ const SpendVsIncomeLineChart = () => {
     };
 
     return (
-        <Line data={{ labels, datasets }} options={options} />
+        <div style={{ overflowX: 'auto' }}>
+            <Line data={{ labels, datasets }} options={options} style={{ minHeight: '400px', minWidth: '300px' }} />
+        </div>
     )
 }
 
@@ -133,6 +136,7 @@ const MonthlySpendPerCategoryBarChart = () => {
 
     const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
@@ -145,7 +149,9 @@ const MonthlySpendPerCategoryBarChart = () => {
     };
 
     return (
-        <Bar data={{ labels, datasets }} options={options} />
+        <div style={{ overflowX: 'auto' }}>
+            <Bar data={{ labels, datasets }} options={options} style={{ minHeight: '500px', minWidth: '400px' }} />
+        </div>
     )
 }
 
