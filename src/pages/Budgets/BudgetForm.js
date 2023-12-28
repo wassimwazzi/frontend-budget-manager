@@ -93,7 +93,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onSubmit, onClear }) => 
                 <Form.Label>Category:</Form.Label>
                 <Form.Select
                     name='category'
-                    value={formData.category.id}
+                    value={formData.category}
                     onChange={handleChange}
                 >
                     <option value=''>Select category</option>
