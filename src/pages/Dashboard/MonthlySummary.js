@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Form, Table } from 'react-bootstrap'
+import { Button, Form, InputGroup, Table } from 'react-bootstrap'
 import { Bar } from 'react-chartjs-2';
-import { getCurrentMonth } from '../../utils/dateUtils';
+import { getCurrentMonth, offsetMonth } from '../../utils/dateUtils';
 import SummaryCard from './SummaryCard';
 import PieChart from '../../components/PieChart';
 import PlotContainer from '../../components/PlotContainer';
@@ -37,6 +37,26 @@ const SummaryForm = ({ onUpdate }) => {
                     onChange={handleChange}
                 />
             </Form.Group>
+            <InputGroup>
+                <Button
+                    variant='light'
+                    onClick={() => {
+                        setFormData({ month: offsetMonth(formData.month, -1) })
+                    }}
+                    className='me-4 border'
+                >
+                    Previous Month
+                </Button>
+                <Button
+                    variant='light'
+                    onClick={() => {
+                        setFormData({ month: offsetMonth(formData.month, 1) })
+                    }}
+                    className='border'
+                >
+                    Next Month
+                </Button>
+            </InputGroup>
         </Form>
     )
 
