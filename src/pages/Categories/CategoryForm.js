@@ -69,7 +69,7 @@ const CategoryForm = ({ categoryId, onSubmit }) => {
             })
             .catch(error => {
                 setErrorMessage(extractErrorMessageFromResponse(error, formData))
-                console.error('Error submitting category data:', error.response.data)
+                console.error('Error submitting category data:', error.response?.data)
             })
     }
 

@@ -48,3 +48,41 @@ export const getConfirmation = (message) => {
     });
 }
 
+
+
+/**
+ * // Modal
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import { Modal as BootstrapModal, Button } from 'react-bootstrap';
+
+const Modal = ({ show, title, children, handleClose, handleConfirm, confirmMessage, cancelMessage }) => {
+    const ModalLayout = (
+        <BootstrapModal show={show} onHide={handleClose} centered>
+            <BootstrapModal.Header closeButton>
+                <BootstrapModal.Title>{title}</BootstrapModal.Title>
+            </BootstrapModal.Header>
+            <BootstrapModal.Body>
+                {children}
+            </BootstrapModal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    {cancelMessage ? cancelMessage : 'Cancel'}
+                </Button>
+                <Button variant="primary" onClick={handleConfirm}>
+                    {confirmMessage ? confirmMessage : 'Confirm'}
+                </Button>
+            </Modal.Footer>
+        </BootstrapModal>
+    )
+    return new Promise((resolve, reject) => {
+        const modalInstance = window.createReactModal(ModalLayout);
+        modalInstance.onClose = reject;
+        modalInstance.onConfirm = resolve;
+    });
+};
+
+export default Modal;
+
+
+ */

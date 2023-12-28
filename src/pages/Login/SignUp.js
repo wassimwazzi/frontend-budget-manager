@@ -1,6 +1,7 @@
 import { nonAuthenticatedApi as api } from '../../api'
 import { Form, Button, Container, Alert } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -53,13 +54,7 @@ const SignUp = () => {
       })
       .catch(error => {
         console.error('Error:', error.response)
-        if (error.response.status === 400) {
-          for (const [key, value] of Object.entries(error.response.data)) {
-            setErrorMessages(prevMessages => [...prevMessages, `${key}: ${value}`])
-          }
-        } else {
-          setErrorMessages(['Error creating account. Please try again later.'])
-        }
+        setErrorMessages(extractErrorMessageFromResponse(error.response))
       })
   }
 

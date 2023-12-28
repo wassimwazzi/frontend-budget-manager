@@ -69,7 +69,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
             })
             .catch(error => {
                 setErrorMessage(extractErrorMessageFromResponse(error, formData, 'Error submitting budget data. Make sure you have not already created a budget for this month.'))
-                console.error('Error submitting budget data:', error.response.data)
+                console.error('Error submitting budget data:', error.response?.data)
             })
     }
 
