@@ -228,6 +228,13 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) =>
             Clear
           </Button>
         </div>
+        {transactionId && (
+          <div className='mb-3'>
+            <Form.Text className='text-muted'>
+              <b>NOTE:</b> Updating a transaction set inferred category to false
+            </Form.Text>
+          </div>
+        )}
       </Form>
     </>
   )
