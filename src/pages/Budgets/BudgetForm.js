@@ -5,7 +5,7 @@ import { getCurrentMonth } from '../../utils/dateUtils'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
-const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
+const BudgetForm = ({ budgetId, categories, currencies, onSubmit, onClear }) => {
     const initialFormData = Object.freeze({
         amount: '',
         currency: '',
@@ -44,6 +44,9 @@ const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
 
     const handleClear = () => {
         setFormData(initialFormData)
+        setErrorMessage(null)
+        setSuccessMessage(null)
+        onClear()
     }
 
     const handleSubmit = e => {
@@ -69,7 +72,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
             })
             .catch(error => {
                 setErrorMessage(extractErrorMessageFromResponse(error, formData, 'Error submitting budget data. Make sure you have not already created a budget for this month.'))
-                console.error('Error submitting budget data:', error.response.data)
+                console.error('Error submitting budget data:', error.response?.data)
             })
     }
 
@@ -90,7 +93,7 @@ const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
                 <Form.Label>Category:</Form.Label>
                 <Form.Select
                     name='category'
-                    value={formData.category.id}
+                    value={formData.category}
                     onChange={handleChange}
                 >
                     <option value=''>Select category</option>

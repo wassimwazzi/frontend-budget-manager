@@ -4,7 +4,7 @@ import { Form, Button } from 'react-bootstrap'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
-const CategoryForm = ({ categoryId, onSubmit }) => {
+const CategoryForm = ({ categoryId, onSubmit, onClear }) => {
     const initialFormData = Object.freeze({
         income: false,
         category: '',
@@ -45,6 +45,9 @@ const CategoryForm = ({ categoryId, onSubmit }) => {
 
     const handleClear = () => {
         setFormData(initialFormData)
+        setErrorMessage(null)
+        setSuccessMessage(null)
+        onClear()
     }
 
     const handleSubmit = e => {
@@ -69,7 +72,7 @@ const CategoryForm = ({ categoryId, onSubmit }) => {
             })
             .catch(error => {
                 setErrorMessage(extractErrorMessageFromResponse(error, formData))
-                console.error('Error submitting category data:', error.response.data)
+                console.error('Error submitting category data:', error.response?.data)
             })
     }
 
@@ -95,6 +98,7 @@ const CategoryForm = ({ categoryId, onSubmit }) => {
                     name='description'
                     value={formData.description}
                     onChange={handleChange}
+                    required
                 />
             </Form.Group>
 

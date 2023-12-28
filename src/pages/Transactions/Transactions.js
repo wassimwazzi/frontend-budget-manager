@@ -156,10 +156,11 @@ const Transactions = () => {
         categories={categories}
         currencies={currencies}
         onSubmit={handleFormUpdate}
+        onClear={() => setEditTransactionId(null)}
       />
 
       <div className='d-flex mb-3'>
-        <Button onClick={inferCategories} className='mb-3' disabled={inferring}>
+        <Button onClick={inferCategories} className='mb-3 me-3' disabled={inferring}>
           Re-infer categories
         </Button>
         <Status loading={inferring} successMessage={inferranceSuccessMessage} errorMessage={inferranceErrorMessage} />
