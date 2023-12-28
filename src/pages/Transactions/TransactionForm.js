@@ -6,7 +6,6 @@ import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import CategoryForm from '../Categories/CategoryForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { faSquarePlus } from '@fortawesome/free-regular-svg-icons'
 
 const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) => {

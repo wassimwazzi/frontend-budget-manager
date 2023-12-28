@@ -257,12 +257,14 @@ const MonthlySummary = () => {
             <SummaryCard budgetSummaryData={budgetSummary} month={month} />
             {
                 budgetSummary.length > 0 ?
-                    <PlotContainer className="mt-4">
+                    <div className="mt-5">
                         <SummaryTable data={budgetSummary} title={'Summary Table'} />
-                        <BudgetVsActualBarChart budgetSummaryData={budgetSummary} title={'Budget vs Spend'} />
-                        <RemainingFromBudgetBarChart budgetSummaryData={budgetSummary} title={'Remaining from Budget'} />
-                        <SpendPerCategoryPieChart budgetSummaryData={budgetSummary} title={'Spend Per Category'} />
-                    </PlotContainer>
+                        <PlotContainer className="mt-5">
+                            <BudgetVsActualBarChart budgetSummaryData={budgetSummary} title={'Budget vs Spend'} />
+                            <RemainingFromBudgetBarChart budgetSummaryData={budgetSummary} title={'Remaining from Budget'} />
+                            <SpendPerCategoryPieChart budgetSummaryData={budgetSummary} title={'Spend Per Category'} />
+                        </PlotContainer>
+                    </div>
                     :
                     <>
                         <h2 className="mt-5">No data for this month</h2>
