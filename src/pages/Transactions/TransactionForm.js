@@ -8,15 +8,17 @@ import CategoryForm from '../Categories/CategoryForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquarePlus } from '@fortawesome/free-regular-svg-icons'
 
-const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) => {
-  const [formData, setFormData] = useState({
+const TransactionForm = ({ transactionId, categories, currencies, onSubmit, onClear }) => {
+  const initialFormData = {
     date: getCurrentDay(),
     code: '',
     description: '',
     category: '',
     amount: '',
     currency: ''
-  })
+  }
+
+  const [formData, setFormData] = useState(initialFormData)
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [showCategoryForm, setShowCategoryForm] = useState(false)
@@ -76,16 +78,10 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) =>
   }
 
   const handleClear = () => {
-    setFormData({
-      date: '',
-      code: '',
-      description: '',
-      category: '',
-      amount: '',
-      currency: ''
-    })
+    setFormData(initialFormData)
     setSuccessMessage(null)
     setErrorMessage(null)
+    onClear()
   }
 
   const handleSubmit = e => {

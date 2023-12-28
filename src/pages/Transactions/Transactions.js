@@ -150,6 +150,7 @@ const Transactions = () => {
         categories={categories}
         currencies={currencies}
         onSubmit={handleFormUpdate}
+        onClear={() => setEditTransactionId(null)}
       />
 
       <div className='d-flex mb-3'>

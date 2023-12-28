@@ -111,6 +111,7 @@ const Budgets = () => {
                 categories={categories}
                 currencies={currencies}
                 onSubmit={handleFormUpdate}
+                onClear={() => setEditBudgetId(null)}
             />
 
             <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />

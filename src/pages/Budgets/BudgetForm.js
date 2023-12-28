@@ -5,7 +5,7 @@ import { getCurrentMonth } from '../../utils/dateUtils'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
-const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
+const BudgetForm = ({ budgetId, categories, currencies, onSubmit, onClear }) => {
     const initialFormData = Object.freeze({
         amount: '',
         currency: '',
@@ -44,6 +44,9 @@ const BudgetForm = ({ budgetId, categories, currencies, onSubmit }) => {
 
     const handleClear = () => {
         setFormData(initialFormData)
+        setErrorMessage(null)
+        setSuccessMessage(null)
+        onClear()
     }
 
     const handleSubmit = e => {

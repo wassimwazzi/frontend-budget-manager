@@ -87,6 +87,7 @@ const Categories = () => {
             <CategoryForm
                 categoryId={editCategoryId}
                 onSubmit={handleFormUpdate}
+                onClear={() => setEditCategoryId(null)}
             />
             <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
 
