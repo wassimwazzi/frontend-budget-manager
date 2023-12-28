@@ -1,3 +1,7 @@
+[Check out the deployed version here!](https://budget-manager-frontend-0ec640b5ed51.herokuapp.com/)
+
+[Check out the backend source code here!](https://github.com/wassimwazzi/backend-budget-manager)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
