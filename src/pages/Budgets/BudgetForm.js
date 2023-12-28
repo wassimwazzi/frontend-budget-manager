@@ -66,9 +66,9 @@ const BudgetForm = ({ budgetId, categories, currencies, onSubmit, onClear }) => 
         })
             .then(response => {
                 const action = budgetId ? 'updated' : 'created'
-                setSuccessMessage(`Budget successfully ${action}!`)
                 onSubmit(response.data)
                 handleClear()
+                setSuccessMessage(`Budget successfully ${action}!`)
             })
             .catch(error => {
                 setErrorMessage(extractErrorMessageFromResponse(error, formData, 'Error submitting budget data. Make sure you have not already created a budget for this month.'))

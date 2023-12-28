@@ -66,9 +66,9 @@ const CategoryForm = ({ categoryId, onSubmit, onClear }) => {
         })
             .then(response => {
                 const action = categoryId ? 'updated' : 'created'
-                setSuccessMessage(`Category successfully ${action}!`)
                 onSubmit(response.data)
                 handleClear()
+                setSuccessMessage(`Category successfully ${action}!`)
             })
             .catch(error => {
                 setErrorMessage(extractErrorMessageFromResponse(error, formData))
