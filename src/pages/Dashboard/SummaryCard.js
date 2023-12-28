@@ -177,7 +177,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                         <GradientCard gradientColors={getGradientColors()}>
                             <Card.Body>
                                 <TrendBlock />
-                                <CardValue title={'Budget'} amount={totalBudget} />
+                                <CardValue title={'Budget'} amount={totalBudget}  color={getGradientColors()[1]}/>
                             </Card.Body>
                         </GradientCard>
                     </Col>
@@ -193,7 +193,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                             text={' from average'}
                                         />
                                     </TrendBlock>
-                                    <CardValue title={'Spend'} amount={totalSpend} />
+                                    <CardValue title={'Spend'} amount={totalSpend}  color={getGradientColors()[1]}/>
                                 </Card.Body>
                             </Card>
                         </GradientCard>
@@ -233,7 +233,7 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                             text={' from last month'}
                                         />
                                     </TrendBlock>
-                                    <CardValue title={'Income'} amount={transactionSummary.this_month?.income} />
+                                    <CardValue title={'Income'} amount={transactionSummary.this_month?.income}  color={getGradientColors()[1]}/>
                                 </Card.Body>
                             </Card>
                         </GradientCard>
