@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
-import { Form, Button, InputGroup } from 'react-bootstrap'
+import { Form, Button, InputGroup, Modal } from 'react-bootstrap'
 import { getCurrentDay } from '../../utils/dateUtils'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
+import CategoryForm from '../Categories/CategoryForm'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faSquarePlus } from '@fortawesome/free-regular-svg-icons'
 
 const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -16,6 +20,33 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) =>
   })
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [showCategoryForm, setShowCategoryForm] = useState(false)
+
+  const CategoryFormModal = () => {
+    const handleConfirm = (data) => {
+      setShowCategoryForm(false)
+      setErrorMessage(null)
+      setSuccessMessage('Category successfully created!')
+      categories.push(data)
+      handleChange({ target: { name: 'category', value: data.id } })
+    }
+    const handleClose = () => {
+      setShowCategoryForm(false)
+    }
+    return (
+      <Modal
+        show={showCategoryForm}
+        onHide={handleClose}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create a Category</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <CategoryForm onSubmit={handleConfirm} />
+        </Modal.Body>
+      </Modal>)
+
+  }
 
   useEffect(() => {
 
@@ -118,21 +149,32 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) =>
         />
       </Form.Group>
 
-      <Form.Group className='mb-3'>
+      <Form.Group className="mb-3">
         <Form.Label>Category:</Form.Label>
-        <Form.Select
-          name='category'
-          value={formData.category}
-          onChange={handleChange}
-          required
-        >
-          <option value=''>Select category</option>
-          {categories.map(category => (
-            <option key={category.id} value={category.id}>
-              {category.category}
-            </option>
-          ))}
-        </Form.Select>
+        <div style={{ display: 'flex' }}>
+          <Form.Select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+            style={{ flex: 1, marginRight: '10px' }}
+          >
+            <option value="">Select category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.category}
+              </option>
+            ))}
+          </Form.Select>
+          <div style={{ flex: '1' }} className='ps-5'>
+            <FontAwesomeIcon
+              icon={faSquarePlus}
+              onClick={() => setShowCategoryForm(true)}
+              size="2x"
+              style={{ cursor: 'pointer', flex: 1 }}
+            />
+          </div>
+        </div>
       </Form.Group>
 
       <InputGroup className='mb-3'>
@@ -182,6 +224,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit }) =>
           Clear
         </Button>
       </div>
+      <CategoryFormModal />
     </Form>
   )
 }

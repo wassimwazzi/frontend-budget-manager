@@ -95,6 +95,7 @@ const CategoryForm = ({ categoryId, onSubmit }) => {
                     name='description'
                     value={formData.description}
                     onChange={handleChange}
+                    required
                 />
             </Form.Group>
 
