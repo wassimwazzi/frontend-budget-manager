@@ -18,14 +18,9 @@ const SortedColumn = ({ title, sortAsc }) => {
 
 const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
     const [searches, setSearches] = useState([]);
-    const [currentData, setCurrentData] = useState(data);
     const [sortColumn, setSortColumn] = useState(columns[0]);
     const [sortAsc, setSortAsc] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-
-    useEffect(() => {
-        setCurrentData(data);
-    }, [data]);
 
     useEffect(() => {
         const params = {
@@ -92,7 +87,7 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {currentData.map((row, index) => (
+                    {data.map((row, index) => (
                         <tr key={index}>
                             {columns.map(column => (
                                 <td key={`${index}-${column}`}>{row[column]}</td>
