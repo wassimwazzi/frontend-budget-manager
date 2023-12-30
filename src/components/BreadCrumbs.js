@@ -39,15 +39,15 @@ const BreadCrumbs = ({ steps, currentStepIndex, goTo }) => {
     <BreadcrumbsContainer>
       {steps.map((step, index) => (
         index <= currentStepIndex &&
-        <>
+        <React.Fragment key={index}>
           <BreadcrumbItem key={index}
-            active={currentStepIndex === index}
+            active={(currentStepIndex === index).toString()}
             onClick={() => goTo(index)}
           >
             {step}
           </BreadcrumbItem>
           {getSeparator(index, currentStepIndex)}
-        </>
+        </React.Fragment>
       ))}
     </BreadcrumbsContainer>
   );
