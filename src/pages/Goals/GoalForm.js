@@ -6,7 +6,6 @@ import DescriptionForm from './Stepper/DescriptionForm';
 import AmountForm from './Stepper/AmountForm';
 import DateForm from './Stepper/DateForm';
 import BreadCrumbs from '../../components/BreadCrumbs';
-import styled from 'styled-components';
 
 const INITIAL_DATA = {
     description: '',

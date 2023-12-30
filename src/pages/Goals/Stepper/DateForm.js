@@ -28,9 +28,17 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
     }, [start_date, end_date]);
 
     useEffect(() => {
-        console.log("prevent submit", !useDefaultStart && !startBeforeEnd)
         setPreventSubmit(!useDefaultStart && !startBeforeEnd);
     }, [useDefaultStart, startBeforeEnd])
+
+    function toggleStart() {
+        if (!useDefaultStart) {
+            // If we're switching to default start, set start date to current month
+            updateFields({ start_date: getCurrentMonth() });
+        }
+        setUseDefaultStart(!useDefaultStart);
+    }
+
 
     function handleChange(e) {
         const input = e.target.value;
@@ -59,7 +67,7 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
                 <Form.Check
                     type="switch"
                     checked={!useDefaultStart}
-                    onChange={() => setUseDefaultStart(!useDefaultStart)}
+                    onChange={toggleStart}
                 />
             </Form.Group>
             <StyledTransitionContainer className={useDefaultStart ? "" : "visible mt-3"}>
@@ -74,6 +82,7 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
                         value={start_date}
                         onChange={handleChange}
                         min={getCurrentMonth()}
+                        max={end_date}
                         isInvalid={!startBeforeEnd}
                         required
                     />
