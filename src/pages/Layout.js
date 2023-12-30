@@ -57,6 +57,7 @@ const Layout = () => {
             <NavLink to="/categories">Categories</NavLink>
             <NavLink to="/budgets">Budgets</NavLink>
             <NavLink to="/uploads">Upload Transactions</NavLink>
+            <NavLink to="/goals">Goals</NavLink>
           </Nav>
           <Nav>
             <Dropdown
