@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import styled from "styled-components";
 import { getCurrentMonth } from "../../../utils/dateUtils";
@@ -10,13 +10,27 @@ const StyledTransitionContainer = styled.div`
   transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
 
   &.visible {
-    max-height: 1000px; /* Adjust this value to fit your content height */
+    max-height: 1000px;
     opacity: 1;
   }
 `;
 
-const DescriptionForm = ({ start_date, end_date, updateFields }) => {
+const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit }) => {
     const [useDefaultStart, setUseDefaultStart] = useState(true);
+    const [startBeforeEnd, setStartBeforeEnd] = useState(true);
+
+    useEffect(() => {
+        if (start_date > end_date) {
+            setStartBeforeEnd(false);
+        } else {
+            setStartBeforeEnd(true);
+        }
+    }, [start_date, end_date]);
+
+    useEffect(() => {
+        console.log("prevent submit", !useDefaultStart && !startBeforeEnd)
+        setPreventSubmit(!useDefaultStart && !startBeforeEnd);
+    }, [useDefaultStart, startBeforeEnd])
 
     function handleChange(e) {
         const input = e.target.value;
@@ -53,14 +67,19 @@ const DescriptionForm = ({ start_date, end_date, updateFields }) => {
                     <Form.Label>
                         When would you like to start saving for this goal?
                     </Form.Label>
-                    <input
+                    <Form.Control
                         type="month"
                         className="form-control"
                         name="start_date"
                         value={start_date}
                         onChange={handleChange}
+                        min={getCurrentMonth()}
+                        isInvalid={!startBeforeEnd}
                         required
                     />
+                    <Form.Control.Feedback type="invalid">
+                        Start date must be before end date.
+                    </Form.Control.Feedback>
                 </Form.Group>
             </StyledTransitionContainer>
         </>

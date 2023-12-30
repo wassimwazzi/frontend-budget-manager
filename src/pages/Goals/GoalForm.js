@@ -6,19 +6,7 @@ import DescriptionForm from './Stepper/DescriptionForm';
 import AmountForm from './Stepper/AmountForm';
 import DateForm from './Stepper/DateForm';
 import BreadCrumbs from '../../components/BreadCrumbs';
-import styled, { keyframes } from 'styled-components';
-// ... (your other imports)
-
-const swooshAnimation = keyframes`
-  0% {
-    transform: scale(0.8) translateY(50%) rotate(-20deg);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1) translateY(0) rotate(0deg);
-    opacity: 1;
-  }
-`;
+import styled from 'styled-components';
 
 const INITIAL_DATA = {
     description: '',
@@ -35,15 +23,23 @@ const TITLES = [
     'Set your goal dates',
 ];
 
-const StyledCard = styled(Card)`
-  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
-  animation: ${swooshAnimation} 0.5s ease-out;
-  opacity: ${(props) => (props.isTransitioning ? 0 : 1)};
-`;
+const StyledCard = ({ children, isTransitioning, ...props }) => (
+    <Card
+        {...props}
+        style={{
+            transition: 'transform 0.5s ease-out, opacity 0.5s ease-out',
+            opacity: isTransitioning ? 0 : 1,
+            ...props.style,
+        }}
+    >
+        {children}
+    </Card>
+);
 
 const GoalForm = () => {
     const [data, setData] = useState(INITIAL_DATA);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const [preventSubmit, setPreventSubmit] = useState(false);
 
     function updateFields(fields) {
         setData((prev) => {
@@ -61,9 +57,9 @@ const GoalForm = () => {
         next,
         goTo,
     } = useMultistepForm([
-        <DescriptionForm {...data} updateFields={updateFields} />,
-        <AmountForm {...data} updateFields={updateFields} />,
-        <DateForm {...data} updateFields={updateFields} />,
+        <DescriptionForm {...data} updateFields={updateFields} setPreventSubmit={setPreventSubmit} />,
+        <AmountForm {...data} updateFields={updateFields} setPreventSubmit={setPreventSubmit} />,
+        <DateForm {...data} updateFields={updateFields} setPreventSubmit={setPreventSubmit} />,
     ]);
 
     function handleTransition(direction) {
@@ -115,7 +111,7 @@ const GoalForm = () => {
                                     Back
                                 </Button>
                             )}
-                            <Button type="submit" variant="primary">
+                            <Button type="submit" variant="primary" disabled={preventSubmit}>
                                 {isLastStep ? 'Submit' : 'Next'}
                             </Button>
                         </div>
