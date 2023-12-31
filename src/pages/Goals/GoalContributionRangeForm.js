@@ -68,7 +68,7 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
     );
 };
 
-const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionRanges }) => {
+const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionRanges, onSubmit }) => {
     const [errors, setErrors] = useState(contributionRanges.map(() => false));
 
     function updateErrors(index) {
@@ -96,6 +96,12 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
         e.preventDefault();
         console.log("Submitted", JSON.stringify(contributionRanges));
         window.alert("Submitted", JSON.stringify(contributionRanges));
+        onSubmit();
+    }
+
+
+    if (!contributionRanges) {
+        return null;
     }
 
     return (

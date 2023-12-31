@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Line, Bar } from 'react-chartjs-2';
-import PieChart from '../../components/PieChart'
+import PieChart from '../../components/chart/PieChart'
 import PlotContainer from '../../components/PlotContainer'
 import api from '../../api'
 import getColorArray from '../../utils/getColorArray';

@@ -1,12 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Form } from "react-bootstrap";
+import { Container, Card, Row, Col, Button, ProgressBar as ProgressBarBootstrap } from "react-bootstrap";
 import { formatToHumanReadableDate } from "../../utils/dateUtils";
+import ProgressChart from "../../components/chart/ProgressChart";
 import GoalContributionRangesForm from "./GoalContributionRangeForm";
 import api from "../../api";
 import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFromResponse";
+import styled, { keyframes} from "styled-components";
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const FormContainer = styled.div`
+  opacity: ${(props) => (props.visible ? 1 : 0)};
+  height: ${(props) => (props.visible ? "auto" : 0)};
+  overflow: hidden;
+  transition: height 0.3s ease-in-out;
+  animation: ${(props) => (props.visible ? fadeIn : fadeOut)} 0.3s ease-in-out;
+`;
 const GOAL_FAKE_DATA = {
     "id": 1,
     "amount": "1000.00",
@@ -83,11 +109,20 @@ const GOAL_CONTRIBUTION_RANGES = [
 
 const FAKE_GOAL_PROGRESS = 50;
 
+const ProgressBar = ({ progress }) => {
+    return (
+        <ProgressBarBootstrap>
+            <ProgressBarBootstrap variant="success" now={progress} key={1} label={`${progress}%`} />
+            <ProgressBarBootstrap striped variant="danger" now={100 - progress} key={2} />
+        </ProgressBarBootstrap>
+    );
+};
 
 const GoalDetails = () => {
     const [goal, setGoal] = useState({});
     const [goalProgress, setGoalProgress] = useState(0);
     const [goalContributionRanges, setGoalContributionRanges] = useState([]);
+    const [configureRanges, setConfigureRanges] = useState(false);
     const { goalId } = useParams();
 
     useEffect(() => {
@@ -106,34 +141,65 @@ const GoalDetails = () => {
     }, [goalId]);
 
     return (
-        <>
-            <div>
-                <h1>{goal.description}</h1>
-                <h2>{goal.amount}</h2>
-                <h2>{goal.start_date}</h2>
-                <h2>{goal.end_date}</h2>
-            </div>
-            <div>
-                <h1>Goal Progress</h1>
-                <h2>{goalProgress} %</h2>
-            </div>
+        <Container className="py-5">
+            <Card className="mb-4">
+                <Card.Body>
+                    <Row className="mb-4">
+                        <Col md={1} />
+                        <Col md={4}>
+                            <div>
+                                <h4>{goal.description}</h4>
+                                <p className="lead">description: {goal.description}</p>
+                                <p className="lead">Amount: ${Number(goal.amount)}</p>
+                                <p className="lead">
+                                    Start Date: {formatToHumanReadableDate(goal.start_date)}
+                                </p>
+                                <p className="lead">
+                                    Target Date: {formatToHumanReadableDate(goal.expected_completion_date)}
+                                </p>
+                            </div>
+                        </Col>
+                        <Col md={2}>
+                            <div className="text-center">
+                                <h4>Goal Status</h4>
+                                <ProgressBar progress={goalProgress} />
+                            </div>
+                        </Col>
+                        <Col md={4}>
+                            <div className="text-center">
+                                <h4>Your Progress</h4>
+                                <ProgressChart progress={goalProgress} />
+                            </div>
+                        </Col>
+                        <Col md={1} />
+                    </Row>
+                    {goalContributionRanges.length > 0 && (
+                        <Row>
+                            <Col>
+                                <div className="mb-4 text-center">
+                                    <Button variant="outline-info" size="lg" className="mx-auto d-block" onClick={() => setConfigureRanges(true)}>
+                                        Configure your contributions
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    )}
+                    <FormContainer visible={configureRanges}>
+                        <Row>
+                            <Col>
+                                <GoalContributionRangesForm
+                                    goal={goal}
+                                    contributionRanges={goalContributionRanges}
+                                    setContributionRanges={setGoalContributionRanges}
+                                    onSubmit={() => setConfigureRanges(false)}
+                                />
+                            </Col>
+                        </Row>
+                    </FormContainer>
+                </Card.Body>
+            </Card>
 
-            {
-                goalContributionRanges.length > 0 &&
-                <>
-                    <div>
-                        It looks like you have other goals between
-                        {' '}{formatToHumanReadableDate(goal.start_date)} and {formatToHumanReadableDate(goal.expected_completion_date)}.
-                    </div>
-                    <GoalContributionRangesForm
-                        goal={goal}
-                        contributionRanges={goalContributionRanges}
-                        setContributionRanges={setGoalContributionRanges}
-                    />
-                </>
-            }
-
-        </>
+        </Container>
     );
 };
 

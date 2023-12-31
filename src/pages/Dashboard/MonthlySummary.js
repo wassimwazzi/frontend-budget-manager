@@ -3,7 +3,7 @@ import { Button, Form, InputGroup, Table } from 'react-bootstrap'
 import { Bar } from 'react-chartjs-2';
 import { getCurrentMonth, offsetMonth } from '../../utils/dateUtils';
 import SummaryCard from './SummaryCard';
-import PieChart from '../../components/PieChart';
+import PieChart from '../../components/chart/PieChart';
 import PlotContainer from '../../components/PlotContainer';
 import api from '../../api'
 
