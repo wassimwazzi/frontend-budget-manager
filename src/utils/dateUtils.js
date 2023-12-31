@@ -30,3 +30,39 @@ export const offsetMonth = (currentMonth, offset) => {
 
     return `${year}-${month}`;
 }
+
+export const formatToHumanReadableDate = (date) => {
+    // date is in YYYY-MM-DD format
+    let [year, month, day] = date.split('-');
+    let result = ""
+    if (month) {
+        month = new Date(`${year}-${month}-01`).toLocaleString('default', { month: 'long' });
+        result += `${month} `;
+    }
+    if (day) {
+        result += `${day}, `;
+    }
+    if (year) {
+        result += `${year}`;
+    }
+    return result;
+}
+
+export const findAllOverlappingRanges = (start, end, ranges) => {
+    /**
+     * Given a start and end date, this will return all the subranges that overlap with the given ranges.
+     * It will return the smallest subranges that overlap with the given ranges.
+     * Example:
+     * start: 2021-01-01
+     * end: 2021-12-31
+     * ranges: [
+     *  [ start: 2021-01-01, end: 2021-12-31 ],
+     * [ start: 2021-01-01, end: 2021-06-30 ],
+     * [ start: 2021-07-01, end: 2022-12-31 ],
+     * [ start: 2023-01-01, end: 2023-12-31 ],
+     * [ start: 2021-07-01, end: 2022-12-31 ],
+     */
+
+
+}
+

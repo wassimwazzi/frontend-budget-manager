@@ -20,6 +20,7 @@ const TITLES = [
     'Describe your goal',
     'Set your goal amount',
     'Set your goal dates',
+    'Review your goal',
 ];
 
 const StyledCard = ({ children, isTransitioning, ...props }) => (

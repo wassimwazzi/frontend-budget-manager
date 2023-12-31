@@ -8,6 +8,7 @@ import Transactions from './pages/Transactions/Transactions'
 import Categories from './pages/Categories/Categories'
 import Budgets from './pages/Budgets/Budgets'
 import GoalForm from './pages/Goals/GoalForm'
+import GoalDetails from './pages/Goals/GoalDetails'
 import Files from './pages/FileUploads/Files'
 import NotFound from './pages/NotFound'
 import {
@@ -50,6 +51,7 @@ const App = () => {
           <Route path='/budgets' element={<Budgets />} />
           <Route path='/uploads' element={<Files />} />
           <Route path='/goals' element={<GoalForm />} />
+          <Route path='/goals/:id' element={<GoalDetails />} />
           <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>
