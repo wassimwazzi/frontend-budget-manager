@@ -10,8 +10,6 @@ const GoalSummary = ({ goal, link = false }) => (
         className="mb-4 border-0"
         style={{
             borderRadius: '20px',
-            // backgroundColor: '#F5F5F5',
-            // textAlign: 'center',
             padding: '20px',
             boxShadow: '0px 8px 16px #00000029',
         }}>

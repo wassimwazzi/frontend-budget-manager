@@ -18,7 +18,7 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
 
     useEffect(() => {
         setPreventSubmit(!useDefaultStart && !startBeforeEnd);
-    }, [useDefaultStart, startBeforeEnd])
+    }, [useDefaultStart, startBeforeEnd, setPreventSubmit])
 
     function toggleStart() {
         if (!useDefaultStart) {

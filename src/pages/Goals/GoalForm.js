@@ -49,7 +49,6 @@ const GoalForm = () => {
     }
 
     const {
-        steps,
         currentStepIndex,
         visitedSteps,
         step,

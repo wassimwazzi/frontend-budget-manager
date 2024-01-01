@@ -14,17 +14,17 @@ const transitionStyles = ({ duration }) => css`
 `;
 
 // moves in from the left
-const transitionStyles2 = ({ duration }) => css`
-  transform: translateX(-100%);
-    opacity: 0;
-    overflow: hidden;
-    transition: transform ${duration}s ease-out, opacity ${duration}s ease-out;
+// const transitionStyles2 = ({ duration }) => css`
+//   transform: translateX(-100%);
+//     opacity: 0;
+//     overflow: hidden;
+//     transition: transform ${duration}s ease-out, opacity ${duration}s ease-out;
 
-    &.visible {
-        transform: translateX(0);
-        opacity: 1;
-    }
-`;
+//     &.visible {
+//         transform: translateX(0);
+//         opacity: 1;
+//     }
+// `;
 
 const TransitionContainer = styled.div`
   ${transitionStyles}

@@ -3,12 +3,20 @@ import { Form, Button, Alert, ProgressBar } from "react-bootstrap";
 import { formatToHumanReadableDate } from "../../utils/dateUtils";
 import Transition from "../../components/Transition";
 
+function calculateTotalPercentage(contributionRange) {
+    let totalPercentage = 0;
+    contributionRange.contributions.forEach((contribution) => {
+        totalPercentage += Number(contribution.percentage);
+    });
+    return totalPercentage;
+}
+
 const SingleContributionRangeSlider = ({ contributionRange, setContributionRange, preventSubmit }) => {
     const [totalPercentage, setTotalPercentage] = useState(0);
     const [lastChangedBar, setLastChangedBar] = useState(null)
 
     useEffect(() => {
-        setTotalPercentage(calculateTotalPercentage());
+        setTotalPercentage(calculateTotalPercentage(contributionRange));
     }, [contributionRange]);
 
     useEffect(() => {
@@ -20,20 +28,11 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
         else {
             preventSubmit(false);
         }
-    }, [totalPercentage]);
-
-    function calculateTotalPercentage() {
-        let totalPercentage = 0;
-        contributionRange.contributions.forEach((contribution) => {
-            totalPercentage += Number(contribution.percentage);
-        });
-        return totalPercentage;
-    }
+    }, [totalPercentage, preventSubmit]);
 
     function handleContributionChange(index) {
         return (e) => {
             const percentage = e.target.value;
-            const id = e.target.id;
             let oldPercentage = contributionRange.contributions[index].percentage;
             contributionRange.contributions[index].percentage = percentage;
             setTotalPercentage((prev) => (prev - oldPercentage + Number(percentage)));

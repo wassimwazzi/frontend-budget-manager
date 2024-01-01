@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import GoalSummary from "./GoalSummary";
-import { Button, Row, Col, Card } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import api from "../../api";
 
 const Goals = () => {
