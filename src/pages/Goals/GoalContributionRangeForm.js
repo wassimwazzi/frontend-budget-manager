@@ -57,7 +57,7 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
             <h3>{formatToHumanReadableDate(contributionRange.start_date)} - {formatToHumanReadableDate(contributionRange.end_date)}</h3>
             {contributionRange.contributions.map((contribution, index) => (
                 <Form.Group controlId={`contribution-${contribution.id}`} key={contribution.id}>
-                    <Form.Label>Goal {contribution.goal} </Form.Label>
+                    <Form.Label>Goal {contribution.goal.description} </Form.Label>
                     <Form.Range
                         min="0"
                         max="100"
