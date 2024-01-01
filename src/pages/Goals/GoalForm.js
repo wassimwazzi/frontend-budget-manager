@@ -51,6 +51,7 @@ const GoalForm = () => {
     const {
         steps,
         currentStepIndex,
+        visitedSteps,
         step,
         isFirstStep,
         isLastStep,
@@ -100,6 +101,7 @@ const GoalForm = () => {
                     steps={BREADCRUMBS}
                     currentStepIndex={currentStepIndex}
                     goTo={goTo}
+                    maxStepIndex={visitedSteps.length - 1}
                 />
                 <Card.Title as="h2" className="mb-4" style={{ fontWeight: 'bold', fontSize: '2.5rem' }}>
                     {TITLES[currentStepIndex]}

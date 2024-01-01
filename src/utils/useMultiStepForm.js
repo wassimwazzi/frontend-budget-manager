@@ -1,7 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export function useMultistepForm(steps) {
     const [currentStepIndex, setCurrentStepIndex] = useState(0)
+    const [visitedSteps, setVisitedSteps] = useState([0])
+
+    useEffect(() => {
+        setVisitedSteps((prev) => {
+            if (prev.includes(currentStepIndex)) return prev
+            return [...prev, currentStepIndex]
+        })
+    }, [currentStepIndex])
 
     function next() {
         setCurrentStepIndex(i => {
@@ -25,6 +33,7 @@ export function useMultistepForm(steps) {
         currentStepIndex,
         step: steps[currentStepIndex],
         steps,
+        visitedSteps,
         isFirstStep: currentStepIndex === 0,
         isLastStep: currentStepIndex === steps.length - 1,
         goTo,

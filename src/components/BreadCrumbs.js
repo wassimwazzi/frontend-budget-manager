@@ -34,24 +34,24 @@ const getSeparator = (index, lastIndex) => {
   return <Separator><FontAwesomeIcon icon={faAngleRight} /></Separator>;
 }
 
-const BreadCrumbs = ({ steps, currentStepIndex, goTo, showBackArrow = false }) => {
+const BreadCrumbs = ({ steps, currentStepIndex, goTo, maxStepIndex }) => {
   return (
     <BreadcrumbsContainer>
-      {showBackArrow &&
-        <FontAwesomeIcon icon={faAngleLeft} onClick={() => goTo(currentStepIndex - 1)} className='me-2' style={{ cursor: 'pointer' }} />
-      }
-      {steps.map((step, index) => (
-        index <= currentStepIndex &&
-        <React.Fragment key={index}>
-          <BreadcrumbItem key={index}
-            active={(currentStepIndex === index).toString()}
-            onClick={() => goTo(index)}
-          >
-            {step}
-          </BreadcrumbItem>
-          {getSeparator(index, currentStepIndex)}
-        </React.Fragment>
-      ))}
+      {steps.map((step, index) => {
+        const active = currentStepIndex === index ? 'true' : null;
+        return (
+          index <= maxStepIndex &&
+          <React.Fragment key={index}>
+            <BreadcrumbItem key={index}
+              active={active}
+              onClick={() => goTo(index)}
+            >
+              {step}
+            </BreadcrumbItem>
+            {getSeparator(index, maxStepIndex)}
+          </React.Fragment>
+        )
+      })}
     </BreadcrumbsContainer>
   );
 };
