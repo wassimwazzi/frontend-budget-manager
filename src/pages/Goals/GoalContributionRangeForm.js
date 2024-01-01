@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Form, Button, Alert, ProgressBar } from "react-bootstrap";
 import { formatToHumanReadableDate } from "../../utils/dateUtils";
+import Status from "../../components/Status";
 import Transition from "../../components/Transition";
+import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFromResponse";
+import api from "../../api";
 
 function calculateTotalPercentage(contributionRange) {
     let totalPercentage = 0;
@@ -11,7 +14,7 @@ function calculateTotalPercentage(contributionRange) {
     return totalPercentage;
 }
 
-const SingleContributionRangeSlider = ({ contributionRange, setContributionRange, preventSubmit }) => {
+const SingleContributionRangeSlider = ({ contributionRange, setContributionRange, preventSubmit, index }) => {
     const [totalPercentage, setTotalPercentage] = useState(0);
     const [lastChangedBar, setLastChangedBar] = useState(null)
 
@@ -21,14 +24,14 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
 
     useEffect(() => {
         if (totalPercentage > 100) {
-            preventSubmit(true);
+            preventSubmit(true, index);
         } else if (totalPercentage < 100) {
-            preventSubmit(true);
+            preventSubmit(true, index);
         }
         else {
-            preventSubmit(false);
+            preventSubmit(false, index);
         }
-    }, [totalPercentage, preventSubmit]);
+    }, [totalPercentage, preventSubmit, index]);
 
     function handleContributionChange(index) {
         return (e) => {
@@ -79,18 +82,18 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
     );
 };
 
-const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionRanges, onSubmit }) => {
+const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionRanges }) => {
     const [errors, setErrors] = useState(contributionRanges.map(() => false));
+    const [submitErrorMessage, setSubmitErrorMessage] = useState();
+    const [submitSuccessMessage, setSubmitSuccessMessage] = useState();
 
-    function updateErrors(index) {
-        return (bool) => {
-            setErrors((prev) => {
-                const newErrors = [...prev];
-                newErrors[index] = bool;
-                return newErrors;
-            });
-        }
-    }
+    const updateErrors = useCallback((index, bool) => {
+        setErrors((prev) => {
+            const newErrors = [...prev];
+            newErrors[index] = bool;
+            return newErrors;
+        });
+    }, [setErrors]);
 
 
     function updateContributionRange(index) {
@@ -105,9 +108,20 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log("Submitted", JSON.stringify(contributionRanges));
-        window.alert("Submitted", JSON.stringify(contributionRanges));
-        onSubmit();
+        setSubmitErrorMessage();
+        setSubmitSuccessMessage();
+        console.log(contributionRanges);
+        api
+            .post(`/api/goals/update_contributions/`, contributionRanges)
+            .then((res) => {
+                console.log(res);
+                setSubmitSuccessMessage("Your contributions have been updated!");
+            })
+            .catch((err) => {
+                console.error(err.response);
+                setSubmitErrorMessage(extractErrorMessageFromResponse(err));
+            }
+            );
     }
 
 
@@ -122,7 +136,8 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
                     <SingleContributionRangeSlider
                         contributionRange={contributionRange}
                         setContributionRange={updateContributionRange(index)}
-                        preventSubmit={updateErrors(index)}
+                        preventSubmit={updateErrors}
+                        index={index}
                     />
                 </div>
             ))}
@@ -134,6 +149,10 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
                 </Alert>
             </Transition>
             <Button type="submit" disabled={errors.some((error) => error)}>Submit</Button>
+            <Status
+                successMessage={submitErrorMessage}
+                errorMessage={submitSuccessMessage}
+            />
         </Form>
     )
 
