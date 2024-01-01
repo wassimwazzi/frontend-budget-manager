@@ -107,13 +107,13 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
     return (
         <Form onSubmit={handleSubmit}>
             {contributionRanges.map((contributionRange, index) => (
-                <React.Fragment key={contributionRange.id}>
+                <div key={contributionRange.id} className="mb-5">
                     <SingleContributionRangeSlider
                         contributionRange={contributionRange}
                         setContributionRange={updateContributionRange(index)}
                         setError={updateErrors(index)}
                     />
-                </React.Fragment>
+                </div>
             ))}
             <Button type="submit" disabled={errors.some((error) => error)}>Submit</Button>
         </Form>

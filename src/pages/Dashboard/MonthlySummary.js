@@ -4,7 +4,7 @@ import { Bar } from 'react-chartjs-2';
 import { getCurrentMonth, offsetMonth } from '../../utils/dateUtils';
 import SummaryCard from './SummaryCard';
 import PieChart from '../../components/chart/PieChart';
-import PlotContainer from '../../components/PlotContainer';
+import Accordion from '../../components/accordion/Accordion';
 import api from '../../api'
 
 
@@ -259,11 +259,11 @@ const MonthlySummary = () => {
                 budgetSummary.length > 0 ?
                     <div className="mt-5">
                         <SummaryTable data={budgetSummary} title={'Summary Table'} />
-                        <PlotContainer className="mt-5">
+                        <Accordion className="mt-5">
                             <BudgetVsActualBarChart budgetSummaryData={budgetSummary} title={'Budget vs Spend'} />
                             <RemainingFromBudgetBarChart budgetSummaryData={budgetSummary} title={'Remaining from Budget'} />
                             <SpendPerCategoryPieChart budgetSummaryData={budgetSummary} title={'Spend Per Category'} />
-                        </PlotContainer>
+                        </Accordion>
                     </div>
                     :
                     <>

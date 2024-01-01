@@ -6,7 +6,8 @@ import ProgressChart from "../../components/chart/ProgressChart";
 import GoalContributionRangesForm from "./GoalContributionRangeForm";
 import api from "../../api";
 import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFromResponse";
-import styled, { keyframes} from "styled-components";
+import Accordion from "../../components/accordion/Accordion";
+import styled, { keyframes } from "styled-components";
 
 const fadeIn = keyframes`
   from {
@@ -122,7 +123,6 @@ const GoalDetails = () => {
     const [goal, setGoal] = useState({});
     const [goalProgress, setGoalProgress] = useState(0);
     const [goalContributionRanges, setGoalContributionRanges] = useState([]);
-    const [configureRanges, setConfigureRanges] = useState(false);
     const { goalId } = useParams();
 
     useEffect(() => {
@@ -142,11 +142,19 @@ const GoalDetails = () => {
 
     return (
         <Container className="py-5">
-            <Card className="mb-4">
+            <Card
+                className="mb-4 border-0"
+                style={{
+                    borderRadius: '20px',
+                    // backgroundColor: '#F5F5F5',
+                    textAlign: 'center',
+                    padding: '20px',
+                    boxShadow: '0px 8px 16px #00000029',
+                }}>
                 <Card.Body>
                     <Row className="mb-4">
                         <Col md={1} />
-                        <Col md={4}>
+                        <Col md={3}>
                             <div>
                                 <h4>{goal.description}</h4>
                                 <p className="lead">description: {goal.description}</p>
@@ -159,6 +167,7 @@ const GoalDetails = () => {
                                 </p>
                             </div>
                         </Col>
+                        <Col md={1} />
                         <Col md={2}>
                             <div className="text-center">
                                 <h4>Goal Status</h4>
@@ -173,32 +182,19 @@ const GoalDetails = () => {
                         </Col>
                         <Col md={1} />
                     </Row>
-                    {goalContributionRanges.length > 0 && (
-                        <Row>
-                            <Col>
-                                <div className="mb-4 text-center">
-                                    <Button variant="outline-info" size="lg" className="mx-auto d-block" onClick={() => setConfigureRanges(true)}>
-                                        Configure your contributions
-                                    </Button>
-                                </div>
-                            </Col>
-                        </Row>
-                    )}
-                    <FormContainer visible={configureRanges}>
-                        <Row>
-                            <Col>
-                                <GoalContributionRangesForm
-                                    goal={goal}
-                                    contributionRanges={goalContributionRanges}
-                                    setContributionRanges={setGoalContributionRanges}
-                                    onSubmit={() => setConfigureRanges(false)}
-                                />
-                            </Col>
-                        </Row>
-                    </FormContainer>
                 </Card.Body>
             </Card>
-
+            {
+                goalContributionRanges.length > 0 &&
+                <Accordion open={false}>
+                    <GoalContributionRangesForm
+                        goal={goal}
+                        contributionRanges={goalContributionRanges}
+                        setContributionRanges={setGoalContributionRanges}
+                        title="Configure your contributions"
+                    />
+                </Accordion>
+            }
         </Container>
     );
 };

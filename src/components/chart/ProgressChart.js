@@ -14,8 +14,8 @@ const ProgressChart = ({ progress, style }) => {
         radius: '100%'
     }
     const colors = [
-        [254, 69, 69],
         [64, 254, 90],
+        [254, 69, 69],
     ];
     const chartData = {
         labels: [],
