@@ -42,7 +42,7 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
         }
     }
 
-    function getColor(percentage) {
+    function getColor() {
         if (totalPercentage === 100) {
             return "success";
         }
@@ -57,7 +57,7 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
             <h3>{formatToHumanReadableDate(contributionRange.start_date)} - {formatToHumanReadableDate(contributionRange.end_date)}</h3>
             {contributionRange.contributions.map((contribution, index) => (
                 <Form.Group controlId={`contribution-${contribution.id}`} key={contribution.id}>
-                    <Form.Label>Goal {contribution.goal.description} </Form.Label>
+                    <Form.Label><strong>Goal description:</strong> {contribution.goal.description} </Form.Label>
                     <Form.Range
                         min="0"
                         max="100"
@@ -128,7 +128,7 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
                 </div>
             ))}
             <Transition visible={errors.some((error) => error)} duration={1}>
-                <Alert variant="danger" className="mt-4">
+                <Alert variant="danger">
                     <p>
                         Please make sure that the total percentage for each contribution range is 100%.
                     </p>
