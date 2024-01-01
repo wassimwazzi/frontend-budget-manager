@@ -44,9 +44,11 @@ const GoalSummary = ({ goal, link = false }) => (
                 <Col md={1} />
             </Row>
             {link &&
-                <Button variant="outline-primary" size="lg" className="mx-auto" href={`/goals/${goal.id}`}>
-                    View Details
-                </Button>
+                <div className='text-center'>
+                    <Button variant="outline-primary" size="lg" className="mx-auto" href={`/goals/${goal.id}`}>
+                        View Details
+                    </Button>
+                </div>
             }
         </Card.Body>
     </Card>

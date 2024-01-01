@@ -24,12 +24,12 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
 
     useEffect(() => {
         if (totalPercentage > 100) {
-            preventSubmit(true, index);
+            preventSubmit(index, true);
         } else if (totalPercentage < 100) {
-            preventSubmit(true, index);
+            preventSubmit(index, true);
         }
         else {
-            preventSubmit(false, index);
+            preventSubmit(index, false);
         }
     }, [totalPercentage, preventSubmit, index]);
 
@@ -149,10 +149,12 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
                 </Alert>
             </Transition>
             <Button type="submit" disabled={errors.some((error) => error)}>Submit</Button>
-            <Status
-                successMessage={submitErrorMessage}
-                errorMessage={submitSuccessMessage}
-            />
+            <div className="mt-3">
+                <Status
+                    successMessage={submitSuccessMessage}
+                    errorMessage={submitErrorMessage}
+                />
+            </div>
         </Form>
     )
 
