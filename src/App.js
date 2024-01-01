@@ -51,7 +51,7 @@ const App = () => {
           <Route path='/budgets' element={<Budgets />} />
           <Route path='/uploads' element={<Files />} />
           <Route path='/goals' element={<GoalForm />} />
-          <Route path='/goals/:id' element={<GoalDetails />} />
+          <Route path='/goals/:goalId' element={<GoalDetails />} />
           <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>

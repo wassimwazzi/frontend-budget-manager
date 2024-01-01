@@ -108,8 +108,6 @@ const GOAL_CONTRIBUTION_RANGES = [
     }
 ]
 
-const FAKE_GOAL_PROGRESS = 50;
-
 const ProgressBar = ({ progress }) => {
     return (
         <ProgressBarBootstrap>
@@ -126,18 +124,29 @@ const GoalDetails = () => {
     const { goalId } = useParams();
 
     useEffect(() => {
-        // api
-        //     .get(`/goals/${goalId}`)
-        //     .then((response) => {
-        //         setGoal(response.data);
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error:", error.response);
-        //         alert(getErrorMessageFromResponse(error.response));
-        //     });
-        setGoal(GOAL_FAKE_DATA);
-        setGoalProgress(FAKE_GOAL_PROGRESS);
-        setGoalContributionRanges(GOAL_CONTRIBUTION_RANGES);
+        api
+            .get(`/api/goals/${goalId}`)
+            .then((response) => {
+                setGoal(response.data);
+                setGoalProgress(Math.min(0, response.data.progress));
+            })
+            .catch((error) => {
+                console.error("Error:", error.response);
+                alert(extractErrorMessageFromResponse(error.response));
+            });
+        api
+            .get(`/api/goals/${goalId}/contribution_ranges`, { params: { include_overlapping: true } })
+            .then((response) => {
+                setGoalContributionRanges(response.data);
+            })
+            .catch((error) => {
+                console.error("Error:", error.response);
+                alert(extractErrorMessageFromResponse(error.response));
+            });
+
+        // setGoal(GOAL_FAKE_DATA);
+        // setGoalProgress(FAKE_GOAL_PROGRESS);
+        // setGoalContributionRanges(GOAL_CONTRIBUTION_RANGES);
     }, [goalId]);
 
     return (

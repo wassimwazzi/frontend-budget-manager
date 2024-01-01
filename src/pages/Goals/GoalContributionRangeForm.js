@@ -2,28 +2,39 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { formatToHumanReadableDate } from "../../utils/dateUtils";
 
-const GreaterThan100Error = ({ currentPercentage }) => (
-    <Alert variant="danger">
-        Total percentage cannot be greater than 100%. Current percentage: {currentPercentage} %
-    </Alert>
-);
+const GreaterThan100Error = ({ currentPercentage, ...props }) => {
+    if (currentPercentage > 100) {
+        return (
+            <Alert variant="danger" {...props}>
+                Total percentage cannot be greater than 100%. Current percentage: {currentPercentage} %
+            </Alert>
+        );
+    }
+    if (currentPercentage < 100) {
+        return (
+            <Alert variant="warning" {...props}>
+                Total percentage cannot be less than 100%. Current percentage: {currentPercentage} %
+            </Alert>
+        );
+    }
+    return null
+};
 
-const SingleContributionRangeSlider = ({ contributionRange, setContributionRange, setError }) => {
+const SingleContributionRangeSlider = ({ contributionRange, setContributionRange, preventSubmit }) => {
     const [totalPercentage, setTotalPercentage] = useState(0);
-    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         setTotalPercentage(calculateTotalPercentage());
     }, [contributionRange]);
 
     useEffect(() => {
-        console.log("totalPercentage", totalPercentage);
         if (totalPercentage > 100) {
-            setError(true);
-            setErrorMessage("Total percentage cannot be greater than 100%");
-        } else {
-            setError(false);
-            setErrorMessage("");
+            preventSubmit(true);
+        } else if (totalPercentage < 100) {
+            preventSubmit(true);
+        }
+        else {
+            preventSubmit(false);
         }
     }, [totalPercentage]);
 
@@ -48,7 +59,6 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
     return (
         <>
             <h3>{formatToHumanReadableDate(contributionRange.start_date)} - {formatToHumanReadableDate(contributionRange.end_date)}</h3>
-            {errorMessage && <GreaterThan100Error currentPercentage={totalPercentage} />}
             {contributionRange.contributions.map((contribution, index) => (
                 <Form.Group controlId={`contribution-${contribution.id}`} key={contribution.id}>
                     <Form.Label>Goal {contribution.goal} </Form.Label>
@@ -59,11 +69,11 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
                         id={contribution.id}
                         value={contribution.percentage}
                         onChange={handleContributionChange(index)}
-                        isInvalid={errorMessage}
                     />
                     <Form.Text>{contribution.percentage}%</Form.Text>
                 </Form.Group>
             ))}
+            <GreaterThan100Error currentPercentage={totalPercentage} className="mt-3" />
         </>
     );
 };
@@ -111,7 +121,7 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
                     <SingleContributionRangeSlider
                         contributionRange={contributionRange}
                         setContributionRange={updateContributionRange(index)}
-                        setError={updateErrors(index)}
+                        preventSubmit={updateErrors(index)}
                     />
                 </div>
             ))}
