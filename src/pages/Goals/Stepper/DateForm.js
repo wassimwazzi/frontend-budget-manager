@@ -4,17 +4,17 @@ import { getCurrentMonth } from "../../../utils/dateUtils";
 import Transition from "../../../components/Transition";
 
 
-const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit }) => {
+const DateForm = ({ start_date, expected_completion_date, updateFields, setPreventSubmit }) => {
     const [useDefaultStart, setUseDefaultStart] = useState(true);
     const [startBeforeEnd, setStartBeforeEnd] = useState(true);
 
     useEffect(() => {
-        if (start_date > end_date) {
+        if (start_date > expected_completion_date) {
             setStartBeforeEnd(false);
         } else {
             setStartBeforeEnd(true);
         }
-    }, [start_date, end_date]);
+    }, [start_date, expected_completion_date]);
 
     useEffect(() => {
         setPreventSubmit(!useDefaultStart && !startBeforeEnd);
@@ -42,8 +42,8 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
                 <input
                     type="month"
                     className="form-control"
-                    name="end_date"
-                    value={end_date}
+                    name="expected_completion_date"
+                    value={expected_completion_date}
                     onChange={handleChange}
                     required
                     min={getCurrentMonth()}
@@ -70,7 +70,7 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
                         name="start_date"
                         value={start_date}
                         onChange={handleChange}
-                        max={end_date}
+                        max={expected_completion_date}
                         isInvalid={!startBeforeEnd}
                         required
                     />
@@ -83,4 +83,4 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
     );
 };
 
-export default DescriptionForm;
+export default DateForm;
