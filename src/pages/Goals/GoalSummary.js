@@ -11,7 +11,7 @@ const GoalSummary = ({ goal, link = false }) => (
         style={{
             borderRadius: '20px',
             // backgroundColor: '#F5F5F5',
-            textAlign: 'center',
+            // textAlign: 'center',
             padding: '20px',
             boxShadow: '0px 8px 16px #00000029',
         }}>
@@ -21,7 +21,6 @@ const GoalSummary = ({ goal, link = false }) => (
                 <Col md={3}>
                     <div>
                         <h4>{goal.description}</h4>
-                        <p className="lead">description: {goal.description}</p>
                         <p className="lead">Amount: ${Number(goal.amount)}</p>
                         <p className="lead">
                             Start Date: {formatToHumanReadableDate(goal.start_date)}

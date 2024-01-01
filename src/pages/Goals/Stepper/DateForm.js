@@ -51,18 +51,18 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
             </Form.Group>
             <Form.Group controlId="start-date" className="mt-3">
                 <Form.Text className="text-muted">
-                    Would you like to start saving for this goal in the future?
+                    Would you like to start saving for this goal right now?
                 </Form.Text>
                 <Form.Check
                     type="switch"
-                    checked={!useDefaultStart}
+                    checked={useDefaultStart}
                     onChange={toggleStart}
                 />
             </Form.Group>
             <Transition visible={!useDefaultStart} duration={0.5}>
                 <Form.Group controlId="start-date" className="mt-3">
                     <Form.Label>
-                        When would you like to start saving for this goal?
+                        Please enter a start date for your goal.
                     </Form.Label>
                     <Form.Control
                         type="month"
@@ -70,7 +70,6 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
                         name="start_date"
                         value={start_date}
                         onChange={handleChange}
-                        min={getCurrentMonth()}
                         max={end_date}
                         isInvalid={!startBeforeEnd}
                         required
