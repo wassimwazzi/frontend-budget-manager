@@ -1,27 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, ProgressBar } from "react-bootstrap";
 import { formatToHumanReadableDate } from "../../utils/dateUtils";
-
-const GreaterThan100Error = ({ currentPercentage, ...props }) => {
-    if (currentPercentage > 100) {
-        return (
-            <Alert variant="danger" {...props}>
-                Total percentage cannot be greater than 100%. Current percentage: {currentPercentage} %
-            </Alert>
-        );
-    }
-    if (currentPercentage < 100) {
-        return (
-            <Alert variant="warning" {...props}>
-                Total percentage cannot be less than 100%. Current percentage: {currentPercentage} %
-            </Alert>
-        );
-    }
-    return null
-};
 
 const SingleContributionRangeSlider = ({ contributionRange, setContributionRange, preventSubmit }) => {
     const [totalPercentage, setTotalPercentage] = useState(0);
+    const [lastChangedBar, setLastChangedBar] = useState(null)
 
     useEffect(() => {
         setTotalPercentage(calculateTotalPercentage());
@@ -54,8 +37,20 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
             contributionRange.contributions[index].percentage = percentage;
             setTotalPercentage((prev) => (prev - oldPercentage + Number(percentage)));
             setContributionRange(contributionRange);
+            setLastChangedBar(index);
         }
     }
+
+    function getColor(percentage) {
+        if (totalPercentage === 100) {
+            return "success";
+        }
+        if (totalPercentage > 100) {
+            return "danger";
+        }
+        return "warning";
+    }
+
     return (
         <>
             <h3>{formatToHumanReadableDate(contributionRange.start_date)} - {formatToHumanReadableDate(contributionRange.end_date)}</h3>
@@ -70,10 +65,16 @@ const SingleContributionRangeSlider = ({ contributionRange, setContributionRange
                         value={contribution.percentage}
                         onChange={handleContributionChange(index)}
                     />
-                    <Form.Text>{contribution.percentage}%</Form.Text>
+                    <ProgressBar
+                        now={contribution.percentage}
+                        label={`${contribution.percentage}%`}
+                        variant={lastChangedBar === index ? getColor() : "success"}
+                    />
                 </Form.Group>
             ))}
-            <GreaterThan100Error currentPercentage={totalPercentage} className="mt-3" />
+            <div className={`mt-4 text-center text-${getColor()}`}>
+                <strong>Total Percentage: {totalPercentage}%</strong>
+            </div>
         </>
     );
 };
@@ -126,6 +127,11 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
                 </div>
             ))}
             <Button type="submit" disabled={errors.some((error) => error)}>Submit</Button>
+            {errors.some((error) => error) && (
+                <Alert variant="danger" className="mt-4">
+                    Please make sure the total percentage is 100% for each contribution range.
+                </Alert>
+            )}
         </Form>
     )
 
