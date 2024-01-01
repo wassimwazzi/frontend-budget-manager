@@ -38,12 +38,18 @@ const GoalDetails = () => {
             {
                 goalContributionRanges.length > 0 &&
                 <Accordion open={false}>
-                    <GoalContributionRangesForm
-                        goal={goal}
-                        contributionRanges={goalContributionRanges}
-                        setContributionRanges={setGoalContributionRanges}
-                        title="Configure your contributions"
-                    />
+                    <div title="Configure your contributions">
+                        <p>
+                            Optimize your savings by allocating contributions to specific goals.
+                            If you have multiple goals that overlap, customize how much of your savings
+                            should be directed towards each individual goal.
+                        </p>
+                        <GoalContributionRangesForm
+                            goal={goal}
+                            contributionRanges={goalContributionRanges}
+                            setContributionRanges={setGoalContributionRanges}
+                        />
+                    </div>
                 </Accordion>
             }
         </Container>
