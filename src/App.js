@@ -7,6 +7,7 @@ import SignUp from './pages/Login/SignUp'
 import Transactions from './pages/Transactions/Transactions'
 import Categories from './pages/Categories/Categories'
 import Budgets from './pages/Budgets/Budgets'
+import Goals from './pages/Goals/Goals'
 import GoalForm from './pages/Goals/GoalForm'
 import GoalDetails from './pages/Goals/GoalDetails'
 import Files from './pages/FileUploads/Files'
@@ -50,8 +51,9 @@ const App = () => {
           <Route path='/categories' element={<Categories />} />
           <Route path='/budgets' element={<Budgets />} />
           <Route path='/uploads' element={<Files />} />
-          <Route path='/goals' element={<GoalForm />} />
+          <Route path='/goals' element={<Goals />} />
           <Route path='/goals/:goalId' element={<GoalDetails />} />
+          <Route path='/goals/new' element={<GoalForm />} />
           <Route path='*' element={<NotFound />} />
         </Route>
       </Routes>

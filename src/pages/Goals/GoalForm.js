@@ -6,6 +6,7 @@ import DescriptionForm from './Stepper/DescriptionForm';
 import AmountForm from './Stepper/AmountForm';
 import DateForm from './Stepper/DateForm';
 import BreadCrumbs from '../../components/BreadCrumbs';
+import BackLink from '../../components/BackLink';
 
 const INITIAL_DATA = {
     description: '',
@@ -82,11 +83,7 @@ const GoalForm = () => {
 
     return (
         <Container className="py-4 text-center">
-            <BreadCrumbs
-                steps={BREADCRUMBS}
-                currentStepIndex={currentStepIndex}
-                goTo={goTo}
-            />
+            <BackLink href={'/goals'} name={'Goals'} active={false} />
             <StyledCard
                 className="border-0"
                 isTransitioning={isTransitioning}
@@ -99,6 +96,11 @@ const GoalForm = () => {
                     boxShadow: '0px 8px 16px #00000029',
                 }}
             >
+                <BreadCrumbs
+                    steps={BREADCRUMBS}
+                    currentStepIndex={currentStepIndex}
+                    goTo={goTo}
+                />
                 <Card.Title as="h2" className="mb-4" style={{ fontWeight: 'bold', fontSize: '2.5rem' }}>
                     {TITLES[currentStepIndex]}
                 </Card.Title>

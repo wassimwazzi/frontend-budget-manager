@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
 const BreadcrumbsContainer = styled.div`
@@ -9,7 +9,7 @@ const BreadcrumbsContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const BreadcrumbItem = styled.div`
+export const BreadcrumbItem = styled.div`
   cursor: pointer;
   font-size: 1.2rem;
   color: ${(props) => (props.active ? '#007BFF' : '#555')};
@@ -34,9 +34,12 @@ const getSeparator = (index, lastIndex) => {
   return <Separator><FontAwesomeIcon icon={faAngleRight} /></Separator>;
 }
 
-const BreadCrumbs = ({ steps, currentStepIndex, goTo }) => {
+const BreadCrumbs = ({ steps, currentStepIndex, goTo, showBackArrow = false }) => {
   return (
     <BreadcrumbsContainer>
+      {showBackArrow &&
+        <FontAwesomeIcon icon={faAngleLeft} onClick={() => goTo(currentStepIndex - 1)} className='me-2' style={{ cursor: 'pointer' }} />
+      }
       {steps.map((step, index) => (
         index <= currentStepIndex &&
         <React.Fragment key={index}>
