@@ -1,19 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
-import styled from "styled-components";
 import { getCurrentMonth } from "../../../utils/dateUtils";
+import Transition from "../../../components/Transition";
 
-const StyledTransitionContainer = styled.div`
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-
-  &.visible {
-    max-height: 1000px;
-    opacity: 1;
-  }
-`;
 
 const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit }) => {
     const [useDefaultStart, setUseDefaultStart] = useState(true);
@@ -70,8 +59,8 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
                     onChange={toggleStart}
                 />
             </Form.Group>
-            <StyledTransitionContainer className={useDefaultStart ? "" : "visible mt-3"}>
-                <Form.Group controlId="start-date">
+            <Transition visible={!useDefaultStart} duration={0.5}>
+                <Form.Group controlId="start-date" className="mt-3">
                     <Form.Label>
                         When would you like to start saving for this goal?
                     </Form.Label>
@@ -90,7 +79,7 @@ const DescriptionForm = ({ start_date, end_date, updateFields, setPreventSubmit 
                         Start date must be before end date.
                     </Form.Control.Feedback>
                 </Form.Group>
-            </StyledTransitionContainer>
+            </Transition>
         </>
     );
 };

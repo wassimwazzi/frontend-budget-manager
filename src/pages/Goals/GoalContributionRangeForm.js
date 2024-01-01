@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Alert, ProgressBar } from "react-bootstrap";
 import { formatToHumanReadableDate } from "../../utils/dateUtils";
+import Transition from "../../components/Transition";
 
 const SingleContributionRangeSlider = ({ contributionRange, setContributionRange, preventSubmit }) => {
     const [totalPercentage, setTotalPercentage] = useState(0);
@@ -126,12 +127,14 @@ const GoalContributionRangesForm = ({ goal, contributionRanges, setContributionR
                     />
                 </div>
             ))}
-            <Button type="submit" disabled={errors.some((error) => error)}>Submit</Button>
-            {errors.some((error) => error) && (
+            <Transition visible={errors.some((error) => error)} duration={1}>
                 <Alert variant="danger" className="mt-4">
-                    Please make sure the total percentage is 100% for each contribution range.
+                    <p>
+                        Please make sure that the total percentage for each contribution range is 100%.
+                    </p>
                 </Alert>
-            )}
+            </Transition>
+            <Button type="submit" disabled={errors.some((error) => error)}>Submit</Button>
         </Form>
     )
 
