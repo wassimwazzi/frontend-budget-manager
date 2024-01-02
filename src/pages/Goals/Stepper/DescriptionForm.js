@@ -14,12 +14,12 @@ const DescriptionForm = ({ description, updateFields }) => {
 
     return (
         <Form.Group controlId="description">
-            {/* <Form.Label>Describe your goal</Form.Label> */}
             <textarea
                 className="form-control"
                 placeholder="Enter a description"
                 value={description}
                 onChange={handleChange}
+                maxLength={MaxChars}
                 required
             />
             <Form.Text className="text-muted">

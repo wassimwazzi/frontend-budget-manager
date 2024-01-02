@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { formatToHumanReadableDate } from '../../utils/dateUtils';
 import ProgressBar from '../../components/chart/ProgressBar';
+import GoalStatus from './GoalStatus';
 
 function formatNumber(amount) {
     return Number(amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -17,10 +18,11 @@ const GoalSummary = ({ goal, link = false }) => (
         }}>
         <Card.Body>
             <Row className="mb-4 p-3">
-                <Col md={6}>
+                <Col md={6} className="d-flex justify-content-between flex-column">
                     <div>
                         <h4>{goal.description}</h4>
                     </div>
+                    <GoalStatus goal={goal} />
                 </Col>
                 <Col md={6}>
                     <Row>

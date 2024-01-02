@@ -5,7 +5,7 @@ import Status from "../../components/Status";
 import Transition from "../../components/Transition";
 import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFromResponse";
 import api from "../../api";
-import "./GoalContributionForm.css";
+import "./css/GoalContributionForm.css";
 
 function calculateTotalPercentage(contributionRange) {
     let totalPercentage = 0;
