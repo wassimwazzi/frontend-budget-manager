@@ -76,14 +76,21 @@ const SingleContributionRangeSlider = ({
                     <Form.Label className="mb-2 goal-description">
                         <strong>Goal:</strong> {contribution.goal.description}
                     </Form.Label>
-                    <Form.Range
-                        min="0"
-                        max="100"
-                        step="1"
-                        id={contribution.id}
-                        value={contribution.percentage}
-                        onChange={handleContributionChange(index)}
-                    />
+                    {
+                        contribution.goal.is_finalized ?
+                            <p className="text-warning mt-2">
+                                <strong>Note:</strong> This goal has been finalized and cannot be edited.
+                            </p>
+                            :
+                            <Form.Range
+                                min="0"
+                                max="100"
+                                step="1"
+                                id={contribution.id}
+                                value={contribution.percentage}
+                                onChange={handleContributionChange(index)}
+                            />
+                    }
                     <ProgressBar
                         now={contribution.percentage}
                         label={`${contribution.percentage}%`}

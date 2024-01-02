@@ -6,7 +6,7 @@ import api from "../../api";
 import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFromResponse";
 import "./css/GoalStatus.css";
 
-const GoalStatusTypes = {
+export const GoalStatusTypes = {
     PENDING: "PENDING",
     IN_PROGRESS: "IN_PROGRESS",
     COMPLETED: "COMPLETED",
