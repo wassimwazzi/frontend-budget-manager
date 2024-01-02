@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import BackLink from "../../components/BackLink";
@@ -12,7 +12,7 @@ const GoalDetails = () => {
     const [goalContributionRanges, setGoalContributionRanges] = useState([]);
     const { goalId } = useParams();
 
-    useEffect(() => {
+    const fetchGoal = useCallback(() => {
         api
             .get(`/api/goals/${goalId}`)
             .then((response) => {
@@ -21,6 +21,9 @@ const GoalDetails = () => {
             .catch((error) => {
                 console.error("Error:", error.response);
             });
+    }, [goalId]);
+
+    const fetchContributions = useCallback(() => {
         api
             .get(`/api/goals/${goalId}/contribution_ranges`, { params: { include_overlapping: true } })
             .then((response) => {
@@ -30,6 +33,12 @@ const GoalDetails = () => {
                 console.error("Error:", error.response);
             });
     }, [goalId]);
+
+
+    useEffect(() => {
+        fetchGoal();
+        fetchContributions();
+    }, [goalId, fetchContributions, fetchGoal]);
 
     return (
         <Container className="py-5">
@@ -48,6 +57,7 @@ const GoalDetails = () => {
                             goal={goal}
                             contributionRanges={goalContributionRanges}
                             setContributionRanges={setGoalContributionRanges}
+                            onSuccess={fetchGoal}
                         />
                     </div>
                 </Accordion>

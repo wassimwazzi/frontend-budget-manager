@@ -78,12 +78,10 @@ const GoalForm = () => {
     }
 
     function submit() {
-        console.log('Submitted with data:', data);
         setSubmitErrorMessage(null);
         api
             .post('/api/goals/', data)
             .then((res) => {
-                console.log(res);
                 setGoalId(res.data.id);
             })
             .catch((err) => {

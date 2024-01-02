@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { formatToHumanReadableDate } from '../../utils/dateUtils';
 import ProgressBar from '../../components/chart/ProgressBar';
-import ProgressChart from '../../components/chart/ProgressChart';
 
 function formatNumber(amount) {
     return Number(amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -29,7 +28,7 @@ const GoalSummary = ({ goal, link = false }) => (
                             <h4>Goal Status</h4>
                             <ProgressBar progress={Math.max(goal.progress, 0)} />
                             <p className="lead mt-2">
-                                You have saved {formatNumber(goal.progress)} of {formatNumber(goal.amount)}
+                                You have saved {formatNumber(goal.total_contributed)} of {formatNumber(goal.amount)} target
                             </p>
                             <p className="lead mt-2">
                                 Start Date: {formatToHumanReadableDate(goal.start_date)}

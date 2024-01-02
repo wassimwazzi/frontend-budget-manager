@@ -100,9 +100,9 @@ const SingleContributionRangeSlider = ({
 };
 
 const GoalContributionRangesForm = ({
-    goal,
     contributionRanges,
     setContributionRanges,
+    onSuccess,
 }) => {
     const [errors, setErrors] = useState(contributionRanges.map(() => false));
     const [submitErrorMessage, setSubmitErrorMessage] = useState();
@@ -130,12 +130,11 @@ const GoalContributionRangesForm = ({
         e.preventDefault();
         setSubmitErrorMessage();
         setSubmitSuccessMessage();
-        console.log(contributionRanges);
         api
             .post(`/api/goals/update_contributions/`, contributionRanges)
             .then((res) => {
-                console.log(res);
                 setSubmitSuccessMessage("Your contributions have been updated!");
+                onSuccess();
             })
             .catch((err) => {
                 console.error(err.response);

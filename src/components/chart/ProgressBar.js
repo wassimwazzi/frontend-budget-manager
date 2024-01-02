@@ -5,7 +5,7 @@ const ProgressBar = ({ progress, progressVariant = "success", remainingVariant =
     const remaining = 100 - progress;
     return (
         <ProgressBarBootstrap>
-            <ProgressBarBootstrap variant={progressVariant} now={progress} key={1} label={`${progress}%`} />
+            <ProgressBarBootstrap variant={progressVariant} now={progress} key={1} label={`${progress.toFixed(0)}%`} />
             <ProgressBarBootstrap striped variant={remainingVariant} now={remaining} key={2} />
         </ProgressBarBootstrap>
     );
