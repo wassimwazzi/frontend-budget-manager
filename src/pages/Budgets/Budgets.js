@@ -23,14 +23,14 @@ const Budgets = () => {
         </div>
     ), [])
 
-    function customizeBudget(budget) {
+    const customizeBudget = useCallback(budget => {
         return {
             ...budget,
             start_date: formatToHumanReadableDate(budget.start_date, { month: 'long' }),
             category: budget.category.category,
             actions: getActionButtons(budget.id)
         }
-    }
+    }, [getActionButtons])
 
     useEffect(() => {
         api
@@ -69,7 +69,7 @@ const Budgets = () => {
             .catch(error => {
                 console.error('Error fetching data:', error.response)
             })
-    }, [getActionButtons])
+    }, [customizeBudget])
 
     const handleEdit = budgetId => {
         setEditBudgetId(budgetId)

@@ -41,7 +41,7 @@ const Transactions = () => {
     )
   ), [])
 
-  function customizeTransaction(transaction) {
+  const customizeTransaction = useCallback(transaction => {
     return {
       ...transaction,
       date: formatToHumanReadableDate(transaction.date, { month: 'short', day: 'numeric', weekday: 'short' }),
@@ -49,7 +49,7 @@ const Transactions = () => {
       inferred_category: getInferredCategory(transaction.inferred_category),
       actions: getActionButtons(transaction.id)
     }
-  }
+  }, [getActionButtons, getInferredCategory])
 
   useEffect(() => {
     api
@@ -92,7 +92,7 @@ const Transactions = () => {
       .catch(error => {
         console.error('Error fetching data:', error.response)
       })
-  }, [getActionButtons, getInferredCategory])
+  }, [customizeTransaction])
 
   const handleEdit = transactionId => {
     setEditTransactionId(transactionId)
