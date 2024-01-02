@@ -4,6 +4,9 @@ import { formatToHumanReadableDate } from '../../utils/dateUtils';
 import ProgressBar from '../../components/chart/ProgressBar';
 import ProgressChart from '../../components/chart/ProgressChart';
 
+function formatNumber(amount) {
+    return Number(amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+}
 
 const GoalSummary = ({ goal, link = false }) => (
     <Card
@@ -14,34 +17,29 @@ const GoalSummary = ({ goal, link = false }) => (
             boxShadow: '0px 8px 16px #00000029',
         }}>
         <Card.Body>
-            <Row className="mb-4">
-                <Col md={1} />
-                <Col md={3}>
+            <Row className="mb-4 p-3">
+                <Col md={6}>
                     <div>
                         <h4>{goal.description}</h4>
-                        <p className="lead">Amount: ${Number(goal.amount)}</p>
-                        <p className="lead">
-                            Start Date: {formatToHumanReadableDate(goal.start_date)}
-                        </p>
-                        <p className="lead">
-                            Target Date: {formatToHumanReadableDate(goal.expected_completion_date)}
-                        </p>
                     </div>
                 </Col>
-                <Col md={1} />
-                <Col md={2}>
-                    <div className="text-center">
-                        <h4>Goal Status</h4>
-                        <ProgressBar progress={Math.max(goal.progress, 0)} />
-                    </div>
+                <Col md={6}>
+                    <Row>
+                        <div className="text-center">
+                            <h4>Goal Status</h4>
+                            <ProgressBar progress={Math.max(goal.progress, 0)} />
+                            <p className="lead mt-2">
+                                You have saved {formatNumber(goal.progress)} of {formatNumber(goal.amount)}
+                            </p>
+                            <p className="lead mt-2">
+                                Start Date: {formatToHumanReadableDate(goal.start_date)}
+                            </p>
+                            <p className="lead mt-2">
+                                Target Date: {formatToHumanReadableDate(goal.expected_completion_date)}
+                            </p>
+                        </div>
+                    </Row>
                 </Col>
-                <Col md={4}>
-                    <div className="text-center">
-                        <h4>Your Progress</h4>
-                        <ProgressChart progress={Math.max(goal.progress, 0)} />
-                    </div>
-                </Col>
-                <Col md={1} />
             </Row>
             {link &&
                 <div className='text-center'>

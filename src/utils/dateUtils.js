@@ -31,23 +31,18 @@ export const offsetMonth = (currentMonth, offset) => {
     return `${year}-${month}`;
 }
 
-export const formatToHumanReadableDate = (date) => {
+export const formatToHumanReadableDate = (date, options) => {
     if (!date) {
         return "";
     }
-    // date is in YYYY-MM-DD format
-    let [year, month, day] = date.split('-');
-    let result = ""
-    if (month) {
-        month = new Date(`${year}-${month}-01`).toLocaleString('default', { month: 'long' });
-        result += `${month} `;
+    const baseOptions = { year: 'numeric', timeZone: 'UTC' };
+    // combine default options with any options passed in
+    if (options) {
+        options = { ...baseOptions, ...options };
+    } else {
+        options = { ...baseOptions, ...{ month: 'long', day: 'numeric' } }
     }
-    if (day) {
-        result += `${day}, `;
-    }
-    if (year) {
-        result += `${year}`;
-    }
+    const result = new Date(date).toLocaleDateString('default', options);
     return result;
 }
 
