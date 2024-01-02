@@ -6,7 +6,7 @@ import api from "../../api";
 const Goals = () => {
     const [goals, setGoals] = useState([]);
 
-    useEffect(() => {
+    function fetchData() {
         api
             .get("/api/goals")
             .then((response) => {
@@ -15,6 +15,10 @@ const Goals = () => {
             .catch((error) => {
                 console.error("Error:", error.response);
             });
+    }
+
+    useEffect(() => {
+        fetchData();
     }, []);
 
     return (

@@ -62,6 +62,9 @@ const ActionRequiredStatus = ({ goal }) => {
     const [errorMessage, setErrorMessage] = useState(null);
 
     const handleCancel = () => {
+        if (successMessage) {
+            window.location.reload();
+        }
         setShowModal(false);
     }
 

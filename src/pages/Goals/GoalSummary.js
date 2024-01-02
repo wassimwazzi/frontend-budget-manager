@@ -1,12 +1,37 @@
 import React from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
-import { formatToHumanReadableDate } from '../../utils/dateUtils';
+import { formatToHumanReadableDate, getCurrentDay } from '../../utils/dateUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import ProgressBar from '../../components/chart/ProgressBar';
 import GoalStatus from './GoalStatus';
 
 function formatNumber(amount) {
     return Number(amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 }
+
+const NoContributionsWarning = ({ goal }) => {
+    if (!goal.contributions?.length) {
+        return null;
+    }
+    const today = getCurrentDay();
+    const todayContribution = goal.contributions.find(({ start_date, end_date }) => {
+        return start_date <= today && today <= end_date;
+    });
+    if (todayContribution.percentage > 0) {
+        return null;
+    }
+    return (
+        <div className="d-flex align-items-center" >
+            <span className="text-danger px-2">
+                <FontAwesomeIcon icon={faExclamationTriangle} />
+            </span>
+            <span className='lead text-danger'>
+                You are not currently contributing to this goal
+            </span>
+        </div>
+    );
+};
 
 const GoalSummary = ({ goal, link = false }) => (
     <Card
@@ -38,6 +63,7 @@ const GoalSummary = ({ goal, link = false }) => (
                             <p className="lead mt-2">
                                 Target Date: {formatToHumanReadableDate(goal.expected_completion_date)}
                             </p>
+                            <NoContributionsWarning goal={goal} />
                         </div>
                     </Row>
                 </Col>
