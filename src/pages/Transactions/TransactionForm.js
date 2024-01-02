@@ -224,7 +224,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit, onCl
             Clear
           </Button>
         </div>
-        {transactionId && (
+        {transactionId && formData.inferred_category && (
           <div className='mb-3'>
             <Form.Text className='text-muted'>
               <b>NOTE:</b> Updating a transaction set inferred category to false
