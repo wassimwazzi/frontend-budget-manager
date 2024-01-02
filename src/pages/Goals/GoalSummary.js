@@ -68,10 +68,16 @@ const GoalSummary = ({ goal, link = false }) => (
                     </Row>
                 </Col>
             </Row>
-            {link &&
+            {link ?
                 <div className='text-center'>
                     <Button variant="outline-primary" size="lg" className="mx-auto" href={`/goals/${goal.id}`}>
                         View Details
+                    </Button>
+                </div>
+                :
+                <div className='text-center'>
+                    <Button variant="outline-primary" size="lg" className="mx-auto" href={`/goals/${goal.id}/edit`}>
+                        Edit Goal
                     </Button>
                 </div>
             }

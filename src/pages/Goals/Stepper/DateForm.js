@@ -48,6 +48,9 @@ const DateForm = ({ start_date, expected_completion_date, updateFields, setPreve
                     required
                     min={getCurrentMonth()}
                 />
+                <Form.Text className="text-info">
+                    <strong>Note:</strong> This value will be set to the last day of the month.
+                </Form.Text>
             </Form.Group>
             <Form.Group controlId="start-date" className="mt-3">
                 <Form.Text className="text-muted">
@@ -74,6 +77,9 @@ const DateForm = ({ start_date, expected_completion_date, updateFields, setPreve
                         isInvalid={!startBeforeEnd}
                         required
                     />
+                    <Form.Text className="text-info">
+                        <strong>Note:</strong> This value will be set to the first day of the month.
+                    </Form.Text>
                     <Form.Control.Feedback type="invalid">
                         Start date must be before end date.
                     </Form.Control.Feedback>
