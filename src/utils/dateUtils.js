@@ -44,5 +44,4 @@ export const formatToHumanReadableDate = (date, options) => {
     }
     const result = new Date(date).toLocaleDateString('default', options);
     return result;
-}
-
+};

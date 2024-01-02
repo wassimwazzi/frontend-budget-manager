@@ -4,6 +4,7 @@ import FileUploadForm from './FileUploadForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
+import { formatToHumanReadableDate } from '../../utils/dateUtils'
 import { DeleteButton } from '../../components/ActionButtons'
 
 const Files = () => {
@@ -42,20 +43,25 @@ const Files = () => {
         </div>
     ), [handleDelete])
 
+    const customizeFile = useCallback(file => {
+        return {
+            ...file,
+            date: formatToHumanReadableDate(file.date, { month: 'long', day: 'numeric' }),
+            actions: getActionButtons(file.id)
+        }
+    }, [getActionButtons])
+
     const fetchData = useCallback((params) => {
         api
             .get('/api/uploads/', { params })
             .then(({ data }) => {
-                setFiles(data.results.map(file => ({
-                    ...file,
-                    actions: getActionButtons(file.id)
-                })))
+                setFiles(data.results.map(file => customizeFile(file)))
                 setTotalPages(data.total_pages)
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)
             })
-    }, [getActionButtons])
+    }, [customizeFile])
 
     const handleFormUpdate = () => {
         fetchData({ page: 1 })
