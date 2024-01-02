@@ -4,6 +4,7 @@ import FileUploadForm from './FileUploadForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
+import { formatToHumanReadableDate } from '../../utils/dateUtils'
 import { DeleteButton } from '../../components/ActionButtons'
 
 const Files = () => {
@@ -42,14 +43,19 @@ const Files = () => {
         </div>
     ), [handleDelete])
 
+    function customizeFile(file) {
+        return {
+            ...file,
+            date: formatToHumanReadableDate(file.date, { month: 'long', day: 'numeric'}),
+            actions: getActionButtons(file.id)
+        }
+    }
+
     const fetchData = useCallback((params) => {
         api
             .get('/api/uploads/', { params })
             .then(({ data }) => {
-                setFiles(data.results.map(file => ({
-                    ...file,
-                    actions: getActionButtons(file.id)
-                })))
+                setFiles(data.results.map(file => customizeFile(file)))
                 setTotalPages(data.total_pages)
             })
             .catch(error => {

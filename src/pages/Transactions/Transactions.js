@@ -4,6 +4,7 @@ import TransactionForm from './TransactionForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
+import { formatToHumanReadableDate } from '../../utils/dateUtils'
 import { Button } from 'react-bootstrap'
 import { DeleteButton } from '../../components/ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -40,6 +41,16 @@ const Transactions = () => {
     )
   ), [])
 
+  function customizeTransaction(transaction) {
+    return {
+      ...transaction,
+      date: formatToHumanReadableDate(transaction.date, { month: 'short', day: 'numeric', weekday: 'short' }),
+      category: transaction.category.category,
+      inferred_category: getInferredCategory(transaction.inferred_category),
+      actions: getActionButtons(transaction.id)
+    }
+  }
+
   useEffect(() => {
     api
       .get('/api/categories/?paginate=false&sort=category&order=asc')
@@ -75,12 +86,7 @@ const Transactions = () => {
     api
       .get('/api/transactions/', { params })
       .then(({ data }) => {
-        setTransactions(data.results.map(transaction => ({
-          ...transaction,
-          category: transaction.category.category,
-          inferred_category: getInferredCategory(transaction.inferred_category),
-          actions: getActionButtons(transaction.id)
-        })))
+        setTransactions(data.results.map(transaction => customizeTransaction(transaction)))
         setTotalPages(data.total_pages)
       })
       .catch(error => {
@@ -129,10 +135,7 @@ const Transactions = () => {
   }
 
   const handleFormUpdate = updatedTransaction => {
-    // Update transactions list after adding/editing
-    updatedTransaction.actions = getActionButtons(updatedTransaction.id)
-    updatedTransaction.category = updatedTransaction.category.category
-    updatedTransaction.inferred_category = getInferredCategory(updatedTransaction.inferred_category)
+    updatedTransaction = customizeTransaction(updatedTransaction)
     if (editTransactionId) {
       setTransactions(transactions => (
         transactions.map(transaction =>

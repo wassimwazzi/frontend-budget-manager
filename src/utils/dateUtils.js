@@ -30,3 +30,18 @@ export const offsetMonth = (currentMonth, offset) => {
 
     return `${year}-${month}`;
 }
+
+export const formatToHumanReadableDate = (date, options) => {
+    if (!date) {
+        return "";
+    }
+    const baseOptions = { year: 'numeric', timeZone: 'UTC' };
+    // combine default options with any options passed in
+    if (options) {
+        options = { ...baseOptions, ...options };
+    } else {
+        options = { ...baseOptions, ...{ month: 'long', day: 'numeric' } }
+    }
+    const result = new Date(date).toLocaleDateString('default', options);
+    return result;
+};

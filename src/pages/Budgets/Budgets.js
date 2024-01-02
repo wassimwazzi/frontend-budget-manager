@@ -3,8 +3,9 @@ import api from '../../api'
 import BudgetForm from './BudgetForm'
 import Table from '../../components/table/Table'
 import Status from '../../components/Status'
-import { DeleteButton } from '../../components/ActionButtons'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
+import { formatToHumanReadableDate } from '../../utils/dateUtils'
+import { DeleteButton } from '../../components/ActionButtons'
 
 const Budgets = () => {
     const [budgets, setBudgets] = useState([])
@@ -21,6 +22,15 @@ const Budgets = () => {
             <DeleteButton handleDelete={() => handleDelete(budgetId)} />
         </div>
     ), [])
+
+    function customizeBudget(budget) {
+        return {
+            ...budget,
+            start_date: formatToHumanReadableDate(budget.start_date, { month: 'long' }),
+            category: budget.category.category,
+            actions: getActionButtons(budget.id)
+        }
+    }
 
     useEffect(() => {
         api
@@ -53,11 +63,7 @@ const Budgets = () => {
         api
             .get('/api/budgets/', { params })
             .then(({ data }) => {
-                setBudgets(data.results.map(budget => ({
-                    ...budget,
-                    category: budget.category.category,
-                    actions: getActionButtons(budget.id)
-                })))
+                setBudgets(data.results.map(budget => customizeBudget(budget)))
                 setTotalPages(data.total_pages)
             })
             .catch(error => {
@@ -86,9 +92,7 @@ const Budgets = () => {
     }
 
     const handleFormUpdate = updatedBudget => {
-        // Update budgets list after adding/editing
-        updatedBudget.actions = getActionButtons(updatedBudget.id)
-        updatedBudget.category = updatedBudget.category.category
+        updatedBudget = customizeBudget(updatedBudget)
         if (editBudgetId) {
             const updatedBudgets = budgets.map(budget =>
                 budget.id === updatedBudget.id
