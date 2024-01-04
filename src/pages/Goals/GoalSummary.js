@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
-import { formatToHumanReadableDate, getCurrentDay } from '../../utils/dateUtils';
+import { formatToHumanReadableDate } from '../../utils/dateUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { currentlyContributingTo } from './goalUtils';
 import ProgressBar from '../../components/chart/ProgressBar';
 import GoalStatus from './GoalStatus';
 
@@ -11,14 +12,7 @@ function formatNumber(amount) {
 }
 
 const NoContributionsWarning = ({ goal }) => {
-    if (!goal.contributions?.length) {
-        return null;
-    }
-    const today = getCurrentDay();
-    const todayContribution = goal.contributions.find(({ start_date, end_date }) => {
-        return start_date <= today && today <= end_date;
-    });
-    if (todayContribution.percentage > 0) {
+    if (currentlyContributingTo(goal)) {
         return null;
     }
     return (
