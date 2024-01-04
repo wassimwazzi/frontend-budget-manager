@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from "react";
 import GoalSummary from "./GoalSummary";
+import { GoalStatusTypes } from "./GoalStatus";
 import { Button, Row, Col } from "react-bootstrap";
 import api from "../../api";
+
+function sortGoals(goals) {
+    // goals requiring action first, then in progress goals, then completed, then failed, then pending
+    // goal is requiring action if progress == 100 and status != completed
+
+    const actionRequiredGoals = goals.filter((goal) => goal.progress === 100 && goal.status !== GoalStatusTypes.COMPLETED);
+    const inProgressGoals = goals.filter((goal) => goal.progress < 100 && goal.status === GoalStatusTypes.IN_PROGRESS);
+    const completedGoals = goals.filter((goal) => goal.status === GoalStatusTypes.COMPLETED);
+    const failedGoals = goals.filter((goal) => goal.status === GoalStatusTypes.FAILED);
+    const pendingGoals = goals.filter((goal) => goal.status === GoalStatusTypes.PENDING);
+
+    return [...actionRequiredGoals, ...inProgressGoals, ...completedGoals, ...failedGoals, ...pendingGoals];
+}
 
 const Goals = () => {
     const [goals, setGoals] = useState([]);
@@ -10,7 +24,7 @@ const Goals = () => {
         api
             .get("/api/goals")
             .then((response) => {
-                setGoals(response.data.results);
+                setGoals(sortGoals(response.data));
             })
             .catch((error) => {
                 console.error("Error:", error.response);

@@ -43,11 +43,13 @@ const GoalSummary = ({ goal, link = false }) => (
         }}>
         <Card.Body>
             <Row className="mb-4 p-3">
-                <Col md={6} className="d-flex justify-content-between flex-column">
-                    <div>
+                <Col md={6} className="d-flex justify-content-between flex-column p-4">
+                    <div className='p-2'>
                         <h4>{goal.description}</h4>
                     </div>
-                    <GoalStatus goal={goal} />
+                    <div className='mt-2'>
+                        <GoalStatus goal={goal} />
+                    </div>
                 </Col>
                 <Col md={6}>
                     <Row>
