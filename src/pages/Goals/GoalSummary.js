@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { currentlyContributingTo } from './goalUtils';
 import ProgressBar from '../../components/chart/ProgressBar';
-import GoalStatus from './GoalStatus';
+import GoalStatus, { GoalStatusTypes } from './GoalStatus';
 
 function formatNumber(amount) {
     return Number(amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -105,11 +105,13 @@ const GoalSummary = ({ goal, link = false }) => (
                     </Button>
                 </div>
                 :
-                <div className='text-center'>
-                    <Button variant="outline-primary" size="lg" className="mx-auto" href={`/goals/${goal.id}/edit`}>
-                        Edit Goal
-                    </Button>
-                </div>
+                (goal.status === GoalStatusTypes.IN_PROGRESS | goal.status === GoalStatusTypes.PENDING) ?
+                    <div className='text-center'>
+                        <Button variant="outline-primary" size="lg" className="mx-auto" href={`/goals/${goal.id}/edit`}>
+                            Edit Goal
+                        </Button>
+                    </div>
+                    : null
             }
         </Card.Body>
     </Card>
