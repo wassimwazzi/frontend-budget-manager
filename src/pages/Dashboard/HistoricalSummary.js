@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Line, Bar } from 'react-chartjs-2';
-import PieChart from '../../components/PieChart'
-import PlotContainer from '../../components/PlotContainer'
+import PieChart from '../../components/chart/PieChart'
+import Accordion from '../../components/accordion/Accordion'
 import api from '../../api'
 import getColorArray from '../../utils/getColorArray';
 
@@ -159,11 +159,11 @@ const HistoricalSummary = () => {
     return (
         <>
             <h1 className="mb-4">Historical Summary</h1>
-            <PlotContainer>
+            <Accordion>
                 <SpendVsIncomeLineChart title={'Spend vs Income Per Month'} />
                 <SpendPerCategoryPieChart title={'Total Spend Per Category'} />
                 <MonthlySpendPerCategoryBarChart title={'Monthly Spend Per Category'} />
-            </PlotContainer>
+            </Accordion>
         </>
     )
 }

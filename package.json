@@ -25,6 +25,7 @@
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.8",
     "reactstrap": "^8.9.0",
+    "styled-components": "^6.1.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

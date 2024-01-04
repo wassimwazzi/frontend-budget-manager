@@ -1,8 +1,8 @@
 import { Pie } from 'react-chartjs-2';
-import getColorArray from '../utils/getColorArray';
+import getColorArray from '../../utils/getColorArray';
 
-const PieChart = ({ datasets, labels, title }) => {
-    const options = {
+const getOptions = (title) => (
+    {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -15,7 +15,11 @@ const PieChart = ({ datasets, labels, title }) => {
             }
         },
         radius: '70%'
-    };
+    }
+)
+
+const PieChart = ({ datasets, labels, title }) => {
+    const options = getOptions(title);
     const colors = getColorArray(labels.length);
     const data = datasets.map((dataset) => ({
         label: dataset.label,

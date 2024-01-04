@@ -1,0 +1,119 @@
+.goal-status-container {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adjusted shadow */
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    overflow: hidden;
+    position: relative;
+}
+
+.goal-status-container .icon {
+    margin-right: 1rem;
+}
+
+.completed {
+    color: #4CAF50;
+}
+
+.failed {
+    color: #FF5252;
+}
+
+.action-required {
+    color: #FFD600;
+}
+
+.in-progress {
+    color: #2196F3;
+}
+
+.goal-status-container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.small-text {
+    font-size: 14px;
+    color: #666;
+    opacity: 0.8;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.goal-status-container h3, .goal-status-container p {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/**
+
+*/
+/* GoalStatus.css */
+/* 
+.goal-status-container {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+    overflow: hidden;
+    position: relative;
+}
+
+.goal-status-container .icon {
+    margin-right: 1rem;
+}
+
+.completed {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+}
+
+.failed {
+    background: linear-gradient(45deg, #FF5252, #F44336);
+}
+
+.action-required {
+    background: linear-gradient(45deg, #FFEB3B, #FBC02D);
+}
+
+.in-progress {
+    background: linear-gradient(45deg, #2196F3, #1976D2);
+}
+
+.goal-status-container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.green-text {
+    color: #4CAF50;
+}
+
+.small-text {
+    font-size: 14px;
+    color: #ffffff;
+    opacity: 0.8;
+}
+
+/* Adding some animations */
+/* @keyframes fadeIn { */
+    /* from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.goal-status-container h3, .goal-status-container p {
+    animation: fadeIn 0.8s ease-in-out;
+} */
