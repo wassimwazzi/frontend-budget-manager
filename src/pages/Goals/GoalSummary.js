@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import { formatToHumanReadableDate } from '../../utils/dateUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { currentlyContributingTo } from './goalUtils';
 import ProgressBar from '../../components/chart/ProgressBar';
 import GoalStatus from './GoalStatus';
@@ -24,6 +24,42 @@ const NoContributionsWarning = ({ goal }) => {
                 You are not currently contributing to this goal
             </span>
         </div>
+    );
+};
+
+const Pill = ({ children, color }) => (
+    <div className={`d-flex align-items-center my-3 rounded-pill p-3 ${color} border`}>
+        {children}
+    </div>
+);
+
+const AmountSaved = ({ goal }) => {
+    if (goal.total_contributed == 0) {
+        return (
+            <Pill>
+                <span className='lead'>
+                    You have not yet saved anything of {formatNumber(goal.amount)} target
+                </span>
+            </Pill>
+        );
+    }
+    if (goal.total_contributed > 0) {
+        return (
+            <Pill color='text-success'>
+                <FontAwesomeIcon icon={faThumbsUp} className='px-2' />
+                <span className='lead'>
+                    You have saved {formatNumber(goal.total_contributed)} of {formatNumber(goal.amount)} target
+                </span>
+            </Pill>
+        );
+    }
+    return (
+        <Pill color='text-danger'>
+            <FontAwesomeIcon icon={faThumbsDown} className='px-2' />
+            <span className='lead'>
+                You are down {formatNumber(goal.total_contributed)} of {formatNumber(goal.amount)} target
+            </span>
+        </Pill>
     );
 };
 
@@ -50,9 +86,7 @@ const GoalSummary = ({ goal, link = false }) => (
                         <div className="text-center">
                             <h4>Goal Status</h4>
                             <ProgressBar progress={Math.max(goal.progress, 0)} />
-                            <p className="lead mt-2">
-                                You have saved {formatNumber(goal.total_contributed)} of {formatNumber(goal.amount)} target
-                            </p>
+                            <AmountSaved goal={goal} />
                             <p className="lead mt-2">
                                 Start Date: {formatToHumanReadableDate(goal.start_date)}
                             </p>
