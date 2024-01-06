@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import api from '../../api'
 import FileUploadForm from './FileUploadForm'
 import Table from '../../components/table/Table'
@@ -66,6 +66,10 @@ const Files = () => {
     const handleFormUpdate = () => {
         fetchData({ page: 1 })
     }
+
+    useEffect(() => {
+        fetchData()
+    }, [fetchData])
 
     return (
         <>

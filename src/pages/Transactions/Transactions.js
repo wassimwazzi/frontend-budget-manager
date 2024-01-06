@@ -51,6 +51,18 @@ const Transactions = () => {
     }
   }, [getActionButtons, getInferredCategory])
 
+  const fetchData = useCallback((params) => {
+    api
+      .get('/api/transactions/', { params })
+      .then(({ data }) => {
+        setTransactions(data.results.map(transaction => customizeTransaction(transaction)))
+        setTotalPages(data.total_pages)
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error.response)
+      })
+  }, [customizeTransaction])
+
   useEffect(() => {
     api
       .get('/api/categories/?paginate=false&sort=category&order=asc')
@@ -68,7 +80,9 @@ const Transactions = () => {
       .catch(error => {
         console.error('Error fetching currency data:', error.response)
       })
-  }, [])
+
+    fetchData({ page: 1, sort: 'date', order: 'desc' })
+  }, [fetchData])
 
 
   const columns = [
@@ -81,18 +95,6 @@ const Transactions = () => {
     'currency',
     'actions'
   ]
-
-  const fetchData = useCallback((params) => {
-    api
-      .get('/api/transactions/', { params })
-      .then(({ data }) => {
-        setTransactions(data.results.map(transaction => customizeTransaction(transaction)))
-        setTotalPages(data.total_pages)
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error.response)
-      })
-  }, [customizeTransaction])
 
   const handleEdit = transactionId => {
     setEditTransactionId(transactionId)

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import api from '../../api'
 import CategoryForm from './CategoryForm'
 import Table from '../../components/table/Table'
@@ -43,6 +43,10 @@ const Categories = () => {
                 console.error('Error fetching data:', error.response)
             })
     }, [getActionButtons])
+
+    useEffect(() => {
+        fetchData()
+    }, [fetchData])
 
     const handleEdit = categoryId => {
         setEditCategoryId(categoryId)

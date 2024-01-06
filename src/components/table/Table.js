@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Table as BootstrapTable } from 'react-bootstrap';
 import SearchTable from "./SearchTable";
 import TabeleNavigator from "./TableNavigator";
@@ -22,9 +22,9 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
     const [sortAsc, setSortAsc] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
 
-    useEffect(() => {
+    function updateData(searches, page, sortColumn, sortAsc) {
         const params = {
-            page: currentPage,
+            page: page,
         };
         if (sortColumn) {
             params.sort = sortColumn;
@@ -41,10 +41,13 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
             }
         });
         fetchData(params);
-    }, [sortColumn, sortAsc, searches, currentPage, fetchData]);
+    }
 
     const handleSearch = (searches) => {
         setSearches(searches);
+        setCurrentPage(1);
+        // Reset page to 1 when searching
+        updateData(searches, 1, sortColumn, sortAsc);
     };
 
     const handleSort = (column) => {
@@ -55,10 +58,12 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
             setSortColumn(column);
             setSortAsc(true);
         }
+        updateData(searches, currentPage, column, sortAsc);
     };
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
+        updateData(searches, page, sortColumn, sortAsc);
     }
 
     return (
@@ -97,7 +102,7 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
                 </tbody>
             </BootstrapTable>
 
-            <TabeleNavigator totalPages={totalPages} onPageChange={handlePageChange} />
+            <TabeleNavigator initialPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
     );
 };

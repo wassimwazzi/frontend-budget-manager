@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, InputGroup, FormControl, Form, Card } from 'react-bootstrap';
 
 const SearchTable = ({ columns, onSearch }) => {
@@ -6,25 +6,27 @@ const SearchTable = ({ columns, onSearch }) => {
   const [newSearchTerm, setNewSearchTerm] = useState('');
   const [selectedColumn, setSelectedColumn] = useState('');
 
-  useEffect(() => {
-    onSearch(searchTerms);
-  }, [searchTerms, onSearch]);
-
   const handleSearch = (e) => {
     e.preventDefault();
     // Add the new search term and column to the list
-    setSearchTerms([...searchTerms, { term: newSearchTerm, column: selectedColumn }]);
+    const newSearch = { term: newSearchTerm, column: selectedColumn };
+    const newSearches = [...searchTerms, newSearch];
+    setSearchTerms(newSearches);
+    onSearch(newSearches);
     // Clear the input field
     setNewSearchTerm('');
     // setSelectedColumn(columns[0]);
   };
 
   const handleRemoveSearch = (index) => {
-    setSearchTerms([...searchTerms.slice(0, index), ...searchTerms.slice(index + 1)]);
+    const newSearches = [...searchTerms.slice(0, index), ...searchTerms.slice(index + 1)];
+    setSearchTerms(newSearches);
+    onSearch(newSearches);
   };
 
   const handleClearSearch = () => {
     setSearchTerms([]);
+    onSearch([]);
   };
 
   return (

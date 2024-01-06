@@ -32,6 +32,18 @@ const Budgets = () => {
         }
     }, [getActionButtons])
 
+    const fetchData = useCallback((params) => {
+        api
+            .get('/api/budgets/', { params })
+            .then(({ data }) => {
+                setBudgets(data.results.map(budget => customizeBudget(budget)))
+                setTotalPages(data.total_pages)
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error.response)
+            })
+    }, [customizeBudget])
+
     useEffect(() => {
         api
             .get('/api/categories/?paginate=false&sort=category&order=asc')
@@ -49,7 +61,8 @@ const Budgets = () => {
             .catch(error => {
                 console.error('Error fetching currency data:', error.response)
             })
-    }, [])
+        fetchData()
+    }, [fetchData])
 
     const columns = [
         'amount',
@@ -58,18 +71,6 @@ const Budgets = () => {
         'category',
         'actions'
     ]
-
-    const fetchData = useCallback((params) => {
-        api
-            .get('/api/budgets/', { params })
-            .then(({ data }) => {
-                setBudgets(data.results.map(budget => customizeBudget(budget)))
-                setTotalPages(data.total_pages)
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error.response)
-            })
-    }, [customizeBudget])
 
     const handleEdit = budgetId => {
         setEditBudgetId(budgetId)

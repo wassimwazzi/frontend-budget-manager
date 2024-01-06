@@ -8,12 +8,17 @@ import {
     faAngleDoubleRight
 } from '@fortawesome/free-solid-svg-icons';
 
-const TableNavigator = ({ totalPages, onPageChange }) => {
-    const [page, setPage] = useState(1);
+const TableNavigator = ({ initialPage, totalPages, onPageChange }) => {
+    const [page, setPage] = useState(initialPage);
 
     useEffect(() => {
+        setPage(initialPage);
+    }, [initialPage]);
+
+    function goToPage(page) {
+        setPage(page);
         onPageChange(page);
-    }, [page, onPageChange]);
+    }
 
     const getMiddlePages = () => {
         const middlePages = [];
@@ -38,13 +43,13 @@ const TableNavigator = ({ totalPages, onPageChange }) => {
             <div className="btn-group" role="group" aria-label="Pagination">
                 <Button
                     variant="outline-secondary"
-                    onClick={() => setPage(1)}
+                    onClick={() => goToPage(1)}
                 >
                     <FontAwesomeIcon icon={faAngleDoubleLeft} />
                 </Button>
                 <Button
                     variant="outline-secondary"
-                    onClick={() => setPage(page - 1)}
+                    onClick={() => goToPage(page - 1)}
                     disabled={page === 1}
                 >
                     <FontAwesomeIcon icon={faAngleLeft} />
@@ -53,21 +58,21 @@ const TableNavigator = ({ totalPages, onPageChange }) => {
                     <Button
                         key={middlePage}
                         variant={middlePage === page ? 'primary' : 'outline-secondary'}
-                        onClick={() => setPage(middlePage)}
+                        onClick={() => goToPage(middlePage)}
                     >
                         {middlePage}
                     </Button>
                 ))}
                 <Button
                     variant="outline-secondary"
-                    onClick={() => setPage(page + 1)}
+                    onClick={() => goToPage(page + 1)}
                     disabled={page === totalPages}
                 >
                     <FontAwesomeIcon icon={faAngleRight} />
                 </Button>
                 <Button
                     variant="outline-secondary"
-                    onClick={() => setPage(totalPages)}
+                    onClick={() => goToPage(totalPages)}
                 >
                     <FontAwesomeIcon icon={faAngleDoubleRight} />
                 </Button>
