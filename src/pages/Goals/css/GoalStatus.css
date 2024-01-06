@@ -29,6 +29,10 @@
     color: #2196F3;
 }
 
+.pending {
+    color: #9E9E9E;
+}
+
 .goal-status-container:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     transform: scale(1.05);

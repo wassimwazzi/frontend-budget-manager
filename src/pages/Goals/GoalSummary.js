@@ -28,7 +28,7 @@ const NoContributionsWarning = ({ goal }) => {
 };
 
 const Pill = ({ children, color }) => (
-    <div className={`d-flex align-items-center my-3 rounded-pill p-3 ${color} border`}>
+    <div className={`align-items-center my-3 rounded-pill p-3 ${color} border`}>
         {children}
     </div>
 );
@@ -37,8 +37,8 @@ const AmountSaved = ({ goal }) => {
     if (goal.total_contributed == 0) {
         return (
             <Pill>
-                <span className='lead'>
-                    You have not yet saved anything of {formatNumber(goal.amount)} target
+                <span className='lead text-center'>
+                    You have saved {formatNumber(goal.total_contributed)} of {formatNumber(goal.amount)} target
                 </span>
             </Pill>
         );

@@ -3,7 +3,7 @@ import { GoalStatusTypes } from './GoalStatus';
 
 export function currentlyContributingTo(goal) {
     if (!goal.contributions?.length) {
-        return false;
+        return true;
     }
     const today = getCurrentDay();
     const todayContribution = goal.contributions.find(({ start_date, end_date }) => {
@@ -11,7 +11,7 @@ export function currentlyContributingTo(goal) {
     });
     if (!todayContribution) {
         // future goals have no contributions
-        return false;
+        return true;
     }
     if (todayContribution.percentage > 0) {
         return true;

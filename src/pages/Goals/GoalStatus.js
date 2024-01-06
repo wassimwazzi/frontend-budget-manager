@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle, faPersonDigging, faCircleXmark, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faCheckCircle, faPersonDigging, faCircleXmark, faTriangleExclamation, faClock } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button, Alert } from "react-bootstrap";
 import api from "../../api";
 import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFromResponse";
@@ -124,12 +124,23 @@ const GoalStatus = ({ goal }) => {
     if (goal.progress === 100) {
         return <ActionRequiredStatus goal={goal} />
     }
-    return (
-        <div className="goal-status-container in-progress">
-            <Icon icon={faPersonDigging} color="#2196F3" />
-            <h3>In Progress</h3>
-        </div>
-    );
+    if (goal.status === GoalStatusTypes.PENDING) {
+        return (
+            <div className="goal-status-container pending">
+                <Icon icon={faClock} color="#FF9800" />
+                <h3>Pending</h3>
+            </div>
+        );
+    }
+    if (goal.status === GoalStatusTypes.IN_PROGRESS) {
+        return (
+            <div className="goal-status-container in-progress">
+                <Icon icon={faPersonDigging} color="#2196F3" />
+                <h3>In Progress</h3>
+            </div>
+        );
+    }
+    return null;
 };
 
 export default GoalStatus;
