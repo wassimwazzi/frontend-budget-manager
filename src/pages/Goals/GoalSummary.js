@@ -34,7 +34,7 @@ const Pill = ({ children, color }) => (
 );
 
 const AmountSaved = ({ goal }) => {
-    if (goal.total_contributed == 0) {
+    if (goal.total_contributed === 0) {
         return (
             <Pill>
                 <span className='lead text-center'>
