@@ -16,6 +16,7 @@ const SpendVsIncomeLineChart = () => {
                 // sort by increasing month
                 response.data.sort((a, b) => a.month.localeCompare(b.month))
                 setLabels(response.data.map(d => d.month))
+                const net = response.data.map(d => d.income - d.spend)
                 setDatasets([
                     {
                         data: response.data.map(d => d.spend),
@@ -30,11 +31,21 @@ const SpendVsIncomeLineChart = () => {
                         backgroundColor: 'rgba(75, 192, 192, 0.5)',
                     },
                     {
-                        data: response.data.map(d => d.income - d.spend),
+                        data: net,
                         label: 'Net',
                         borderColor: 'rgb(255, 205, 86)',
                         backgroundColor: 'rgba(255, 205, 86, 0.5)',
-                    }
+                    },
+                    // Savings. Cumulative sum of net income
+                    {
+                        data: net.reduce((acc, value, index) => {
+                            acc.push(value + (index > 0 ? acc[index - 1] : 0))
+                            return acc
+                        }, []),
+                        label: 'Savings',
+                        borderColor: 'rgb(54, 162, 235)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    },
                 ])
             })
             .catch(error => {
