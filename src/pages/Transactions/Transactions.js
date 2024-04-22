@@ -63,6 +63,23 @@ const Transactions = () => {
       })
   }, [customizeTransaction])
 
+  const handleExportToCsv = (params) => {
+    api
+      .get('/api/exports/transactions/', { params })
+      .then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'transactions.csv')
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+      })
+      .catch(error => {
+        console.error('Error exporting data:', error)
+      })
+  }
+
   useEffect(() => {
     api
       .get('/api/categories/?paginate=false&sort=category&order=asc')
@@ -173,12 +190,12 @@ const Transactions = () => {
 
       <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
 
-
       <Table
         columns={columns}
         data={transactions}
         totalPages={totalPages}
         fetchData={fetchData}
+        exportData={handleExportToCsv}
         searchColumns={['date', 'code', 'description', 'category', 'amount', 'currency']}
       />
     </>
