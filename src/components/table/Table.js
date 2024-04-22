@@ -16,7 +16,7 @@ const SortedColumn = ({ title, sortAsc }) => {
     );
 };
 
-const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
+const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns }) => {
     const [searches, setSearches] = useState([]);
     const [sortColumn, setSortColumn] = useState(columns[0]);
     const [sortAsc, setSortAsc] = useState(false);
@@ -42,6 +42,27 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
         });
         fetchData(params);
     }
+
+    function handleExport(searches) {
+        const params = {};
+        if (sortColumn) {
+            params.sort = sortColumn;
+            params.order = sortAsc ? 'asc' : 'desc';
+        }
+        searches.forEach(search => {
+            if (params.filter && params.filter_value) {
+                params.filter.push(search.column);
+                params.filter_value.push(search.term);
+            }
+            else {
+                params.filter = [search.column];
+                params.filter_value = [search.term];
+            }
+        }
+        );
+        exportData(params);
+    }
+
 
     const handleSearch = (searches) => {
         setSearches(searches);
@@ -70,9 +91,8 @@ const Table = ({ data, columns, fetchData, totalPages, searchColumns }) => {
         <div>
             <SearchTable
                 columns={searchColumns ? searchColumns : columns.filter(column => column !== 'actions')}
-                onSearch={handleSearch}
+                onSearch={handleSearch} exportData={handleExport}
             />
-
             <BootstrapTable striped responsive>
                 <thead>
                     <tr>

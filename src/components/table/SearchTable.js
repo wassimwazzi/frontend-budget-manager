@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, InputGroup, FormControl, Form, Card } from 'react-bootstrap';
 
-const SearchTable = ({ columns, onSearch }) => {
+const SearchTable = ({ columns, onSearch, exportData }) => {
   const [searchTerms, setSearchTerms] = useState([]);
   const [newSearchTerm, setNewSearchTerm] = useState('');
   const [selectedColumn, setSelectedColumn] = useState('');
@@ -16,6 +16,10 @@ const SearchTable = ({ columns, onSearch }) => {
     // Clear the input field
     setNewSearchTerm('');
     // setSelectedColumn(columns[0]);
+  };
+
+  const handleExport = () => {
+    exportData(searchTerms);
   };
 
   const handleRemoveSearch = (index) => {
@@ -68,6 +72,10 @@ const SearchTable = ({ columns, onSearch }) => {
                 className='ms-2'
               >
                 Search
+              </Button>
+
+              <Button variant="info" onClick={handleExport} className='ms-2'>
+                Export
               </Button>
 
               {searchTerms.length > 0 && (
