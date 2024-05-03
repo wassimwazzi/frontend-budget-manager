@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Line, Bar } from 'react-chartjs-2';
 import PieChart from '../../components/chart/PieChart'
 import Accordion from '../../components/accordion/Accordion'
 import api from '../../api'
 import getColorArray from '../../utils/getColorArray';
-import { Tabs, Tab, TabContent, Form } from 'react-bootstrap';
+import { Tabs, Tab, Form } from 'react-bootstrap';
 
 
 const SpendVsIncomeLineChart = () => {
@@ -111,21 +111,6 @@ const TotalSpendPerCategoryPieChart = () => {
                 console.error('Error fetching data:', error.response)
             })
     }, [])
-
-    const OnlyMonthsWithSpendForm = () => {
-        const [onlyMonthsWithSpend, setOnlyMonthsWithSpend] = useState(false)
-
-        const handleCheckboxChange = (event) => {
-            setOnlyMonthsWithSpend(event.target.checked)
-        }
-
-        return (
-            <div>
-                <input type="checkbox" id="onlyMonthsWithSpend" name="onlyMonthsWithSpend" checked={onlyMonthsWithSpend} onChange={handleCheckboxChange} />
-                <label htmlFor="onlyMonthsWithSpend">Only months with spend</label>
-            </div>
-        )
-    }
 
     return (
         <PieChart datasets={datasets} labels={labels} title={'Total Spend Per Category'} />
