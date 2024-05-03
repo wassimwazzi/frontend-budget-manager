@@ -4,6 +4,8 @@ import PieChart from '../../components/chart/PieChart'
 import Accordion from '../../components/accordion/Accordion'
 import api from '../../api'
 import getColorArray from '../../utils/getColorArray';
+import { Tabs, Tab, Form } from 'react-bootstrap';
+
 
 const SpendVsIncomeLineChart = () => {
     const [labels, setLabels] = useState([])
@@ -90,14 +92,18 @@ const SpendVsIncomeLineChart = () => {
     )
 }
 
-const SpendPerCategoryPieChart = () => {
+const fetchSpendByCategoryData = (params) => {
+    return api.get('/api/transactions/spend_by_category/', { params: params })
+}
+
+const TotalSpendPerCategoryPieChart = () => {
     const [labels, setLabels] = useState([])
     const [datasets, setDatasets] = useState([])
 
     useEffect(() => {
-        api
-            .get('/api/transactions/spend_by_category/')
+        fetchSpendByCategoryData()
             .then(response => {
+                console.debug("TotalSpendPerCategoryPieChart -> data", response.data)
                 setLabels(response.data.map(d => d.category))
                 setDatasets([{ data: response.data.map(d => d.total), label: 'Total' }])
             })
@@ -107,7 +113,54 @@ const SpendPerCategoryPieChart = () => {
     }, [])
 
     return (
-        <PieChart datasets={datasets} labels={labels} title={'Spend Per Category'} />
+        <PieChart datasets={datasets} labels={labels} title={'Total Spend Per Category'} />
+    )
+}
+
+const AverageSpendPerCategoryPieChart = () => {
+    const [labels, setLabels] = useState([])
+    const [datasets, setDatasets] = useState([])
+    const [onlyMonthsWithSpend, setOnlyMonthsWithSpend] = useState(false)
+
+    useEffect(() => {
+        fetchSpendByCategoryData({avg: true, only_months_with_spend: onlyMonthsWithSpend})
+            .then(response => {
+                console.debug("AverageSpendPerCategoryPieChart -> data", response.data)
+                setLabels(response.data.map(d => d.category))
+                setDatasets([{ data: response.data.map(d => d.average), label: 'Average' }])
+            }
+            )
+            .catch(error => {
+                console.error('Error fetching data:', error.response)
+            }
+            )
+    }, [onlyMonthsWithSpend])
+
+    const OnlyMonthsWithSpendForm = () => {
+        const handleCheckboxChange = (event) => {
+            setOnlyMonthsWithSpend(event.target.checked)
+        }
+
+        return (
+            <div className="my-3 mx-3">
+                <Form>
+                    <Form.Check
+                        type="checkbox"
+                        id="onlyMonthsWithSpend"
+                        label="Only include months with spend for average calculation of each category"
+                        checked={onlyMonthsWithSpend}
+                        onChange={handleCheckboxChange}
+                    />
+                </Form>
+            </div>
+        )
+    }
+
+    return (
+        <>
+            <OnlyMonthsWithSpendForm />
+            <PieChart datasets={datasets} labels={labels} title={'Average Spend Per Category'} />
+        </>
     )
 }
 
@@ -166,14 +219,33 @@ const MonthlySpendPerCategoryBarChart = () => {
     )
 }
 
+const SpendPerCategory = () => {
+    // Tabs for Total Spend Per Category and Average Spend Per Category and Monthly Spend Per Category
+    const [activeTab, setActiveTab] = useState('total')
+
+    return (
+        <Tabs activeKey={activeTab} onSelect={k => setActiveTab(k)}>
+            <Tab eventKey="total" title="Total">
+                <TotalSpendPerCategoryPieChart />
+            </Tab>
+            <Tab eventKey="average" title="Average">
+                <AverageSpendPerCategoryPieChart />
+            </Tab>
+            <Tab eventKey="monthly" title="Monthly">
+                <MonthlySpendPerCategoryBarChart />
+            </Tab>
+        </Tabs>
+    )
+
+}
+
 const HistoricalSummary = () => {
     return (
         <>
             <h1 className="mb-4">Historical Summary</h1>
             <Accordion>
                 <SpendVsIncomeLineChart title={'Spend vs Income Per Month'} />
-                <SpendPerCategoryPieChart title={'Total Spend Per Category'} />
-                <MonthlySpendPerCategoryBarChart title={'Monthly Spend Per Category'} />
+                <SpendPerCategory title={'Spend Per Category'} />
             </Accordion>
         </>
     )
