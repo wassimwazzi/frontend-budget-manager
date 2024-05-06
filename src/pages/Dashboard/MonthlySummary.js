@@ -221,13 +221,15 @@ const RemainingFromBudgetBarChart = ({ budgetSummaryData }) => {
 const SpendPerCategoryPieChart = ({ budgetSummaryData }) => {
     const labels = budgetSummaryData.map(item => item.category);
     const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0);
+    if (totalSpend === 0) {
+        return <h2>No money spent this month</h2>
+    }
     const datasets = [
         {
             label: 'Actual Spend',
             data: budgetSummaryData.map(item => Math.round(item.actual * 100 / totalSpend)),
         }
     ]
-
     return <PieChart datasets={datasets} labels={labels} title={'% of Total Spend per Category'} />
 }
 

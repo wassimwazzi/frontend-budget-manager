@@ -18,10 +18,13 @@ const getOptions = (title) => (
     }
 )
 
-const PieChart = ({ datasets, labels, title }) => {
+const PieChart = ({ data, title }) => {
+    if (!data) return;
+    const labels = data.labels
+    let datasets = data.datasets
     const options = getOptions(title);
     const colors = getColorArray(labels.length);
-    const data = datasets.map((dataset) => ({
+    datasets = datasets.map((dataset) => ({
         label: dataset.label,
         data: dataset.data,
         backgroundColor: colors.map(color => `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.5)`),
@@ -31,7 +34,7 @@ const PieChart = ({ datasets, labels, title }) => {
 
     const chartData = {
         labels: labels,
-        datasets: data,
+        datasets: datasets,
     };
 
     return (
