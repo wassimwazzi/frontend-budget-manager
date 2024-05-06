@@ -230,7 +230,7 @@ const SpendPerCategoryPieChart = ({ budgetSummaryData }) => {
             data: budgetSummaryData.map(item => Math.round(item.actual * 100 / totalSpend)),
         }
     ]
-    return <PieChart datasets={datasets} labels={labels} title={'% of Total Spend per Category'} />
+    return <PieChart data={{datasets: datasets, labels: labels}} title={'% of Total Spend per Category'} />
 }
 
 const MonthlySummary = () => {
