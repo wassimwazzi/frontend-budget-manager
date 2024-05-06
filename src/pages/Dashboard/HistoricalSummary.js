@@ -151,9 +151,11 @@ const AverageSpendPerCategoryPieChart = () => {
                         label="Only include months with spend for average calculation of each category"
                         checked={onlyMonthsWithSpend}
                         onChange={handleCheckboxChange}
+                        style={{ color: '#333', fontWeight: 'bold' }}
                     />
                 </Form>
             </div>
+
         )
     }
 
