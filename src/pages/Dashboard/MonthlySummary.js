@@ -6,6 +6,7 @@ import SummaryCard from './SummaryCard';
 import PieChart from '../../components/chart/PieChart';
 import Accordion from '../../components/accordion/Accordion';
 import api from '../../api'
+import SortableChart from '../../components/chart/SortableChart';
 
 
 const SummaryForm = ({ onUpdate }) => {
@@ -219,18 +220,20 @@ const RemainingFromBudgetBarChart = ({ budgetSummaryData }) => {
 }
 
 const SpendPerCategoryPieChart = ({ budgetSummaryData }) => {
-    const labels = budgetSummaryData.map(item => item.category);
-    const totalSpend = budgetSummaryData.reduce((acc, row) => acc + row.actual, 0);
+    // only keep categories with actual spend
+    const filteredData = budgetSummaryData.filter(item => item.actual > 0);
+    const labels = filteredData.map(item => item.category);
+    const totalSpend = filteredData.reduce((acc, row) => acc + row.actual, 0);
     if (totalSpend === 0) {
         return <h2>No money spent this month</h2>
     }
     const datasets = [
         {
             label: 'Actual Spend',
-            data: budgetSummaryData.map(item => Math.round(item.actual * 100 / totalSpend)),
+            data: filteredData.map(item => Math.round(item.actual * 100 / totalSpend)),
         }
     ]
-    return <PieChart data={{datasets: datasets, labels: labels}} title={'% of Total Spend per Category'} />
+    return <SortableChart datasets={datasets} labels={labels} ChartComponent={PieChart} title={'% of Total Spend per Category'} />
 }
 
 const MonthlySummary = () => {

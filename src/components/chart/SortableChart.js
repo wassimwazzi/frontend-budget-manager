@@ -46,12 +46,10 @@ const sortData = (datasets, labels) => {
         return { sortedData, sortedLabels: labels };
     } else {
         // then this is a pie chart with one dataset
-        const indices = {};
-        datasets[0].data.forEach((value, index) => {
-            indices[value] = index;
-        });
-        const sortedData = datasets[0].data.slice().sort((a, b) => a - b);
-        const sortedLabels = sortedData.map(value => labels[indices[value]]);
+        const combinedData = datasets[0].data.map((value, index) => ({ value, label: labels[index] }));
+        combinedData.sort((a, b) => a.value - b.value);
+        const sortedData = combinedData.map(item => item.value);
+        const sortedLabels = combinedData.map(item => item.label);
         return { sortedData, sortedLabels };
     }
 }
