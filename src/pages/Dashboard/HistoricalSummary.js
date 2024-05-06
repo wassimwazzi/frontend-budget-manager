@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Line, Bar } from 'react-chartjs-2';
 import PieChart from '../../components/chart/PieChart'
+import SortableChart from '../../components/chart/SortableChart';
 import Accordion from '../../components/accordion/Accordion'
 import api from '../../api'
 import getColorArray from '../../utils/getColorArray';
@@ -113,7 +114,7 @@ const TotalSpendPerCategoryPieChart = () => {
     }, [])
 
     return (
-        <PieChart datasets={datasets} labels={labels} title={'Total Spend Per Category'} />
+        <SortableChart datasets={datasets} labels={labels} ChartComponent={PieChart} title={'Total Spend Per Category'} />
     )
 }
 
@@ -123,7 +124,7 @@ const AverageSpendPerCategoryPieChart = () => {
     const [onlyMonthsWithSpend, setOnlyMonthsWithSpend] = useState(false)
 
     useEffect(() => {
-        fetchSpendByCategoryData({avg: true, only_months_with_spend: onlyMonthsWithSpend})
+        fetchSpendByCategoryData({ avg: true, only_months_with_spend: onlyMonthsWithSpend })
             .then(response => {
                 console.debug("AverageSpendPerCategoryPieChart -> data", response.data)
                 setLabels(response.data.map(d => d.category))
@@ -159,7 +160,7 @@ const AverageSpendPerCategoryPieChart = () => {
     return (
         <>
             <OnlyMonthsWithSpendForm />
-            <PieChart datasets={datasets} labels={labels} title={'Average Spend Per Category'} />
+            <SortableChart datasets={datasets} labels={labels} ChartComponent={PieChart} title={'Average Spend Per Category'} />
         </>
     )
 }
@@ -211,10 +212,10 @@ const MonthlySpendPerCategoryBarChart = () => {
             },
         },
     };
-
+    console.log("MonthlySpendPerCategoryBarChart -> datasets", datasets)
     return (
         <div style={{ overflowX: 'auto' }}>
-            <Bar data={{ labels, datasets }} options={options} style={{ minHeight: '500px', minWidth: '400px' }} />
+            <SortableChart datasets={datasets} labels={labels} ChartComponent={Bar} options={options} style={{ minHeight: '500px', minWidth: '400px' }} />
         </div>
     )
 }
