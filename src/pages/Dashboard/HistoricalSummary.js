@@ -143,7 +143,7 @@ const AverageSpendPerCategoryPieChart = () => {
         }
 
         return (
-            <div className="my-3 mx-3">
+            <div className="my-3">
                 <Form>
                     <Form.Check
                         type="checkbox"
@@ -212,7 +212,6 @@ const MonthlySpendPerCategoryBarChart = () => {
             },
         },
     };
-    console.log("MonthlySpendPerCategoryBarChart -> datasets", datasets)
     return (
         <div style={{ overflowX: 'auto' }}>
             <SortableChart datasets={datasets} labels={labels} ChartComponent={Bar} options={options} style={{ minHeight: '500px', minWidth: '400px' }} />
