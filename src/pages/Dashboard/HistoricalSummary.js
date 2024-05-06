@@ -172,8 +172,7 @@ const MonthlySpendPerCategoryBarChart = () => {
     const [datasets, setDatasets] = useState([])
 
     useEffect(() => {
-        api
-            .get('/api/transactions/spend_by_category/', { params: { monthly: true } })
+        fetchSpendByCategoryData({ monthly: true })
             .then(response => {
                 // sort by increasing month
                 response.data.sort((a, b) => a.month.localeCompare(b.month))

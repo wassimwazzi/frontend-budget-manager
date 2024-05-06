@@ -19,7 +19,7 @@ const SortOptions = ({ n, setN, setSortType, maxN }) => {
         <div style={{ display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px', borderRadius: '10px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', backdropFilter: 'blur(5px)' }} className="mt-3">
             <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
                 <Form.Label style={{ marginRight: '10px', fontWeight: 'bold' }}>Choose top/bottom n labels:</Form.Label>
-                <Form.Control type="number" min="1" max={maxN} onChange={handleChange} value={n} style={{ width: '100px', border: '1px solid #ccc', borderRadius: '5px', padding: '8px', outline: 'none', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }} />
+                <Form.Control type="number" min="1" max={maxN} onChange={handleChange} value={n ? n : ''} style={{ width: '100px', border: '1px solid #ccc', borderRadius: '5px', padding: '8px', outline: 'none', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' }} />
             </Form.Group>
             <Form.Group style={{ display: 'flex', alignItems: 'center' }} className="ms-3">
                 <Form.Label style={{ marginRight: '10px', fontWeight: 'bold' }}>Sort Type:</Form.Label>
@@ -106,7 +106,7 @@ const SortableChart = ({ datasets, labels, ChartComponent, ...chartProps }) => {
 
     return (
         <>
-            <SortOptions setN={setN} setSortType={setSortType} maxN={labels.length} n={n} />
+            <SortOptions setN={setN} setSortType={setSortType} maxN={datasets.length > 1 ? datasets.length : labels.length} n={n} />
 
             <div className="mt-4">
                 <ChartComponent data={{ datasets: displayedData, labels: displayedLabels }} {...chartProps} />
