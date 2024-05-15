@@ -21,7 +21,7 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
     const [sortColumn, setSortColumn] = useState(columns[0]);
     const [sortAsc, setSortAsc] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-
+    
     function updateData(searches, page, sortColumn, sortAsc) {
         const params = {
             page: page,
@@ -91,7 +91,7 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
         <div>
             <SearchTable
                 columns={searchColumns ? searchColumns : columns.filter(column => column !== 'actions')}
-                onSearch={handleSearch} exportData={handleExport}
+                onSearch={handleSearch} exportData={exportData ? handleExport : null}
             />
             <BootstrapTable striped responsive>
                 <thead>

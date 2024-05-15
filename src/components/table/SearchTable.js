@@ -74,9 +74,11 @@ const SearchTable = ({ columns, onSearch, exportData }) => {
                 Search
               </Button>
 
-              <Button variant="info" onClick={handleExport} className='ms-2'>
-                Export
-              </Button>
+              {exportData &&
+                <Button variant="info" onClick={handleExport} className='ms-2'>
+                  Export
+                </Button>
+              }
 
               {searchTerms.length > 0 && (
                 <Button variant="secondary" onClick={handleClearSearch} className='ms-2'>
