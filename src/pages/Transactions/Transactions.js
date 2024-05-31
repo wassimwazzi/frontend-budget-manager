@@ -5,10 +5,16 @@ import Table from '../../components/table/Table'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import { formatToHumanReadableDate } from '../../utils/dateUtils'
-import { Button } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import { DeleteButton } from '../../components/ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faMinus } from '@fortawesome/free-solid-svg-icons'
+import TransactionsDisplay from './TransactionsDisplay'
+import FloatingIcon from '../../components/FloatingIcon'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import TableNavigator from '../../components/table/TableNavigator'
+
+
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([])
@@ -21,47 +27,21 @@ const Transactions = () => {
   const [inferranceErrorMessage, setInferranceErrorMessage] = useState(null)
   const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
   const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
-
-  const getActionButtons = useCallback(transactionId => (
-    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-      <button onClick={() => handleEdit(transactionId)} className='btn btn-primary'>Edit</button>
-      <DeleteButton handleDelete={() => handleDelete(transactionId)} />
-    </div>
-  ), [])
-
-  const getInferredCategory = useCallback(inferredCategory => (
-    inferredCategory ? (
-      <div style={{ textAlign: 'center' }}>
-        <FontAwesomeIcon icon={faCircleCheck} style={{ color: 'green' }} size='lg' />
-      </div>
-    ) : (
-      <div style={{ textAlign: 'center' }}>
-        <FontAwesomeIcon icon={faMinus} size='lg' />
-      </div>
-    )
-  ), [])
-
-  const customizeTransaction = useCallback(transaction => {
-    return {
-      ...transaction,
-      date: formatToHumanReadableDate(transaction.date, { month: 'short', day: 'numeric', weekday: 'short' }),
-      category: transaction.category.category,
-      inferred_category: getInferredCategory(transaction.inferred_category),
-      actions: getActionButtons(transaction.id)
-    }
-  }, [getActionButtons, getInferredCategory])
+  const [showModal, setShowModal] = useState(false)
+  const [nextPrev, setNextPrev] = useState([null, null])
 
   const fetchData = useCallback((params) => {
     api
       .get('/api/transactions/', { params })
       .then(({ data }) => {
-        setTransactions(data.results.map(transaction => customizeTransaction(transaction)))
+        setTransactions(data.results)
         setTotalPages(data.total_pages)
+        setNextPrev([data.next, data.previous])
       })
       .catch(error => {
         console.error('Error fetching data:', error.response)
       })
-  }, [customizeTransaction])
+  }, [])
 
   const handleExportToCsv = (params) => {
     api
@@ -115,7 +95,8 @@ const Transactions = () => {
 
   const handleEdit = transactionId => {
     setEditTransactionId(transactionId)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    // window.scrollTo({ top: 0, behavior: 'smooth' })
+    setShowModal(true)
   }
 
   const handleDelete = transactionId => {
@@ -133,6 +114,11 @@ const Transactions = () => {
         console.error('Error deleting transaction:', error.response)
         setDeleteErrorMessage(extractErrorMessageFromResponse(error))
       })
+  }
+
+  const handleAdd = () => {
+    setEditTransactionId(null)
+    setShowModal(true)
   }
 
   const inferCategories = () => {
@@ -154,7 +140,6 @@ const Transactions = () => {
   }
 
   const handleFormUpdate = updatedTransaction => {
-    updatedTransaction = customizeTransaction(updatedTransaction)
     if (editTransactionId) {
       setTransactions(transactions => (
         transactions.map(transaction =>
@@ -167,37 +152,47 @@ const Transactions = () => {
       setTransactions([updatedTransaction, ...transactions])
     }
     setEditTransactionId(null)
+    setShowModal(false)
   }
 
   return (
     <>
-      <h1>Transactions</h1>
+      <FloatingIcon onClick={handleAdd}>
+        <FontAwesomeIcon icon={faPlus} size='2x' />
+      </FloatingIcon>
 
-      <TransactionForm
-        transactionId={editTransactionId}
-        categories={categories}
-        currencies={currencies}
-        onSubmit={handleFormUpdate}
-        onClear={() => setEditTransactionId(null)}
-      />
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Body>
+          <TransactionForm
+            transactionId={editTransactionId}
+            categories={categories}
+            currencies={currencies}
+            onSubmit={handleFormUpdate}
+            onClear={() => setEditTransactionId(null)}
+          />
+        </Modal.Body>
+      </Modal>
+      {/* 
 
       <div className='d-flex mb-3'>
         <Button onClick={inferCategories} className='mb-3 me-3' disabled={inferring}>
           Re-infer categories
         </Button>
         <Status loading={inferring} successMessage={inferranceSuccessMessage} errorMessage={inferranceErrorMessage} />
-      </div>
+      </div> */}
 
       <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
 
-      <Table
+      {/* <Table
         columns={columns}
         data={transactions}
         totalPages={totalPages}
         fetchData={fetchData}
         exportData={handleExportToCsv}
         searchColumns={['date', 'code', 'description', 'category', 'amount', 'currency']}
-      />
+      /> */}
+      <TransactionsDisplay transactions={transactions} handleDelete={handleDelete} handleEdit={handleEdit} />
+      <TableNavigator initialPage={1} totalPages={totalPages} onPageChange={(page) => fetchData({ page, sort: 'date', order: 'desc' })} />
     </>
   )
 }

@@ -215,14 +215,14 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit, onCl
           <Button type='submit' variant='primary'>
             {transactionId ? 'Update' : 'Create'}
           </Button>
-          <Button
+          {!transactionId && <Button
             type='button'
             onClick={handleClear}
             variant='secondary'
             className='ms-2'
           >
             Clear
-          </Button>
+          </Button>}
         </div>
         {transactionId && formData.inferred_category && (
           <div className='mb-3'>
