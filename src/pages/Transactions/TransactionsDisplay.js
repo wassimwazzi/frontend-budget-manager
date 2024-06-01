@@ -25,23 +25,6 @@ const IncomeOrExpenseIcon = ({ income }) => {
     return <FontAwesomeIcon icon={faMoneyBill1Wave} size='2x' />
 }
 
-const TransactionsHeader = () => (
-    <div className='p-3'>
-        <Item>
-            <div className='d-flex justify-content-between'>
-                <div style={{ flex: 1 }}></div>
-                <h5 style={{ flex: 1 }}>Date</h5>
-                <h5 style={{ flex: 1 }}>Category</h5>
-                <p style={{ flex: 1 }}>Code</p>
-                <div style={{ flex: 1 }} className='d-flex'>
-                    <h5>Amount</h5>
-                    <p style={{ marginLeft: '0.5rem' }}>Currency</p>
-                </div>
-            </div>
-        </Item>
-    </div>
-)
-
 const TransactionsDisplay = ({ transactions, handleDelete, handleEdit }) => {
 
     const TransactionItem = ({ transaction, id }) => (
