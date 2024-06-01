@@ -5,8 +5,8 @@ const FloatingIcon = ({ children, onClick }) => {
         position: 'fixed',
         cursor: 'pointer',
         bottom: '20px',
-        right: '20px',
-        
+        right: '4rem',
+
     };
 
     return (

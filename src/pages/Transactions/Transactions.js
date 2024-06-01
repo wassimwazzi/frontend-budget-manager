@@ -14,6 +14,7 @@ import FloatingIcon from '../../components/FloatingIcon'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TableNavigator from '../../components/table/TableNavigator'
 import SearchTable from '../../components/table/SearchTable'
+import AddButton from './AddButton'
 
 
 
@@ -23,13 +24,9 @@ const Transactions = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [categories, setCategories] = useState([])
   const [currencies, setCurrencies] = useState([])
-  const [inferring, setInferring] = useState(false)
-  const [inferranceSuccessMessage, setInferranceSuccessMessage] = useState(null)
-  const [inferranceErrorMessage, setInferranceErrorMessage] = useState(null)
   const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
   const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
   const [showModal, setShowModal] = useState(false)
-  const [nextPrev, setNextPrev] = useState([null, null])
   const [searchParams, setSearchParams] = useState({ page: 1 })
   const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
 
@@ -39,7 +36,6 @@ const Transactions = () => {
       .then(({ data }) => {
         setTransactions(data.results)
         setTotalPages(data.total_pages)
-        setNextPrev([data.next, data.previous])
       })
       .catch(error => {
         console.error('Error fetching data:', error.response)
@@ -109,24 +105,6 @@ const Transactions = () => {
     setShowModal(true)
   }
 
-  const inferCategories = () => {
-    setInferring(true)
-    api
-      .post('/api/transactions/infer/')
-      .then(response => {
-        setInferring(false)
-        setInferranceSuccessMessage('Categories successfully inferred')
-        setInferranceErrorMessage(null)
-        fetchData({ page: 1, sort: 'date', order: 'desc' })
-      })
-      .catch(error => {
-        setInferring(false)
-        setInferranceSuccessMessage(null)
-        setInferranceErrorMessage('Error infering categories')
-        console.error('Error infering categories:', error.response)
-      })
-  }
-
   const handleFormUpdate = updatedTransaction => {
     if (editTransactionId) {
       setTransactions(transactions => (
@@ -136,16 +114,17 @@ const Transactions = () => {
             : transaction
         )
       ))
+
     } else {
       setTransactions([updatedTransaction, ...transactions])
     }
     setEditTransactionId(null)
-    setShowModal(false)
+    // setShowModal(false)
   }
 
   const handlePageChange = page => {
     setSearchParams({ ...searchParams, page })
-    fetchData({ ...searchParams, page })
+    fetchData({ ...searchParams, page, ...sortParams })
   }
 
   const getParamsHelper = (initialParams, newParams) => {
@@ -188,9 +167,10 @@ const Transactions = () => {
 
   return (
     <>
-      <FloatingIcon onClick={handleAdd}>
+      {/* <FloatingIcon onClick={handleAdd}>
         <FontAwesomeIcon icon={faPlus} size='2x' />
-      </FloatingIcon>
+      </FloatingIcon> */}
+
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Body>
@@ -203,26 +183,11 @@ const Transactions = () => {
           />
         </Modal.Body>
       </Modal>
-      {/* 
-
-      <div className='d-flex mb-3'>
-        <Button onClick={inferCategories} className='mb-3 me-3' disabled={inferring}>
-          Re-infer categories
-        </Button>
-        <Status loading={inferring} successMessage={inferranceSuccessMessage} errorMessage={inferranceErrorMessage} />
-      </div> */}
 
       <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
 
-      {/* <Table
-        columns={columns}
-        data={transactions}
-        totalPages={totalPages}
-        fetchData={fetchData}
-        exportData={handleExportToCsv}
-        searchColumns={['date', 'code', 'description', 'category', 'amount', 'currency']}
-      /> */}
       <SearchTable columns={searchColumns} exportData={handleExportToCsv} onSearch={handleSearch} />
+      <AddButton onClick={handleAdd} />
       <TransactionsDisplay transactions={transactions} handleDelete={handleDelete} handleEdit={handleEdit} />
       <TableNavigator initialPage={1} totalPages={totalPages} onPageChange={handlePageChange} />
     </>
