@@ -1,17 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import api from '../../api'
 import TransactionForm from './TransactionForm'
-import Table from '../../components/table/Table'
 import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
-import { formatToHumanReadableDate } from '../../utils/dateUtils'
-import { Button, Modal } from 'react-bootstrap'
-import { DeleteButton } from '../../components/ActionButtons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faMinus } from '@fortawesome/free-solid-svg-icons'
+import { Modal } from 'react-bootstrap'
 import TransactionsDisplay from './TransactionsDisplay'
-import FloatingIcon from '../../components/FloatingIcon'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import TableNavigator from '../../components/table/TableNavigator'
 import SearchTable from '../../components/table/SearchTable'
 import AddButton from './AddButton'
@@ -28,7 +21,8 @@ const Transactions = () => {
   const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [searchParams, setSearchParams] = useState({ page: 1 })
-  const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
+  // const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
+  const sortParams = useMemo(() => ({ sort: 'date', order: 'desc' }), [])
 
   const fetchData = useCallback((params) => {
     api
@@ -61,19 +55,7 @@ const Transactions = () => {
       })
 
     fetchData({ ...searchParams, ...sortParams })
-  }, [fetchData])
-
-
-  const columns = [
-    'date',
-    'code',
-    'description',
-    'category',
-    'inferred_category',
-    'amount',
-    'currency',
-    'actions'
-  ]
+  }, [fetchData, searchParams, sortParams])
 
   const searchColumns = ['date', 'code', 'description', 'category', 'amount', 'currency']
 
