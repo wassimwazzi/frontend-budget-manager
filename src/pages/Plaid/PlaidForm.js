@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { usePlaidLink } from 'react-plaid-link';
 import api from '../../api';
@@ -98,6 +98,11 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
     const [showModal, setShowModal] = useState(false);
     const [lookbackDays, setLookbackDays] = useState(null);
     const [status, setStatus] = useState({ loading: false, successMessage: null, errorMessage: null });
+    const lookbackDaysRef = useRef(lookbackDays);
+
+    useEffect(() => {
+        lookbackDaysRef.current = lookbackDays;
+    }, [lookbackDays]);
 
     const onSuccess = useCallback((public_token, metadata) => {
         // Validate that the item does not already exist
@@ -114,7 +119,6 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
                 return;
             }
             for (let item of existingItems) {
-                console.log(item.institution_id === metadata.institution.institution_id)
                 if (item.institution_id === metadata.institution.institution_id) {
                     processItem = false;
                     break;
@@ -125,13 +129,14 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
                 setStatus({ loading: false, successMessage: null, errorMessage: "This account has already been linked" });
                 return;
             }
+            console.log(lookbackDaysRef.current);
             api
-                .post('/api/plaiditem/exchange_public_token/', { public_token })
+                .post('/api/plaiditem/exchange_public_token/', { public_token, metadata, lookback_days: lookbackDaysRef.current })
                 .catch(error => {
                     console.error('Error setting access token:', error.response)
                 });
         });
-    }, []);
+    }, [lookbackDays]);
 
     const config = {
         token: linkToken,
