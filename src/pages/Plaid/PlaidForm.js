@@ -142,7 +142,7 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
         setShowModal(false);
         open();
     }
-    console.log(status)
+    // TODO: BUG when error on create, and opening Link again immediately gives error message again.
     return (
         <>
             <Button onClick={() => setShowModal(true)} disabled={!ready} {...props}>
