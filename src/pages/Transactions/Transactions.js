@@ -7,9 +7,8 @@ import { Modal } from 'react-bootstrap'
 import TransactionsDisplay from './TransactionsDisplay'
 import TableNavigator from '../../components/table/TableNavigator'
 import SearchTable from '../../components/table/SearchTable'
-import AddButton from './AddButton'
-
-
+import AddButton, { buttonStyle } from './ControlButton'
+import PlaidLink from '../Plaid/Plaid'
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([])
@@ -147,13 +146,17 @@ const Transactions = () => {
       })
   }
 
+  const ControlButtons = () => {
+    return (
+      <div className='d-flex justify-content-around'>
+        <AddButton onClick={handleAdd} />
+        <PlaidLink buttonText='Link New Account' style={buttonStyle} />
+      </div>
+    )
+  }
+
   return (
     <>
-      {/* <FloatingIcon onClick={handleAdd}>
-        <FontAwesomeIcon icon={faPlus} size='2x' />
-      </FloatingIcon> */}
-
-
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Body>
           <TransactionForm
@@ -169,7 +172,7 @@ const Transactions = () => {
       <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
 
       <SearchTable columns={searchColumns} exportData={handleExportToCsv} onSearch={handleSearch} />
-      <AddButton onClick={handleAdd} />
+      <ControlButtons />
       <TransactionsDisplay transactions={transactions} handleDelete={handleDelete} handleEdit={handleEdit} />
       <TableNavigator initialPage={1} totalPages={totalPages} onPageChange={handlePageChange} />
     </>
