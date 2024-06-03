@@ -4,13 +4,16 @@ import { usePlaidLink } from 'react-plaid-link';
 import api from '../../api';
 import Status from '../../components/Status';
 
-const LookbackDaysModal = ({ show, onSubmit, onClose, lookbackDays, setLookbackDays }) => {
+const LookbackDateModal = ({ show, onSubmit, onClose, lookbackDate, setLookbackDate }) => {
     const [useAllData, setUseAllData] = useState(true);
+    const today = new Date();
+    const oneYearAgo = new Date(today);
+    oneYearAgo.setDate(oneYearAgo.getDate() - 365);
 
     const handleUseAllDataChange = (e) => {
         setUseAllData(e.target.checked);
         if (e.target.checked) {
-            setLookbackDays(null);
+            setLookbackDate(null);
         }
     };
 
@@ -18,20 +21,17 @@ const LookbackDaysModal = ({ show, onSubmit, onClose, lookbackDays, setLookbackD
         setUseAllData(!e.target.checked);
     }
 
-    const handleLookbackDaysChange = (e) => {
-        const value = parseInt(e.target.value);
-        if (!isNaN(value)) {
-            setLookbackDays(Math.max(0, Math.min(365, value))); // Ensure lookback days are between 0 and 365
-        }
+    const handlelookbackDateChange = (e) => {
+        setLookbackDate(e.target.value);
     };
 
     return (
-        <Modal show={show}>
-            <Modal.Body>
-                <p>
-                    Would you like to sync all available historical transactions, or set a custom range?
-                </p>
-                <Form>
+        <Modal show={show} onHide={onClose}>
+            <Form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
+                <Modal.Body>
+                    <p>
+                        Would you like to sync all available historical transactions, or set a custom range?
+                    </p>
                     <Form.Group controlId="allData">
                         <Form.Check
                             type="radio"
@@ -49,27 +49,30 @@ const LookbackDaysModal = ({ show, onSubmit, onClose, lookbackDays, setLookbackD
                         />
                     </Form.Group>
                     {!useAllData && (
-                        <Form.Group controlId="lookbackDays">
-                            <Form.Label>Lookback Days</Form.Label>
-                            <Form.Control
-                                type="number"
-                                value={lookbackDays}
-                                onChange={handleLookbackDaysChange}
-                                max={365}
-                                min={0}
+                        <Form.Group controlId="lookbackDate">
+                            <Form.Label>Oldest Lookback Date</Form.Label>
+                            <input
+                                type="date"
+                                name="date"
+                                className="form-control"
+                                value={lookbackDate}
+                                onChange={handlelookbackDateChange}
+                                min={oneYearAgo.toISOString().split('T')[0]}
+                                max={today.toISOString().split('T')[0]}
+                                required={!useAllData}
                             />
                         </Form.Group>
                     )}
-                </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>
-                    Cancel
-                </Button>
-                <Button variant="primary" onClick={onSubmit}>
-                    Apply
-                </Button>
-            </Modal.Footer>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={onClose}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" type="submit">
+                        Apply
+                    </Button>
+                </Modal.Footer>
+            </Form>
         </Modal>
     );
 };
@@ -96,13 +99,13 @@ const getExistingItems = async () => {
 
 const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => {
     const [showModal, setShowModal] = useState(false);
-    const [lookbackDays, setLookbackDays] = useState(null);
+    const [lookbackDate, setLookbackDate] = useState(null);
     const [status, setStatus] = useState({ loading: false, successMessage: null, errorMessage: null });
-    const lookbackDaysRef = useRef(lookbackDays);
+    const lookbackDateRef = useRef(lookbackDate);
 
     useEffect(() => {
-        lookbackDaysRef.current = lookbackDays;
-    }, [lookbackDays]);
+        lookbackDateRef.current = lookbackDate;
+    }, [lookbackDate]);
 
     const onSuccess = useCallback((public_token, metadata) => {
         // Validate that the item does not already exist
@@ -129,14 +132,14 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
                 setStatus({ loading: false, successMessage: null, errorMessage: "This account has already been linked" });
                 return;
             }
-            console.log(lookbackDaysRef.current);
+            console.log(lookbackDateRef.current);
             api
-                .post('/api/plaiditem/exchange_public_token/', { public_token, metadata, lookback_days: lookbackDaysRef.current })
+                .post('/api/plaiditem/exchange_public_token/', { public_token, metadata, lookback_date: lookbackDateRef.current })
                 .catch(error => {
                     console.error('Error setting access token:', error.response)
                 });
         });
-    }, [lookbackDays]);
+    }, []);
 
     const config = {
         token: linkToken,
@@ -154,12 +157,12 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
                 {buttonText}
             </Button>
             <Status {...status} />
-            <LookbackDaysModal
+            <LookbackDateModal
                 show={showModal}
                 onSubmit={onSubmit}
                 onClose={() => setShowModal(false)}
-                lookbackDays={lookbackDays}
-                setLookbackDays={setLookbackDays}
+                lookbackDate={lookbackDate}
+                setLookbackDate={setLookbackDate}
             />
         </>
     );

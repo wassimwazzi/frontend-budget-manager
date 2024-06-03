@@ -76,7 +76,7 @@ const TransactionsDisplay = ({ transactions, handleDelete, handleEdit }) => {
                             {transaction.plaid_transaction && <PlaidTransactionCard transaction={transaction.plaid_transaction} />}
                             <div className='d-flex justify-content-center'>
                                 <button onClick={() => handleEdit(transaction.id)} className='btn btn-secondary'>Edit</button>
-                                <DeleteButton onClick={() => handleDelete(transaction.id)} />
+                                <DeleteButton handleDelete={() => handleDelete(transaction.id)} warningMessage={'Are you sure you want to delete this transaction?'} />
                             </div>
 
                         </>
