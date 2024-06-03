@@ -4,7 +4,8 @@ import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import Item from '../../components/Item'
 import { DeleteButton } from '../../components/ActionButtons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMoneyBill1Wave, faMoneyBillTrendUp } from '@fortawesome/free-solid-svg-icons'
+import { faMoneyBill1Wave, faMoneyBillTrendUp, faFileImport, faLightbulb } from '@fortawesome/free-solid-svg-icons'
+import PlaidTransactionCard from './PlaidTransaction';
 
 function CustomToggle({ children, eventKey }) {
 
@@ -24,6 +25,26 @@ const IncomeOrExpenseIcon = ({ income }) => {
     }
     return <FontAwesomeIcon icon={faMoneyBill1Wave} size='2x' />
 }
+
+const InferredCategoryPill = () => {
+    const style = {
+        display: 'inline-block',
+        padding: '0.5rem 1rem',
+        fontSize: '14px',
+        color: '#fff',
+        backgroundColor: '#dbb749',
+        borderRadius: '200px',
+        textAlign: 'center',
+        whiteSpace: 'nowrap'
+    };
+
+    return (
+        <div style={style}>
+            <FontAwesomeIcon icon={faLightbulb} style={{ marginRight: '0.5rem' }} />
+            Inferred Category
+        </div>
+    );
+};
 
 const TransactionsDisplay = ({ transactions, handleDelete, handleEdit }) => {
 
@@ -45,10 +66,19 @@ const TransactionsDisplay = ({ transactions, handleDelete, handleEdit }) => {
                     </div>
                     <Accordion.Collapse eventKey={id}>
                         <>
-                            <p>Description: {transaction.description}</p>
-                            <p>Inferred Category: {transaction.inferred_category ? 'Yes' : 'No'}</p>
-                            <button onClick={() => handleEdit(transaction.id)} className='btn btn-secondary'>Edit</button>
-                            <DeleteButton handleDelete={() => handleDelete(transaction.id)} />
+                            <div style={{ borderTop: '1px solid #dee2e6' }}>
+                                <div className='d-flex justify-content-around' style={{ marginTop: '1rem' }}>
+                                    {transaction.description && <p>Description: {transaction.description}</p>}
+                                    {transaction.inferred_category && <InferredCategoryPill />}
+                                    {transaction.file && <div><FontAwesomeIcon icon={faFileImport} size='1x' /> {transaction.file.file}</div>}
+                                </div>
+                            </div>
+                            {transaction.plaid_transaction && <PlaidTransactionCard transaction={transaction.plaid_transaction} />}
+                            <div className='d-flex justify-content-center'>
+                                <button onClick={() => handleEdit(transaction.id)} className='btn btn-secondary'>Edit</button>
+                                <DeleteButton handleDelete={() => handleDelete(transaction.id)} warningMessage={'Are you sure you want to delete this transaction?'} />
+                            </div>
+
                         </>
                     </Accordion.Collapse>
                 </CustomToggle>
