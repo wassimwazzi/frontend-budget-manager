@@ -47,7 +47,7 @@ const InferredCategoryPill = () => {
 };
 
 const TransactionsDisplay = ({ transactions, handleDelete, handleEdit }) => {
-
+    console.log(transactions)
     const TransactionItem = ({ transaction, id }) => (
         <div className='p-3' style={{ overflow: 'scroll' }}>
             <Item>

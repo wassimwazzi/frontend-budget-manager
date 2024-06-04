@@ -11,8 +11,8 @@ const Categories = () => {
     const [categories, setCategories] = useState([])
     const [editCategoryId, setEditCategoryId] = useState(null)
     const [totalPages, setTotalPages] = useState(1)
-    const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
-    const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
+    const [statusSucessMessage, setStatusSucessMessage] = useState(null)
+    const [statusErrorMessage, setStatusErrorMessage] = useState(null)
 
     const getActionButtons = useCallback(categoryId => (
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -41,6 +41,7 @@ const Categories = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)
+                setStatusErrorMessage(extractErrorMessageFromResponse(error.response))
             })
     }, [getActionButtons])
 
@@ -54,17 +55,17 @@ const Categories = () => {
     }
 
     const handleDelete = categoryId => {
-        setDeleteSucessMessage(null)
-        setDeleteErrorMessage(null)
+        setStatusSucessMessage(null)
+        setStatusErrorMessage(null)
         api
             .delete(`/api/categories/${categoryId}/`)
             .then(response => {
                 setCategories(categories => categories.filter(category => category.id !== categoryId))
-                setDeleteSucessMessage('Category successfully deleted.')
+                setStatusSucessMessage('Category successfully deleted.')
             })
             .catch(error => {
                 console.error('Error deleting category:', error.response)
-                setDeleteErrorMessage(extractErrorMessageFromResponse(error))
+                setStatusErrorMessage(extractErrorMessageFromResponse(error))
             })
     }
 
@@ -93,7 +94,7 @@ const Categories = () => {
                 onSubmit={handleFormUpdate}
                 onClear={() => setEditCategoryId(null)}
             />
-            <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
+            <Status successMessage={statusSucessMessage} errorMessage={statusErrorMessage} />
 
             <Table
                 columns={columns}

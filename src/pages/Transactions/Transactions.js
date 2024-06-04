@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import api from '../../api'
 import TransactionForm from './TransactionForm'
 import Status from '../../components/Status'
@@ -9,6 +9,7 @@ import TableNavigator from '../../components/table/TableNavigator'
 import SearchTable from '../../components/table/SearchTable'
 import AddButton, { buttonStyle } from './ControlButton'
 import PlaidLink from '../Plaid/Plaid'
+import SortForm from './SortForm'
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([])
@@ -16,12 +17,11 @@ const Transactions = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [categories, setCategories] = useState([])
   const [currencies, setCurrencies] = useState([])
-  const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
-  const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
+  const [statusSuccessMessage, setStatusSuccessMessage] = useState(null)
+  const [statusErrorMessage, setStatusErrorMessage] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [searchParams, setSearchParams] = useState({ page: 1 })
-  // const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
-  const sortParams = useMemo(() => ({ sort: 'date', order: 'desc' }), [])
+  const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
 
   const fetchData = useCallback((params) => {
     api
@@ -32,6 +32,7 @@ const Transactions = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error.response)
+        setStatusErrorMessage(extractErrorMessageFromResponse(error))
       })
   }, [])
 
@@ -65,19 +66,19 @@ const Transactions = () => {
   }
 
   const handleDelete = transactionId => {
-    setDeleteSucessMessage(null)
-    setDeleteErrorMessage(null)
+    setStatusSuccessMessage(null)
+    setStatusErrorMessage(null)
     api
       .delete(`/api/transactions/${transactionId}/`)
       .then(response => {
         setTransactions(transactions => (
           transactions.filter(transaction => transaction.id !== transactionId)
         ))
-        setDeleteSucessMessage('Transaction successfully deleted.')
+        setStatusSuccessMessage('Transaction successfully deleted.')
       })
       .catch(error => {
         console.error('Error deleting transaction:', error.response)
-        setDeleteErrorMessage(extractErrorMessageFromResponse(error))
+        setStatusErrorMessage(extractErrorMessageFromResponse(error))
       })
   }
 
@@ -100,36 +101,18 @@ const Transactions = () => {
       setTransactions([updatedTransaction, ...transactions])
     }
     setEditTransactionId(null)
-    // setShowModal(false)
   }
 
   const handlePageChange = page => {
     setSearchParams({ ...searchParams, page })
-    fetchData({ ...searchParams, page, ...sortParams })
   }
 
-  const getParamsHelper = (initialParams, newParams) => {
-    const params = { ...initialParams }
-    newParams.forEach(search => {
-      if (params.filter && params.filter_value) {
-        params.filter.push(search.column);
-        params.filter_value.push(search.term);
-      }
-      else {
-        params.filter = [search.column];
-        params.filter_value = [search.term];
-      }
-    })
-    return params
-  }
   const handleSearch = (searchTerms) => {
-    const params = getParamsHelper({ page: 1 }, searchTerms)
+    const params = { page: 1, ...searchTerms }
     setSearchParams(params)
-    fetchData({ ...params, ...sortParams })
   }
 
   const handleExportToCsv = (params) => {
-    params = getParamsHelper({}, params)
     api
       .get('/api/exports/transactions/', { params })
       .then(response => {
@@ -148,9 +131,16 @@ const Transactions = () => {
 
   const ControlButtons = () => {
     return (
-      <div className='d-flex justify-content-around'>
-        <AddButton onClick={handleAdd} />
-        <PlaidLink buttonText='Link New Account' style={buttonStyle} />
+      <div className='d-flex justify-content-around align-items-center'>
+        <div>
+          <AddButton onClick={handleAdd} />
+        </div>
+        <div>
+          <PlaidLink buttonText='Link New Account' style={buttonStyle} />
+        </div>
+        <div>
+          <SortForm cols={searchColumns} sortParams={sortParams} setSortParams={setSortParams} />
+        </div>
       </div>
     )
   }
@@ -169,7 +159,7 @@ const Transactions = () => {
         </Modal.Body>
       </Modal>
 
-      <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
+      <Status successMessage={statusSuccessMessage} errorMessage={statusErrorMessage} />
 
       <SearchTable columns={searchColumns} exportData={handleExportToCsv} onSearch={handleSearch} />
       <ControlButtons />

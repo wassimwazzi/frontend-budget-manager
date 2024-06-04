@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table as BootstrapTable } from 'react-bootstrap';
 import SearchTable from "./SearchTable";
 import TabeleNavigator from "./TableNavigator";
@@ -17,49 +17,29 @@ const SortedColumn = ({ title, sortAsc }) => {
 };
 
 const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns }) => {
-    const [searches, setSearches] = useState([]);
+    const [searches, setSearches] = useState({});
     const [sortColumn, setSortColumn] = useState(columns[0]);
     const [sortAsc, setSortAsc] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    
-    function updateData(searches, page, sortColumn, sortAsc) {
+
+    useEffect(() => {
         const params = {
-            page: page,
+            page: currentPage,
+            ...searches
         };
         if (sortColumn) {
             params.sort = sortColumn;
             params.order = sortAsc ? 'asc' : 'desc';
         }
-        searches.forEach(search => {
-            if (params.filter && params.filter_value) {
-                params.filter.push(search.column);
-                params.filter_value.push(search.term);
-            }
-            else {
-                params.filter = [search.column];
-                params.filter_value = [search.term];
-            }
-        });
         fetchData(params);
-    }
+    }, [searches, sortColumn, sortAsc, currentPage, fetchData])
 
     function handleExport(searches) {
-        const params = {};
+        const params = searches
         if (sortColumn) {
             params.sort = sortColumn;
             params.order = sortAsc ? 'asc' : 'desc';
         }
-        searches.forEach(search => {
-            if (params.filter && params.filter_value) {
-                params.filter.push(search.column);
-                params.filter_value.push(search.term);
-            }
-            else {
-                params.filter = [search.column];
-                params.filter_value = [search.term];
-            }
-        }
-        );
         exportData(params);
     }
 
@@ -67,8 +47,6 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
     const handleSearch = (searches) => {
         setSearches(searches);
         setCurrentPage(1);
-        // Reset page to 1 when searching
-        updateData(searches, 1, sortColumn, sortAsc);
     };
 
     const handleSort = (column) => {
@@ -79,12 +57,10 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
             setSortColumn(column);
             setSortAsc(true);
         }
-        updateData(searches, currentPage, column, sortAsc);
     };
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
-        updateData(searches, page, sortColumn, sortAsc);
     }
 
     return (
