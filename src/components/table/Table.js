@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table as BootstrapTable } from 'react-bootstrap';
 import SearchTable from "./SearchTable";
 import TabeleNavigator from "./TableNavigator";
@@ -17,14 +17,14 @@ const SortedColumn = ({ title, sortAsc }) => {
 };
 
 const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns }) => {
-    const [searches, setSearches] = useState([]);
+    const [searches, setSearches] = useState({});
     const [sortColumn, setSortColumn] = useState(columns[0]);
     const [sortAsc, setSortAsc] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
 
-    function updateData(searches, page, sortColumn, sortAsc) {
+    useEffect(() => {
         const params = {
-            page: page,
+            page: currentPage,
             ...searches
         };
         if (sortColumn) {
@@ -32,7 +32,7 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
             params.order = sortAsc ? 'asc' : 'desc';
         }
         fetchData(params);
-    }
+    }, [searches, sortColumn, sortAsc, currentPage, fetchData])
 
     function handleExport(searches) {
         const params = searches
@@ -47,8 +47,6 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
     const handleSearch = (searches) => {
         setSearches(searches);
         setCurrentPage(1);
-        // Reset page to 1 when searching
-        updateData(searches, 1, sortColumn, sortAsc);
     };
 
     const handleSort = (column) => {
@@ -59,12 +57,10 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
             setSortColumn(column);
             setSortAsc(true);
         }
-        updateData(searches, currentPage, column, sortAsc);
     };
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
-        updateData(searches, page, sortColumn, sortAsc);
     }
 
     return (

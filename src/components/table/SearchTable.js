@@ -45,11 +45,6 @@ const SearchTable = ({ columns, onSearch, exportData }) => {
     setSelectedOperator(SearchOperators[0].value)
   };
 
-  const handleOperator = (e) => {
-    console.log(e.target.value)
-    setSelectedOperator(e.target.value)
-  }
-
   const handleExport = () => {
     exportData(searchTerms);
   };
@@ -98,7 +93,7 @@ const SearchTable = ({ columns, onSearch, exportData }) => {
               <Form.Select
                 value={selectedOperator}
                 // onChange={event => setSelectedOperator(event.target.value)}
-                onChange={handleOperator}
+                onChange={e => setSelectedOperator(e.target.value)}
                 className='ms-2 rounded-lg border-secondary'
                 required
               >

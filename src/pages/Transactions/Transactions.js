@@ -9,6 +9,7 @@ import TableNavigator from '../../components/table/TableNavigator'
 import SearchTable from '../../components/table/SearchTable'
 import AddButton, { buttonStyle } from './ControlButton'
 import PlaidLink from '../Plaid/Plaid'
+import SortForm from './SortForm'
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([])
@@ -20,8 +21,7 @@ const Transactions = () => {
   const [statusErrorMessage, setStatusErrorMessage] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [searchParams, setSearchParams] = useState({ page: 1 })
-  // const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
-  const sortParams = useMemo(() => ({ sort: 'date', order: 'desc' }), [])
+  const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
 
   const fetchData = useCallback((params) => {
     api
@@ -34,7 +34,7 @@ const Transactions = () => {
         console.error('Error fetching data:', error.response)
         setStatusErrorMessage(extractErrorMessageFromResponse(error))
       })
-  }, [])
+  }, [sortParams, searchParams])
 
   useEffect(() => {
     api
@@ -101,18 +101,15 @@ const Transactions = () => {
       setTransactions([updatedTransaction, ...transactions])
     }
     setEditTransactionId(null)
-    // setShowModal(false)
   }
 
   const handlePageChange = page => {
     setSearchParams({ ...searchParams, page })
-    fetchData({ ...searchParams, page, ...sortParams })
   }
 
   const handleSearch = (searchTerms) => {
     const params = { page: 1, ...searchTerms }
     setSearchParams(params)
-    fetchData({ ...params, ...sortParams })
   }
 
   const handleExportToCsv = (params) => {
@@ -134,9 +131,16 @@ const Transactions = () => {
 
   const ControlButtons = () => {
     return (
-      <div className='d-flex justify-content-around'>
-        <AddButton onClick={handleAdd} />
-        <PlaidLink buttonText='Link New Account' style={buttonStyle} />
+      <div className='d-flex justify-content-around align-items-center'>
+        <div>
+          <AddButton onClick={handleAdd} />
+        </div>
+        <div>
+          <PlaidLink buttonText='Link New Account' style={buttonStyle} />
+        </div>
+        <div>
+          <SortForm cols={searchColumns} sortParams={sortParams} setSortParams={setSortParams} />
+        </div>
       </div>
     )
   }
