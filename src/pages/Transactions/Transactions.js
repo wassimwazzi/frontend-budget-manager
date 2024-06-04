@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import api from '../../api'
 import TransactionForm from './TransactionForm'
 import Status from '../../components/Status'
@@ -34,7 +34,7 @@ const Transactions = () => {
         console.error('Error fetching data:', error.response)
         setStatusErrorMessage(extractErrorMessageFromResponse(error))
       })
-  }, [sortParams, searchParams])
+  }, [])
 
   useEffect(() => {
     api
