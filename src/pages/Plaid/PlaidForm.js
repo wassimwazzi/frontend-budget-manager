@@ -55,7 +55,7 @@ const LookbackDateModal = ({ show, onSubmit, onClose, lookbackDate, setLookbackD
                                 type="date"
                                 name="date"
                                 className="form-control"
-                                value={lookbackDate}
+                                value={lookbackDate ? lookbackDate : today.toISOString().split('T')[0]}
                                 onChange={handlelookbackDateChange}
                                 min={oneYearAgo.toISOString().split('T')[0]}
                                 max={today.toISOString().split('T')[0]}
@@ -141,9 +141,17 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
         });
     }, []);
 
+    const onExit = useCallback((error, metadata) => {
+        if (error) {
+            console.log('Error during Plaid Link:', error, metadata);
+            setStatus({ loading: false, successMessage: null, errorMessage: "An error occurred during the Plaid Link process" });
+        }
+    }, []);
+
     const config = {
         token: linkToken,
         onSuccess,
+        onExit,
     };
     const { open, ready } = usePlaidLink(config);
     const onSubmit = () => {

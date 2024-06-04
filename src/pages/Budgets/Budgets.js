@@ -13,8 +13,8 @@ const Budgets = () => {
     const [categories, setCategories] = useState([])
     const [currencies, setCurrencies] = useState([])
     const [totalPages, setTotalPages] = useState(1)
-    const [deleteSucessMessage, setDeleteSucessMessage] = useState(null)
-    const [deleteErrorMessage, setDeleteErrorMessage] = useState(null)
+    const [statusSuccessMessage, setStatusSuccessMessage] = useState(null)
+    const [statusErrorMessage, setStatusErrorMessage] = useState(null)
 
     const getActionButtons = useCallback(budgetId => (
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
@@ -41,6 +41,7 @@ const Budgets = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)
+                setStatusErrorMessage(extractErrorMessageFromResponse(error.response))
             })
     }, [customizeBudget])
 
@@ -78,17 +79,17 @@ const Budgets = () => {
     }
 
     const handleDelete = budgetId => {
-        setDeleteSucessMessage(null)
-        setDeleteErrorMessage(null)
+        setStatusSuccessMessage(null)
+        setStatusErrorMessage(null)
         api
             .delete(`/api/budgets/${budgetId}/`)
             .then(response => {
                 setBudgets(budgets => (budgets.filter(budget => budget.id !== budgetId)))
-                setDeleteSucessMessage('Budget successfully deleted.')
+                setStatusSuccessMessage('Budget successfully deleted.')
             })
             .catch(error => {
                 console.error('Error deleting budget:', error.response)
-                setDeleteErrorMessage(extractErrorMessageFromResponse(error))
+                setStatusErrorMessage(extractErrorMessageFromResponse(error))
             })
     }
 
@@ -119,7 +120,7 @@ const Budgets = () => {
                 onClear={() => setEditBudgetId(null)}
             />
 
-            <Status successMessage={deleteSucessMessage} errorMessage={deleteErrorMessage} />
+            <Status successMessage={statusSuccessMessage} errorMessage={statusErrorMessage} />
             <Table
                 columns={columns}
                 data={budgets}

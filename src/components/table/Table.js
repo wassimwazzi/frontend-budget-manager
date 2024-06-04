@@ -21,45 +21,25 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
     const [sortColumn, setSortColumn] = useState(columns[0]);
     const [sortAsc, setSortAsc] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     function updateData(searches, page, sortColumn, sortAsc) {
         const params = {
             page: page,
+            ...searches
         };
         if (sortColumn) {
             params.sort = sortColumn;
             params.order = sortAsc ? 'asc' : 'desc';
         }
-        searches.forEach(search => {
-            if (params.filter && params.filter_value) {
-                params.filter.push(search.column);
-                params.filter_value.push(search.term);
-            }
-            else {
-                params.filter = [search.column];
-                params.filter_value = [search.term];
-            }
-        });
         fetchData(params);
     }
 
     function handleExport(searches) {
-        const params = {};
+        const params = searches
         if (sortColumn) {
             params.sort = sortColumn;
             params.order = sortAsc ? 'asc' : 'desc';
         }
-        searches.forEach(search => {
-            if (params.filter && params.filter_value) {
-                params.filter.push(search.column);
-                params.filter_value.push(search.term);
-            }
-            else {
-                params.filter = [search.column];
-                params.filter_value = [search.term];
-            }
-        }
-        );
         exportData(params);
     }
 
