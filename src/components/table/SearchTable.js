@@ -12,6 +12,20 @@ const SearchOperators = [
   { value: 'lte', label: 'is less than or equal to', shortLabel: '<=', caseSensitive: false },
 ];
 
+const formSelectContainerStyle = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'flex-start',
+  alignItems: 'center'
+};
+
+const formSelectStyle = {
+  flex: '1 1 auto', // Allow the select input to grow and shrink
+  minWidth: '0', // Prevent overflow
+  marginTop: '0.5rem' // Add margin for spacing on small screens
+};
+
+
 const INITIAL_SEARCH_TERMS = { filter: [], filter_value: [], filter_operator: [] }
 const SearchTable = ({ columns, onSearch, exportData }) => {
   const [searchTerms, setSearchTerms] = useState(INITIAL_SEARCH_TERMS)
@@ -72,58 +86,88 @@ const SearchTable = ({ columns, onSearch, exportData }) => {
           <Form.Group className="mb-3">
             <InputGroup className="mb-3">
 
-              <Form.Select
-                value={selectedColumn}
-                onChange={event => setSelectedColumn(event.target.value)}
-                className='ms-2 rounded-lg border-secondary'
-                required
-              >
-                <>
-                  <option value="" disabled>
-                    Select a column
-                  </option>
-                  {columns.slice().sort().map(column => (
-                    <option key={column} value={column}>
-                      {column.replace('_', ' ')}
+              <div style={formSelectContainerStyle}>
+                <Form.Select
+                  value={selectedColumn}
+                  onChange={event => setSelectedColumn(event.target.value)}
+                  className="responsive-form-select ms-2 rounded-lg border-secondary"
+                  style={formSelectStyle}
+                  required
+                >
+                  <>
+                    <option value="" disabled>
+                      Select a column
                     </option>
-                  ))}
-                </>
-              </Form.Select>
+                    {columns.slice().sort().map(column => (
+                      <option key={column} value={column}>
+                        {column.replace('_', ' ')}
+                      </option>
+                    ))}
+                  </>
+                </Form.Select>
+              </div>
 
-              <Form.Select
-                value={selectedOperator}
-                // onChange={event => setSelectedOperator(event.target.value)}
-                onChange={e => setSelectedOperator(e.target.value)}
-                className='ms-2 rounded-lg border-secondary'
-                required
-              >
-                <>
-                  {SearchOperators.map(operator => (
-                    <option key={operator.value} value={operator.value}>
-                      {operator.label}
-                    </option>
-                  ))}
-                </>
-              </Form.Select>
+              <div style={formSelectContainerStyle}>
+                <Form.Select
+                  value={selectedOperator}
+                  // onChange={event => setSelectedOperator(event.target.value)}
+                  onChange={e => setSelectedOperator(e.target.value)}
+                  className='ms-2 rounded-lg border-secondary'
+                  required
+                  style={formSelectStyle}
+                >
+                  <>
+                    {SearchOperators.map(operator => (
+                      <option key={operator.value} value={operator.value}>
+                        {operator.label}
+                      </option>
+                    ))}
+                  </>
+                </Form.Select>
+              </div>
 
-              <FormControl
-                type="text"
-                placeholder="Search..."
-                value={selectedFilter}
-                onChange={event => setSelectedFilter(event.target.value)}
-                className='ms-2 rounded-lg border-secondary'
-                required
-              />
+              <div style={formSelectContainerStyle}>
+                <FormControl
+                  type="text"
+                  placeholder="Search..."
+                  value={selectedFilter}
+                  onChange={event => setSelectedFilter(event.target.value)}
+                  className='ms-2 rounded-lg border-secondary'
+                  required
+                  style={formSelectStyle}
+                />
+              </div>
 
-              <Form.Check
-                type="switch"
-                id="caseSensitiveSwitch"
-                label="Case Sensitive"
-                checked={caseSensitive}
-                onChange={() => setCaseSensitive(!caseSensitive)}
-                className='ms-2'
-              />
+              <div style={formSelectContainerStyle}>
+                <Form.Check
+                  type="switch"
+                  id="caseSensitiveSwitch"
+                  label="Case Sensitive"
+                  checked={caseSensitive}
+                  onChange={() => setCaseSensitive(!caseSensitive)}
+                  className='ms-2'
+                  style={formSelectStyle}
+                />
+              </div>
 
+            </InputGroup>
+
+            <InputGroup className='my-2'>
+              {searchTerms.filter.map((filter, index) => (
+                <InputGroup.Text key={index} className='rounded-lg bg-transparent text-black me-2'>
+                  {filter}: {searchTerms.filter_value[index]}
+                  <Button
+                    variant="link"
+                    onClick={() => handleRemoveSearch(index)}
+                    className='ms-2'
+                  >
+                    Remove
+                  </Button>
+                </InputGroup.Text>
+              ))}
+            </InputGroup>
+
+            <InputGroup>
               <Button
                 variant="primary"
                 type="submit"
@@ -138,26 +182,11 @@ const SearchTable = ({ columns, onSearch, exportData }) => {
                 </Button>
               }
 
-              {searchTerms.length > 0 && (
+              {searchTerms.filter.length > 0 && (
                 <Button variant="secondary" onClick={handleClearSearch} className='ms-2'>
                   Clear All
                 </Button>
               )}
-
-            </InputGroup>
-            <InputGroup>
-              {searchTerms.filter.map((filter, index) => (
-                <InputGroup.Text key={index} className='rounded-lg bg-transparent text-black me-2'>
-                  {filter}: {searchTerms.filter_value[index]}
-                  <Button
-                    variant="link"
-                    onClick={() => handleRemoveSearch(index)}
-                    className='ms-2'
-                  >
-                    Remove
-                  </Button>
-                </InputGroup.Text>
-              ))}
             </InputGroup>
           </Form.Group>
         </Form>

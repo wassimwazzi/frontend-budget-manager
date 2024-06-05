@@ -62,7 +62,7 @@ const PlaidTransactionCard = ({ transaction }) => {
                             </div>
                         </PlaidInfoItem>
                     </div>
-                    <div id="right-info">
+                    <div id="right-info" className='ms-2'>
                         <PlaidInfoItem>
                             <FontAwesomeIcon icon={faCreditCard} style={{ marginRight: '10px', color: '#007bff' }} />
                             <div>

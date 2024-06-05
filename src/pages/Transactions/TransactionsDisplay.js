@@ -46,43 +46,48 @@ const InferredCategoryPill = () => {
     );
 };
 
+const TransactionElementStyle = {
+    flex: 1,
+    marginLeft: '1rem',
+    whiteSpace: 'nowrap'
+}
+
 const TransactionsDisplay = ({ transactions, handleDelete, handleEdit }) => {
-    console.log(transactions)
     const TransactionItem = ({ transaction, id }) => (
         <div className='p-3' style={{ overflow: 'scroll' }}>
-            <Item>
-                <CustomToggle eventKey={id}>
+            <CustomToggle eventKey={id}>
+                <Item>
                     <div className='d-flex justify-content-between'>
                         <div style={{ flex: 1 }}>
                             <IncomeOrExpenseIcon income={transaction.category.income} />
                         </div>
-                        <h5 style={{ flex: 1 }}>{transaction.date}</h5>
-                        <h5 style={{ flex: 1 }}>{transaction.category.category}</h5>
-                        <p style={{ flex: 1 }}>{transaction.code}</p>
-                        <div style={{ flex: 1 }} className='d-flex'>
+                        <h5 style={TransactionElementStyle}>{transaction.date}</h5>
+                        <h5 style={TransactionElementStyle}>{transaction.category.category}</h5>
+                        <p style={TransactionElementStyle}>{transaction.code}</p>
+                        <div style={TransactionElementStyle} className='d-flex'>
                             <h5 >{transaction.amount}</h5>
                             <p style={{ marginLeft: '0.5rem' }}>{transaction.currency}</p>
                         </div>
                     </div>
-                    <Accordion.Collapse eventKey={id}>
-                        <>
-                            <div style={{ borderTop: '1px solid #dee2e6' }}>
-                                <div className='d-flex justify-content-around' style={{ marginTop: '1rem' }}>
-                                    {transaction.description && <p>Description: {transaction.description}</p>}
-                                    {transaction.inferred_category && <InferredCategoryPill />}
-                                    {transaction.file && <div><FontAwesomeIcon icon={faFileImport} size='1x' /> {transaction.file.file}</div>}
-                                </div>
+                </Item>
+                <Accordion.Collapse eventKey={id}>
+                    <Item>
+                        <div style={{ borderTop: '1px solid #dee2e6' }}>
+                            <div className='d-flex justify-content-around' style={{ marginTop: '1rem' }}>
+                                {transaction.description && <p>Description: {transaction.description}</p>}
+                                {transaction.inferred_category && <div><InferredCategoryPill /></div>}
+                                {transaction.file && <div><FontAwesomeIcon icon={faFileImport} size='1x' /> {transaction.file.file}</div>}
                             </div>
-                            {transaction.plaid_transaction && <PlaidTransactionCard transaction={transaction.plaid_transaction} />}
-                            <div className='d-flex justify-content-center'>
-                                <button onClick={() => handleEdit(transaction.id)} className='btn btn-secondary'>Edit</button>
-                                <DeleteButton handleDelete={() => handleDelete(transaction.id)} warningMessage={'Are you sure you want to delete this transaction?'} />
-                            </div>
+                        </div>
+                        {transaction.plaid_transaction && <PlaidTransactionCard transaction={transaction.plaid_transaction} />}
+                        <div className='d-flex justify-content-center'>
+                            <button onClick={() => handleEdit(transaction.id)} className='btn btn-secondary'>Edit</button>
+                            <DeleteButton handleDelete={() => handleDelete(transaction.id)} warningMessage={'Are you sure you want to delete this transaction?'} />
+                        </div>
 
-                        </>
-                    </Accordion.Collapse>
-                </CustomToggle>
-            </Item>
+                    </Item>
+                </Accordion.Collapse>
+            </CustomToggle>
         </div >
     )
 

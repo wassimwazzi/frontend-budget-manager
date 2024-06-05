@@ -12,6 +12,7 @@ export const buttonStyle = {
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow
     transition: 'all 0.3s ease', // Smooth transition for hover effects
     backgroundImage: 'linear-gradient(to right, #4FACFE 0%, #00F2FE 100%)', // Gradient background
+    minWidth: '150px'
 };
 
 export const hoverStyle = {

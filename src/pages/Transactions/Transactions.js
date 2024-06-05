@@ -130,15 +130,16 @@ const Transactions = () => {
   }
 
   const ControlButtons = () => {
+
     return (
       <div className='d-flex justify-content-around align-items-center'>
         <div>
           <AddButton onClick={handleAdd} />
         </div>
-        <div>
+        <div className='ms-2'>
           <PlaidLink buttonText='Link New Account' style={buttonStyle} />
         </div>
-        <div>
+        <div className='ms-2'>
           <SortForm cols={searchColumns} sortParams={sortParams} setSortParams={setSortParams} />
         </div>
       </div>
