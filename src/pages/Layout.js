@@ -2,6 +2,8 @@ import { Outlet, Link, Navigate, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
+import { useEffect } from 'react';
+import api from '../api';
 
 const Layout = () => {
   const location = useLocation();
@@ -13,13 +15,25 @@ const Layout = () => {
 
   const isAuthenticated = localStorage.getItem('authToken') !== null;
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    const lastUpdate = localStorage.getItem('lastUpdate');
+    const now = new Date();
+    // only update if last update was more than 1 day ago
+    const shouldUpdate = lastUpdate === null || now - new Date(lastUpdate) > 1000 * 60 * 60 * 24;
+    if (isAuthenticated && shouldUpdate) {
+      api.post('/api/goals/update_goals/');
+      localStorage.setItem('lastUpdate', now);
+    }
+  }, [isAuthenticated]);
 
   const getUserName = () => {
     return localStorage.getItem('username');
   };
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
 
   const NavLink = ({ to, children }) => {
     const active = location.pathname === to;
