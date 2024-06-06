@@ -132,7 +132,6 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
                 setStatus({ loading: false, successMessage: null, errorMessage: "This account has already been linked" });
                 return;
             }
-            console.log(lookbackDateRef.current);
             api
                 .post('/api/plaiditem/exchange_public_token/', { public_token, metadata, lookback_date: lookbackDateRef.current })
                 .catch(error => {
@@ -143,7 +142,7 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
 
     const onExit = useCallback((error, metadata) => {
         if (error) {
-            console.log('Error during Plaid Link:', error, metadata);
+            console.error('Error during Plaid Link:', error, metadata);
             setStatus({ loading: false, successMessage: null, errorMessage: "An error occurred during the Plaid Link process" });
         }
     }, []);

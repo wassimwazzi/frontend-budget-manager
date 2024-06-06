@@ -34,7 +34,6 @@ const SearchTable = ({ columns, onSearch, exportData }) => {
     } else {
       newSearchTerms.filter_operator.push(selectedOperator)
     }
-    console.log("NewSearchTerms", newSearchTerms)
     // handle Search
     setSearchTerms(newSearchTerms)
     onSearch(newSearchTerms)
@@ -52,7 +51,6 @@ const SearchTable = ({ columns, onSearch, exportData }) => {
   const handleRemoveSearch = (index) => {
     const newSearches = INITIAL_SEARCH_TERMS
     for (let key in searchTerms) {
-      console.log(key)
       newSearches[key] = [...searchTerms[key].slice(0, index), ...searchTerms[key].slice(index + 1)]
     }
     // const newSearches = [...searchTerms.slice(0, index), ...searchTerms.slice(index + 1)];
