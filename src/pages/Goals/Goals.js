@@ -17,6 +17,7 @@ const Goals = () => {
         api
             .get("/api/goals")
             .then((response) => {
+                console.log(response.data);
                 setGoals(sortGoals(response.data));
             })
             .catch((error) => {
