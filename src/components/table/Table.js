@@ -44,8 +44,8 @@ const Table = ({ data, columns, fetchData, exportData, totalPages, searchColumns
     }
 
 
-    const handleSearch = (searches) => {
-        setSearches(searches);
+    const handleSearch = (newSearches) => {
+        setSearches({ ...searches, ...newSearches });
         setCurrentPage(1);
     };
 
