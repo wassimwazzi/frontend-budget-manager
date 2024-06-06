@@ -2,6 +2,8 @@ import { Outlet, Link, Navigate, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
+import { useEffect } from 'react';
+import api from '../api';
 
 const Layout = () => {
   const location = useLocation();
@@ -13,13 +15,20 @@ const Layout = () => {
 
   const isAuthenticated = localStorage.getItem('authToken') !== null;
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      api.post('/api/goals/update_goals/');
+    }
+  }, [isAuthenticated]);
 
   const getUserName = () => {
     return localStorage.getItem('username');
   };
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
 
   const NavLink = ({ to, children }) => {
     const active = location.pathname === to;
