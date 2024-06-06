@@ -7,6 +7,7 @@ import Transition from "../../../components/Transition";
 const DateForm = ({ start_date, expected_completion_date, updateFields, setPreventSubmit }) => {
     const [useDefaultStart, setUseDefaultStart] = useState(true);
     const [startBeforeEnd, setStartBeforeEnd] = useState(true);
+    const [recurring, setRecurring] = useState(false);
 
     useEffect(() => {
         if (start_date > expected_completion_date) {
@@ -29,7 +30,7 @@ const DateForm = ({ start_date, expected_completion_date, updateFields, setPreve
     }
 
 
-    function handleChange(e) {
+    function handleMonthChange(e) {
         const input = e.target.value;
         const name = e.target.name;
         updateFields({ [name]: input });
@@ -44,13 +45,27 @@ const DateForm = ({ start_date, expected_completion_date, updateFields, setPreve
                     className="form-control"
                     name="expected_completion_date"
                     value={expected_completion_date}
-                    onChange={handleChange}
+                    onChange={handleMonthChange}
                     required
                     min={getCurrentMonth()}
                 />
                 <Form.Text className="text-info">
                     <strong>Note:</strong> This value will be set to the last day of the month.
                 </Form.Text>
+            </Form.Group>
+            <Form.Group controlId="recurring" className="mt-3">
+                <Form.Text className="text-muted">
+                    Is this a recurring goal?
+                </Form.Text>
+                <Form.Check
+                    type="switch"
+                    name="recurring"
+                    onChange={(e) => {
+                        updateFields({ recurring: e.target.checked });
+                        setRecurring(e.target.checked);
+                    }}
+                    checked={recurring}
+                />
             </Form.Group>
             <Form.Group controlId="start-date" className="mt-3">
                 <Form.Text className="text-muted">
@@ -72,7 +87,7 @@ const DateForm = ({ start_date, expected_completion_date, updateFields, setPreve
                         className="form-control"
                         name="start_date"
                         value={start_date}
-                        onChange={handleChange}
+                        onChange={handleMonthChange}
                         max={expected_completion_date}
                         isInvalid={!startBeforeEnd}
                         required

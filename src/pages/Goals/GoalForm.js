@@ -13,6 +13,7 @@ const INITIAL_DATA = {
     amount: '',
     start_date: getCurrentMonth(),
     expected_completion_date: '',
+    recurring: false,
 };
 
 const BREADCRUMBS = ['Description', 'Amount', 'Date'];

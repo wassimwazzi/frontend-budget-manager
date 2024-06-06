@@ -20,6 +20,8 @@ export function currentlyContributingTo(goal) {
 }
 
 export function getGoalRanking(goal) {
+    // TODO: Implement a better ranking system
+    // Goals which today falls within their contribution period should be ranked higher
     if (goal.progress === 100 && goal.status === GoalStatusTypes.IN_PROGRESS) return 5;
     if (goal.status === GoalStatusTypes.IN_PROGRESS) return 4;
     if (!currentlyContributingTo(goal)) return 3;

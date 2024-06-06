@@ -11,6 +11,13 @@ const CreateGoal = () => {
 
     function submit(data) {
         setSubmitErrorMessage(null);
+        if (data.recurring) {
+            // TODO - handle recurring goals states and frequency
+            data.recurring = 'FIXED'
+            data.recurring_frequency = 1
+        } else {
+            data.recurring = 'NON_RECURRING'
+        }
         api
             .post('/api/goals/', data)
             .then((res) => {
