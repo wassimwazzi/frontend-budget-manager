@@ -16,8 +16,13 @@ const Layout = () => {
   const isAuthenticated = localStorage.getItem('authToken') !== null;
 
   useEffect(() => {
-    if (isAuthenticated) {
+    const lastUpdate = localStorage.getItem('lastUpdate');
+    const now = new Date();
+    // only update if last update was more than 1 day ago
+    const shouldUpdate = lastUpdate === null || now - new Date(lastUpdate) > 1000 * 60 * 60 * 24;
+    if (isAuthenticated && shouldUpdate) {
       api.post('/api/goals/update_goals/');
+      localStorage.setItem('lastUpdate', now);
     }
   }, [isAuthenticated]);
 
