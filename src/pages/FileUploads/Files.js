@@ -7,6 +7,8 @@ import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFrom
 import { formatToHumanReadableDate } from '../../utils/dateUtils'
 import { DeleteButton } from '../../components/ActionButtons'
 
+const DELETE_WARNING_MESSAGE = 'All transactions associated with this file will be deleted. Are you sure you want to delete this file?'
+
 const Files = () => {
     const [files, setFiles] = useState([])
     const [totalPages, setTotalPages] = useState(1)
@@ -39,7 +41,7 @@ const Files = () => {
 
     const getActionButtons = useCallback(fileId => (
         <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <DeleteButton handleDelete={() => handleDelete(fileId)} />
+            <DeleteButton handleDelete={() => handleDelete(fileId)} warningMessage={DELETE_WARNING_MESSAGE} />
         </div>
     ), [handleDelete])
 
