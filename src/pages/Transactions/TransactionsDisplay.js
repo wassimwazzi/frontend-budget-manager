@@ -71,24 +71,21 @@ const TransactionsDisplay = ({ transactions, handleDelete, handleEdit }) => {
                     </div>
                 </Item>
                 <Accordion.Collapse eventKey={id}>
-                    <Item>
-                        <div style={{ borderTop: '1px solid #dee2e6' }}>
-                            <div className='d-flex justify-content-around' style={{ marginTop: '1rem' }}>
-                                {transaction.description && <p>Description: {transaction.description}</p>}
-                                {transaction.inferred_category && <div><InferredCategoryPill /></div>}
-                                {transaction.file && <div><FontAwesomeIcon icon={faFileImport} size='1x' /> {transaction.file.file}</div>}
-                            </div>
+                    <div className='py-2 px-1' style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                        <div className='d-flex justify-content-around' style={{ marginTop: '1rem' }}>
+                            {transaction.description && <p>Description: {transaction.description}</p>}
+                            {transaction.inferred_category && <div><InferredCategoryPill /></div>}
+                            {transaction.file && <div><FontAwesomeIcon icon={faFileImport} size='1x' /> {transaction.file.file}</div>}
                         </div>
                         {transaction.plaid_transaction && <PlaidTransactionCard transaction={transaction.plaid_transaction} />}
                         <div className='d-flex justify-content-center'>
                             <button onClick={() => handleEdit(transaction.id)} className='btn btn-secondary'>Edit</button>
                             <DeleteButton handleDelete={() => handleDelete(transaction.id)} warningMessage={'Are you sure you want to delete this transaction?'} />
                         </div>
-
-                    </Item>
+                    </div>
                 </Accordion.Collapse>
             </CustomToggle>
-        </div >
+        </div>
     )
 
     return (
