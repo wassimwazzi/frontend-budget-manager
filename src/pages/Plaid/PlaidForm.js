@@ -17,6 +17,11 @@ const LookbackDateModal = ({ show, onSubmit, onClose, lookbackDate, setLookbackD
         }
     };
 
+    const handleClose = () => {
+        makeScrollable();
+        onClose();
+    };
+
     const handleCustomChange = (e) => {
         setUseAllData(!e.target.checked);
     }
@@ -26,8 +31,8 @@ const LookbackDateModal = ({ show, onSubmit, onClose, lookbackDate, setLookbackD
     };
 
     return (
-        <Modal show={show} onHide={onClose}>
-            <Form onSubmit={(e) => { e.preventDefault(); onSubmit(); }}>
+        <Modal show={show} onHide={handleClose}>
+            <Form onSubmit={(e) => { e.preventDefault(); makeScrollable(); onSubmit(); }}>
                 <Modal.Body>
                     <p>
                         Would you like to sync all available historical transactions, or set a custom range?
@@ -65,7 +70,7 @@ const LookbackDateModal = ({ show, onSubmit, onClose, lookbackDate, setLookbackD
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onClose}>
+                    <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
                     <Button variant="primary" type="submit">
@@ -96,6 +101,9 @@ const getExistingItems = async () => {
     return { existingItems, error };
 };
 
+const makeScrollable = () => {
+    document.body.style.overflow = 'auto';
+};
 
 const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => {
     const [showModal, setShowModal] = useState(false);
