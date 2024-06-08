@@ -6,6 +6,8 @@ import { faExclamationTriangle, faThumbsDown, faThumbsUp } from '@fortawesome/fr
 import { currentlyContributingTo } from './goalUtils';
 import ProgressBar from '../../components/chart/ProgressBar';
 import GoalStatus, { GoalStatusTypes } from './GoalStatus';
+import { DeleteButton } from '../../components/ActionButtons';
+import api from '../../api';
 
 function formatNumber(amount) {
     return Number(amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -63,6 +65,19 @@ const AmountSaved = ({ goal }) => {
     );
 };
 
+const handleDelete = (goalId) => {
+    api
+        .delete(`/api/goals/${goalId}`)
+
+        .then((response) => {
+            // Redirect to the goals page
+            window.location.href = '/goals';
+        })
+        .catch((error) => {
+            console.error("Error:", error.response);
+        });
+};
+
 const GoalSummary = ({ goal, link = false }) => (
     <Card
         className="mb-4 border-0"
@@ -107,9 +122,12 @@ const GoalSummary = ({ goal, link = false }) => (
                 :
                 (goal.status === GoalStatusTypes.IN_PROGRESS | goal.status === GoalStatusTypes.PENDING) ?
                     <div className='text-center'>
-                        <Button variant="outline-primary" size="lg" className="mx-auto" href={`/goals/${goal.id}/edit`}>
+                        <Button variant="outline-primary" className="mx-auto" href={`/goals/${goal.id}/edit`}>
                             Edit Goal
                         </Button>
+                        <DeleteButton handleDelete={() => handleDelete(goal.id)}>
+                            Delete Goal
+                        </DeleteButton>
                     </div>
                     : null
             }
