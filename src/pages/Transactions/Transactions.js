@@ -93,11 +93,11 @@ const Transactions = () => {
             : transaction
         )
       ))
-
     } else {
       setTransactions([updatedTransaction, ...transactions])
     }
     setEditTransactionId(null)
+    setShowModal(false)
   }
 
   const handlePageChange = page => {
@@ -129,17 +129,17 @@ const Transactions = () => {
   const ControlButtons = () => {
 
     return (
-      <div className='d-flex justify-content-around align-items-center'>
-        <div>
+      <div className='d-flex justify-content-around align-items-center flex-wrap my-2'>
+        <div className='mt-2'>
           <AddButton onClick={handleAdd} />
         </div>
-        <div className='ms-2'>
+        <div className='ms-2 mt-2'>
           <PlaidLink buttonText='Link New Account' style={buttonStyle} />
         </div>
-        <div className='ms-2'>
+        <div className='ms-2 mt-2'>
           <SortForm cols={searchColumns} sortParams={sortParams} setSortParams={setSortParams} />
         </div>
-      </div>
+      </div >
     )
   }
 

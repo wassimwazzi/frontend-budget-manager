@@ -51,15 +51,19 @@ const StatusContext = createContext();
 export const StatusProvider = ({ children }) => {
     const [status, setStatus] = useState({ message: '', type: '' });
 
+    const hideStatus = () => {
+        setStatus({ message: '', type: '' });
+    }
+
     const showStatus = (message, type) => {
         setStatus({ message, type });
         setTimeout(() => {
-            setStatus({ message: '', type: '' });
-        }, 7000);
+            hideStatus();
+        }, 10_000);
     };
 
     return (
-        <StatusContext.Provider value={{ status, showStatus }}>
+        <StatusContext.Provider value={{ status, showStatus, hideStatus }}>
             <Status />
             {children}
         </StatusContext.Provider>
@@ -71,7 +75,7 @@ export const useStatus = () => {
 };
 
 const Status = () => {
-    const { status } = useStatus();
+    const { status, hideStatus } = useStatus();
 
     const getStatusStyle = () => {
         switch (status.type) {
@@ -89,6 +93,7 @@ const Status = () => {
             style={{
                 position: 'fixed',
                 bottom: 0,
+                minWidth: '300px',
                 width: '50%',
                 textAlign: 'center',
                 padding: '1rem',
@@ -101,8 +106,23 @@ const Status = () => {
             className={getStatusStyle()}
             role="alert"
         >
+            <button
+                style={{
+                    position: 'absolute',
+                    top: '0.5rem',
+                    right: '0.5rem',
+                    background: 'transparent',
+                    border: 'none',
+                    fontSize: '1.2rem',
+                    cursor: 'pointer',
+                }}
+                onClick={hideStatus}
+                aria-label="Close"
+            >
+                &times;
+            </button>
             {status.message}
-        </div>
+        </div >
     );
 };
 

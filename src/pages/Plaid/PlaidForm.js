@@ -142,7 +142,6 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
             api
                 .post('/api/plaiditem/exchange_public_token/', { public_token, metadata, lookback_date: lookbackDateRef.current })
                 .then(response => {
-                    console.log('Successfully set access token:', response.data);
                     const newTransactionCount = response.data.added.length;
                     let statusMessage = 'Account linked successfully!'
                     if (newTransactionCount > 0) {
