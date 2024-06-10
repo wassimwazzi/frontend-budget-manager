@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Form, Button, Alert, ProgressBar, Card } from "react-bootstrap";
 import { formatToHumanReadableDate } from "../../utils/dateUtils";
-import Status from "../../components/Status";
+import { useStatus } from "../../components/Status";
 import Transition from "../../components/Transition";
 import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFromResponse";
 import api from "../../api";
@@ -112,8 +112,7 @@ const GoalContributionRangesForm = ({
     onSuccess,
 }) => {
     const [errors, setErrors] = useState(contributionRanges.map(() => false));
-    const [submitErrorMessage, setSubmitErrorMessage] = useState();
-    const [submitSuccessMessage, setSubmitSuccessMessage] = useState();
+    const { showStatus } = useStatus();
 
     const updateErrors = useCallback((index, bool) => {
         setErrors((prev) => {
@@ -135,17 +134,15 @@ const GoalContributionRangesForm = ({
 
     function handleSubmit(e) {
         e.preventDefault();
-        setSubmitErrorMessage();
-        setSubmitSuccessMessage();
         api
             .post(`/api/goals/update_contributions/`, contributionRanges)
             .then((res) => {
-                setSubmitSuccessMessage("Your contributions have been updated!");
+                showStatus("Your contributions have been updated!", "success");
                 onSuccess();
             })
             .catch((err) => {
                 console.error(err.response);
-                setSubmitErrorMessage(extractErrorMessageFromResponse(err));
+                showStatus(extractErrorMessageFromResponse(err), "error");
             });
     }
 
@@ -180,12 +177,6 @@ const GoalContributionRangesForm = ({
             >
                 Save
             </Button>
-            <div className="mt-3">
-                <Status
-                    successMessage={submitSuccessMessage}
-                    errorMessage={submitErrorMessage}
-                />
-            </div>
         </Form>
     );
 };

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import api from '../../api'
 import BudgetForm from './BudgetForm'
 import Table from '../../components/table/Table'
-import Status from '../../components/Status'
+import { useStatus } from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import { formatToHumanReadableDate } from '../../utils/dateUtils'
 import { DeleteButton } from '../../components/ActionButtons'
@@ -13,15 +13,30 @@ const Budgets = () => {
     const [categories, setCategories] = useState([])
     const [currencies, setCurrencies] = useState([])
     const [totalPages, setTotalPages] = useState(1)
-    const [statusSuccessMessage, setStatusSuccessMessage] = useState(null)
-    const [statusErrorMessage, setStatusErrorMessage] = useState(null)
+    const { showStatus } = useStatus()
 
-    const getActionButtons = useCallback(budgetId => (
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <button onClick={() => handleEdit(budgetId)} className='btn btn-primary'>Edit</button>
-            <DeleteButton handleDelete={() => handleDelete(budgetId)} />
-        </div>
-    ), [])
+    const getActionButtons = useCallback(budgetId => {
+        const handleDelete = budgetId => {
+            showStatus('', '')
+            api
+                .delete(`/api/budgets/${budgetId}/`)
+                .then(response => {
+                    setBudgets(budgets => (budgets.filter(budget => budget.id !== budgetId)))
+                    showStatus('Budget successfully deleted.', 'success')
+                })
+                .catch(error => {
+                    console.error('Error deleting budget:', error.response)
+                    showStatus(extractErrorMessageFromResponse(error), 'error')
+                })
+        }
+
+        return (
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                <button onClick={() => handleEdit(budgetId)} className='btn btn-primary'>Edit</button>
+                <DeleteButton handleDelete={() => handleDelete(budgetId)} />
+            </div>
+        )
+    }, [showStatus])
 
     const customizeBudget = useCallback(budget => {
         return {
@@ -41,9 +56,9 @@ const Budgets = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)
-                setStatusErrorMessage(extractErrorMessageFromResponse(error.response))
+                showStatus(extractErrorMessageFromResponse(error.response), 'error')
             })
-    }, [customizeBudget])
+    }, [customizeBudget, showStatus])
 
     useEffect(() => {
         api
@@ -78,21 +93,6 @@ const Budgets = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
-    const handleDelete = budgetId => {
-        setStatusSuccessMessage(null)
-        setStatusErrorMessage(null)
-        api
-            .delete(`/api/budgets/${budgetId}/`)
-            .then(response => {
-                setBudgets(budgets => (budgets.filter(budget => budget.id !== budgetId)))
-                setStatusSuccessMessage('Budget successfully deleted.')
-            })
-            .catch(error => {
-                console.error('Error deleting budget:', error.response)
-                setStatusErrorMessage(extractErrorMessageFromResponse(error))
-            })
-    }
-
     const handleFormUpdate = updatedBudget => {
         updatedBudget = customizeBudget(updatedBudget)
         if (editBudgetId) {
@@ -120,7 +120,6 @@ const Budgets = () => {
                 onClear={() => setEditBudgetId(null)}
             />
 
-            <Status successMessage={statusSuccessMessage} errorMessage={statusErrorMessage} />
             <Table
                 columns={columns}
                 data={budgets}

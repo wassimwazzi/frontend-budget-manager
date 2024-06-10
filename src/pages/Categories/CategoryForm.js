@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../api'
 import { Form, Button } from 'react-bootstrap'
-import Status from '../../components/Status'
+import { useStatus } from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 
 const CategoryForm = ({ categoryId, onSubmit, onClear }) => {
@@ -11,8 +11,7 @@ const CategoryForm = ({ categoryId, onSubmit, onClear }) => {
         description: '',
     })
     const [formData, setFormData] = useState(initialFormData)
-    const [successMessage, setSuccessMessage] = useState(null)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const { showStatus } = useStatus()
 
     useEffect(() => {
 
@@ -45,15 +44,12 @@ const CategoryForm = ({ categoryId, onSubmit, onClear }) => {
 
     const handleClear = () => {
         setFormData(initialFormData)
-        setErrorMessage(null)
-        setSuccessMessage(null)
+        showStatus('', '')
         onClear()
     }
 
     const handleSubmit = e => {
         e.preventDefault()
-        setErrorMessage(null)
-        setSuccessMessage(null)
 
         const apiUrl = categoryId
             ? `/api/categories/${categoryId}/`
@@ -68,10 +64,10 @@ const CategoryForm = ({ categoryId, onSubmit, onClear }) => {
                 const action = categoryId ? 'updated' : 'created'
                 onSubmit(response.data)
                 handleClear()
-                setSuccessMessage(`Category successfully ${action}!`)
+                showStatus(`Category successfully ${action}!`, 'success')
             })
             .catch(error => {
-                setErrorMessage(extractErrorMessageFromResponse(error, formData))
+                showStatus(extractErrorMessageFromResponse(error, formData), 'error')
                 console.error('Error submitting category data:', error.response?.data)
             })
     }
@@ -111,11 +107,6 @@ const CategoryForm = ({ categoryId, onSubmit, onClear }) => {
                     onChange={handleChange}
                 />
             </Form.Group>
-
-            <Status
-                successMessage={successMessage}
-                errorMessage={errorMessage}
-            />
 
             <div className='mb-3'>
                 <Button type='submit' variant='primary'>

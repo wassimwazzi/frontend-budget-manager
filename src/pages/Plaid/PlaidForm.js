@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { usePlaidLink } from 'react-plaid-link';
 import api from '../../api';
-import Status from '../../components/Status';
+import { useStatus } from '../../components/Status';
 
 const LookbackDateModal = ({ show, onSubmit, onClose, lookbackDate, setLookbackDate }) => {
     const [useAllData, setUseAllData] = useState(true);
@@ -108,7 +108,7 @@ const makeScrollable = () => {
 const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => {
     const [showModal, setShowModal] = useState(false);
     const [lookbackDate, setLookbackDate] = useState(null);
-    const [status, setStatus] = useState({ loading: false, successMessage: null, errorMessage: null });
+    const { showStatus } = useStatus();
     const lookbackDateRef = useRef(lookbackDate);
 
     useEffect(() => {
@@ -121,12 +121,11 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
         // if it is, set an error message and return
         // otherwise, set the access token
         let processItem = true;
-        setStatus({ loading: false, successMessage: null, errorMessage: null });
 
         getExistingItems().then(({ existingItems, error }) => {
             if (error) {
                 console.error('Error fetching existing items:', error);
-                setStatus({ loading: false, successMessage: null, errorMessage: "An error occurred while fetching existing items" });
+                showStatus('An error occurred while linking the account', 'error');
                 return;
             }
             for (let item of existingItems) {
@@ -137,23 +136,33 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
             }
             if (!processItem) {
                 console.error('Item already exists');
-                setStatus({ loading: false, successMessage: null, errorMessage: "This account has already been linked" });
+                showStatus('This account has already been linked', 'error');
                 return;
             }
             api
                 .post('/api/plaiditem/exchange_public_token/', { public_token, metadata, lookback_date: lookbackDateRef.current })
+                .then(response => {
+                    console.log('Successfully set access token:', response.data);
+                    const newTransactionCount = response.data.added.length;
+                    let statusMessage = 'Account linked successfully!'
+                    if (newTransactionCount > 0) {
+                        statusMessage += ` ${newTransactionCount} transactions have been added,  refresh the page to view them.`
+                    }
+                    showStatus(statusMessage, 'success');
+                })
                 .catch(error => {
                     console.error('Error setting access token:', error.response)
+                    showStatus('An error occurred while linking the account', 'error');
                 });
         });
-    }, []);
+    }, [showStatus]);
 
     const onExit = useCallback((error, metadata) => {
         if (error) {
             console.error('Error during Plaid Link:', error, metadata);
-            setStatus({ loading: false, successMessage: null, errorMessage: "An error occurred during the Plaid Link process" });
+            showStatus('An error occurred during the Plaid Link process', 'error');
         }
-    }, []);
+    }, [showStatus]);
 
     const config = {
         token: linkToken,
@@ -171,7 +180,6 @@ const PlaidForm = ({ linkToken, buttonText = "Link New Account", ...props }) => 
             <Button onClick={() => setShowModal(true)} disabled={!ready} {...props}>
                 {buttonText}
             </Button>
-            <Status {...status} />
             <LookbackDateModal
                 show={showModal}
                 onSubmit={onSubmit}

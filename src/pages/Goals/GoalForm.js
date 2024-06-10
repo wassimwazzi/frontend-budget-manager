@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Form, Button, Container, Card } from 'react-bootstrap';
 import { useMultistepForm } from '../../utils/useMultiStepForm';
 import { getCurrentMonth } from '../../utils/dateUtils';
-import Status from '../../components/Status';
 import DescriptionForm from './Stepper/DescriptionForm';
 import AmountForm from './Stepper/AmountForm';
 import DateForm from './Stepper/DateForm';
@@ -38,7 +37,7 @@ const StyledCard = ({ children, isTransitioning, ...props }) => (
     </Card>
 );
 
-const GoalForm = ({ submitErrorMessage, onSubmit, initialData = INITIAL_DATA }) => {
+const GoalForm = ({ onSubmit, initialData = INITIAL_DATA }) => {
     const [data, setData] = useState(initialData);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [preventSubmit, setPreventSubmit] = useState(false);
@@ -118,7 +117,6 @@ const GoalForm = ({ submitErrorMessage, onSubmit, initialData = INITIAL_DATA }) 
                                 {isLastStep ? 'Submit' : 'Next'}
                             </Button>
                         </div>
-                        <Status errorMessage={submitErrorMessage} />
                     </Form>
                 </Card.Body>
             </StyledCard>

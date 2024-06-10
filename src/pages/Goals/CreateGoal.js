@@ -4,13 +4,13 @@ import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFrom
 import api from "../../api";
 import GoalForm from './GoalForm';
 import BackLink from '../../components/BackLink';
+import { useStatus } from '../../components/Status';
 
 const CreateGoal = () => {
     const [goalId, setGoalId] = useState();
-    const [submitErrorMessage, setSubmitErrorMessage] = useState();
+    const { showStatus } = useStatus();
 
     function submit(data) {
-        setSubmitErrorMessage(null);
         if (data.recurring) {
             // TODO - handle recurring goals states and frequency
             data.recurring = 'FIXED'
@@ -25,7 +25,7 @@ const CreateGoal = () => {
             })
             .catch((err) => {
                 console.error(err.response);
-                setSubmitErrorMessage(extractErrorMessageFromResponse(err));
+                showStatus(extractErrorMessageFromResponse(err), 'error');
             });
     }
 
@@ -51,7 +51,7 @@ const CreateGoal = () => {
                         </Alert>
                     </div>
                     :
-                    <GoalForm onSubmit={submit} submitErrorMessage={submitErrorMessage} />
+                    <GoalForm onSubmit={submit} />
             }
 
         </Container>

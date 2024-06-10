@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import api from '../../api'
 import TransactionForm from './TransactionForm'
-import Status from '../../components/Status'
+import { useStatus } from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import { Modal } from 'react-bootstrap'
 import TransactionsDisplay from './TransactionsDisplay'
@@ -17,11 +17,10 @@ const Transactions = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [categories, setCategories] = useState([])
   const [currencies, setCurrencies] = useState([])
-  const [statusSuccessMessage, setStatusSuccessMessage] = useState(null)
-  const [statusErrorMessage, setStatusErrorMessage] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [searchParams, setSearchParams] = useState({ page: 1 })
   const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
+  const { showStatus } = useStatus()
 
   const fetchData = useCallback((params) => {
     api
@@ -32,9 +31,9 @@ const Transactions = () => {
       })
       .catch(error => {
         console.error('Error fetching data:', error.response)
-        setStatusErrorMessage(extractErrorMessageFromResponse(error))
+        showStatus(extractErrorMessageFromResponse(error), 'error')
       })
-  }, [])
+  }, [showStatus])
 
   useEffect(() => {
     api
@@ -66,19 +65,17 @@ const Transactions = () => {
   }
 
   const handleDelete = transactionId => {
-    setStatusSuccessMessage(null)
-    setStatusErrorMessage(null)
     api
       .delete(`/api/transactions/${transactionId}/`)
       .then(response => {
         setTransactions(transactions => (
           transactions.filter(transaction => transaction.id !== transactionId)
         ))
-        setStatusSuccessMessage('Transaction successfully deleted.')
+        showStatus('Transaction successfully deleted.', 'success')
       })
       .catch(error => {
         console.error('Error deleting transaction:', error.response)
-        setStatusErrorMessage(extractErrorMessageFromResponse(error))
+        showStatus(extractErrorMessageFromResponse(error), 'error')
       })
   }
 
@@ -159,8 +156,6 @@ const Transactions = () => {
           />
         </Modal.Body>
       </Modal>
-
-      <Status successMessage={statusSuccessMessage} errorMessage={statusErrorMessage} />
 
       <SearchTable columns={searchColumns} exportData={handleExportToCsv} onSearch={handleSearch} />
       <ControlButtons />

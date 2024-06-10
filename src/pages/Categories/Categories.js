@@ -3,23 +3,42 @@ import api from '../../api'
 import CategoryForm from './CategoryForm'
 import Table from '../../components/table/Table'
 import { Button } from 'react-bootstrap'
-import Status from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import { DeleteButton } from '../../components/ActionButtons'
+import { useStatus } from '../../components/Status'
 
 const Categories = () => {
     const [categories, setCategories] = useState([])
     const [editCategoryId, setEditCategoryId] = useState(null)
     const [totalPages, setTotalPages] = useState(1)
-    const [statusSucessMessage, setStatusSucessMessage] = useState(null)
-    const [statusErrorMessage, setStatusErrorMessage] = useState(null)
+    const { showStatus } = useStatus()
 
-    const getActionButtons = useCallback(categoryId => (
-        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <Button onClick={() => handleEdit(categoryId)} className='btn btn-primary'>Edit</Button>
-            <DeleteButton handleDelete={() => handleDelete(categoryId)} />
-        </div>
-    ), [])
+    const getActionButtons = useCallback(categoryId => {
+        const handleEdit = categoryId => {
+            setEditCategoryId(categoryId)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+
+        const handleDelete = categoryId => {
+            api
+                .delete(`/api/categories/${categoryId}/`)
+                .then(response => {
+                    setCategories(categories => categories.filter(category => category.id !== categoryId))
+                    showStatus('Category successfully deleted.', 'success')
+                })
+                .catch(error => {
+                    console.error('Error deleting category:', error.response)
+                    showStatus(extractErrorMessageFromResponse(error), 'error')
+                })
+        }
+
+        return (
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                <Button onClick={() => handleEdit(categoryId)} className='btn btn-primary'>Edit</Button>
+                <DeleteButton handleDelete={() => handleDelete(categoryId)} />
+            </div>
+        )
+    }, [showStatus])
 
     const columns = [
         'description',
@@ -41,33 +60,13 @@ const Categories = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)
-                setStatusErrorMessage(extractErrorMessageFromResponse(error.response))
+                showStatus(extractErrorMessageFromResponse(error), 'error')
             })
-    }, [getActionButtons])
+    }, [getActionButtons, showStatus])
 
     useEffect(() => {
         fetchData()
     }, [fetchData])
-
-    const handleEdit = categoryId => {
-        setEditCategoryId(categoryId)
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-
-    const handleDelete = categoryId => {
-        setStatusSucessMessage(null)
-        setStatusErrorMessage(null)
-        api
-            .delete(`/api/categories/${categoryId}/`)
-            .then(response => {
-                setCategories(categories => categories.filter(category => category.id !== categoryId))
-                setStatusSucessMessage('Category successfully deleted.')
-            })
-            .catch(error => {
-                console.error('Error deleting category:', error.response)
-                setStatusErrorMessage(extractErrorMessageFromResponse(error))
-            })
-    }
 
     const handleFormUpdate = updatedCategory => {
         // Update categories list after adding/editing
@@ -94,8 +93,6 @@ const Categories = () => {
                 onSubmit={handleFormUpdate}
                 onClear={() => setEditCategoryId(null)}
             />
-            <Status successMessage={statusSucessMessage} errorMessage={statusErrorMessage} />
-
             <Table
                 columns={columns}
                 data={categories}

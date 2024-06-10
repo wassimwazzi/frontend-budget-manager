@@ -1,14 +1,15 @@
-import {nonAuthenticatedApi as api} from '../../api'
+import { nonAuthenticatedApi as api } from '../../api'
 import { Form, Button, Container } from 'react-bootstrap'
 import { useState } from 'react'
-import Status from '../../components/Status'
+import { useStatus } from '../../components/Status'
 
 const Login = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   })
-  const [errorMessage, setErrorMessage] = useState(false)
+
+  const { showStatus } = useStatus()
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -20,7 +21,6 @@ const Login = () => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    setErrorMessage(null)
 
     api
       .post('/api/token/', formData)
@@ -31,7 +31,7 @@ const Login = () => {
       })
       .catch(error => {
         console.error('Error:', error.response)
-        setErrorMessage('Invalid username password combination')
+        showStatus('Invalid username password combination', 'error')
       })
   }
 
@@ -59,7 +59,6 @@ const Login = () => {
             required
           />
         </Form.Group>
-        <Status errorMessage={errorMessage} />
         <Button variant='primary' type='submit' className='mt-2'>
           Submit
         </Button>

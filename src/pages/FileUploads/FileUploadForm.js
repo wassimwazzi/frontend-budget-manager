@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import api from '../../api';
-import Status from '../../components/Status'
+import { useStatus } from '../../components/Status'
 import handleDownload from '../../utils/handleDownload';
 import { Form, Button, InputGroup } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const FileUploadForm = ({ onSubmit }) => {
     const [file, setFile] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const { showStatus } = useStatus();
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -25,15 +25,13 @@ const FileUploadForm = ({ onSubmit }) => {
         api
             .post('/api/uploads/', formData)
             .then((response) => {
-                setSuccessMessage('File uploaded successfully.');
-                setErrorMessage(null);
+                showStatus('File uploaded successfully.', 'success');
                 setFile(null);
                 setUploading(false);
                 onSubmit()
             })
             .catch((error) => {
-                setSuccessMessage(null);
-                setErrorMessage('Error uploading file.');
+                showStatus('Error uploading file.', 'error');
                 setUploading(false);
                 console.error('Error uploading file:', error.response);
                 onSubmit()
@@ -54,11 +52,7 @@ const FileUploadForm = ({ onSubmit }) => {
                     <span className="ms-2">Download Template</span>
                 </Button>
             </InputGroup>
-            <Status
-                successMessage={successMessage}
-                errorMessage={errorMessage}
-                loading={uploading}
-            />
+            <LoadingSpinner loading={uploading} />
         </Form>
     );
 };

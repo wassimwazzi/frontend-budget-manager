@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import api from '../../api'
 import { Form, Button, InputGroup, Modal } from 'react-bootstrap'
 import { getCurrentDay } from '../../utils/dateUtils'
-import Status from '../../components/Status'
+import { useStatus } from '../../components/Status'
 import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse'
 import CategoryForm from '../Categories/CategoryForm'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,9 +19,8 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit, onCl
   }
 
   const [formData, setFormData] = useState(initialFormData)
-  const [successMessage, setSuccessMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [showCategoryForm, setShowCategoryForm] = useState(false)
+  const { showStatus } = useStatus()
 
   const CategoryFormModal = () => {
     const handleConfirm = (data) => {
@@ -29,8 +28,7 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit, onCl
         return
       }
       setShowCategoryForm(false)
-      setErrorMessage(null)
-      setSuccessMessage('Category successfully created!')
+      showStatus('Category successfully created!', 'success')
       categories.push(data)
       handleChange({ target: { name: 'category', value: data.id } })
     }
@@ -79,18 +77,14 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit, onCl
 
   const handleClear = () => {
     setFormData(initialFormData)
-    setSuccessMessage(null)
-    setErrorMessage(null)
     onClear()
   }
 
   const handleSubmit = e => {
     e.preventDefault()
-    setErrorMessage(null)
-    setSuccessMessage(null)
 
     if (!formData.description && !formData.code) {
-      setErrorMessage('Please enter a description or code.')
+      showStatus('Please enter a description or code.', 'error')
       return
     }
     const apiUrl = transactionId
@@ -105,11 +99,11 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit, onCl
       .then(response => {
         const action = transactionId ? 'updated' : 'created'
         handleClear()
-        setSuccessMessage(`Transasction successfully ${action}!`)
+        showStatus(`Transasction successfully ${action}!`, 'success')
         onSubmit(response.data)
       })
       .catch(error => {
-        setErrorMessage(extractErrorMessageFromResponse(error, formData))
+        showStatus(extractErrorMessageFromResponse(error, formData), 'error')
         console.error('Error submitting transaction data:', error.response)
       })
   }
@@ -205,11 +199,6 @@ const TransactionForm = ({ transactionId, categories, currencies, onSubmit, onCl
             </Form.Select>
           </Form.Group>
         </InputGroup>
-
-        <Status
-          successMessage={successMessage}
-          errorMessage={errorMessage}
-        />
 
         <div className='mb-3'>
           <Button type='submit' variant='primary'>
