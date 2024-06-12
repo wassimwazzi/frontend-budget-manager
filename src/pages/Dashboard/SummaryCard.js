@@ -69,7 +69,8 @@ const GradientCard = ({ gradientColors, children, gradientPos = "top", boxShadow
                 position: 'relative',
                 textAlign: 'center',
                 overflow: 'hidden',
-                padding: '40px 25px 20px',
+                // padding: '40px 25px 20px',
+                padding: '1rem 0.5rem',
                 height: '100%',
             }}>
                 {gradientPos.map(p => <GradientBlock key={p} pos={p} />)}
@@ -173,15 +174,15 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
         <div className="mt-5">
             <Card border='0'>
                 <Row>
-                    <Col md={4}>
+                    <Col className='mt-4'>
                         <GradientCard gradientColors={getGradientColors()}>
-                            <Card.Body>
-                                <TrendBlock />
-                                <CardValue title={'Budget'} amount={totalBudget}  color={getGradientColors()[1]}/>
-                            </Card.Body>
+                            {/* <Card.Body> */}
+                            <TrendBlock />
+                            <CardValue title={'Budget'} amount={totalBudget} color={getGradientColors()[1]} />
+                            {/* </Card.Body> */}
                         </GradientCard>
                     </Col>
-                    <Col md={4}>
+                    <Col className='mt-4'>
                         <GradientCard gradientColors={getGradientColors()}>
                             <Card className="border-0">
                                 <Card.Body>
@@ -193,12 +194,12 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                             text={' from average'}
                                         />
                                     </TrendBlock>
-                                    <CardValue title={'Spend'} amount={totalSpend}  color={getGradientColors()[1]}/>
+                                    <CardValue title={'Spend'} amount={totalSpend} color={getGradientColors()[1]} />
                                 </Card.Body>
                             </Card>
                         </GradientCard>
                     </Col>
-                    <Col md={4}>
+                    <Col className='mt-4'>
                         <GradientCard gradientColors={getGradientColors(totalRemaining)} boxShadowColor={getGradientColors(totalRemaining)[1]}>
                             <Card className="border-0">
                                 <Card.Body >
@@ -220,8 +221,8 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                         </GradientCard>
                     </Col>
                 </Row>
-                <Row className="mt-5">
-                    <Col md={6}>
+                <Row>
+                    <Col className='mt-4'>
                         <GradientCard gradientColors={getGradientColors()}>
                             <Card className="border-0">
                                 <Card.Body>
@@ -233,12 +234,12 @@ const SummaryCard = ({ budgetSummaryData, month }) => {
                                             text={' from last month'}
                                         />
                                     </TrendBlock>
-                                    <CardValue title={'Income'} amount={transactionSummary.this_month?.income}  color={getGradientColors()[1]}/>
+                                    <CardValue title={'Income'} amount={transactionSummary.this_month?.income} color={getGradientColors()[1]} />
                                 </Card.Body>
                             </Card>
                         </GradientCard>
                     </Col>
-                    <Col md={6}>
+                    <Col className='mt-4'>
                         <GradientCard gradientColors={getGradientColors(savings)} boxShadowColor={getGradientColors(savings)[1]}>
                             <Card className="border-0">
                                 <Card.Body>

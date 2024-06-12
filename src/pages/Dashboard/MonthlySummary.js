@@ -38,7 +38,7 @@ const SummaryForm = ({ onUpdate }) => {
                     onChange={handleChange}
                 />
             </Form.Group>
-            <InputGroup>
+            <InputGroup className='d-flex flex-nowrap'>
                 <Button
                     variant='light'
                     onClick={() => {
