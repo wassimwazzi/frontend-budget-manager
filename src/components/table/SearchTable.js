@@ -25,6 +25,13 @@ const formSelectStyle = {
   marginTop: '0.5rem' // Add margin for spacing on small screens
 };
 
+const getFilterDisplay = (filter, filterValue, filterOperator) => {
+  const filterDisplay = filter.replace('_', ' ');
+  const filterValueDisplay = `"${filterValue}"`;
+  const operator = filterOperator.startsWith('i') ? filterOperator.slice(1) : filterOperator;
+  return `${filterDisplay} ${operator} ${filterValueDisplay}`;
+};
+
 
 const INITIAL_SEARCH_TERMS = { filter: [], filter_value: [], filter_operator: [] }
 const SearchTable = ({ columns, onSearch, exportData }) => {
@@ -153,7 +160,7 @@ const SearchTable = ({ columns, onSearch, exportData }) => {
             <InputGroup className='my-2'>
               {searchTerms.filter.map((filter, index) => (
                 <InputGroup.Text key={index} className='rounded-lg bg-transparent text-black me-2'>
-                  {filter}: {searchTerms.filter_value[index]}
+                  {getFilterDisplay(filter, searchTerms.filter_value[index], searchTerms.filter_operator[index])}
                   <Button
                     variant="link"
                     onClick={() => handleRemoveSearch(index)}
