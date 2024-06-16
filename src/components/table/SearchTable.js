@@ -29,7 +29,8 @@ const getFilterDisplay = (filter, filterValue, filterOperator) => {
   const filterDisplay = filter.replace('_', ' ');
   const filterValueDisplay = `"${filterValue}"`;
   const operator = filterOperator.startsWith('i') ? filterOperator.slice(1) : filterOperator;
-  return `${filterDisplay} ${operator} ${filterValueDisplay}`;
+  const displayOperator = SearchOperators.find(op => op.value === operator)?.shortLabel;
+  return `${filterDisplay} ${displayOperator} ${filterValueDisplay}`;
 };
 
 
