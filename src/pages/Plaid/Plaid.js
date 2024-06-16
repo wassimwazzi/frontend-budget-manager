@@ -5,7 +5,7 @@ import PlaidForm from './PlaidForm';
 
 export const generateToken = async (onSuccess) => {
   api
-    .post('/api/plaiditem/create_link_tokens/')
+    .post('/api/plaiditem/create_link_token/')
     .then(({ data }) => {
       onSuccess(data.link_token);
     })
