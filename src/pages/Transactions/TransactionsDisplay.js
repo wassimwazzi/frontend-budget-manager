@@ -55,13 +55,10 @@ const dateDisplay = (date) => {
 
 
 const IncomeOrExpenseIcon = ({ income }) => {
-    // if (income) {
-    //     return <FontAwesomeIcon icon={faMoneyBillTrendUp} size='xs' color='green' />
-    // }
-    // return <FontAwesomeIcon icon={faMoneyBill1Wave} size='s' />
+    const color = income ? 'green' : 'black'
     return (
         <IconWrapper>
-            <FontAwesomeIcon icon={income ? faMoneyBillTrendUp : faMoneyBill1Wave} className='icon' />
+            <FontAwesomeIcon icon={income ? faMoneyBillTrendUp : faMoneyBill1Wave} className='icon' color={color} />
         </IconWrapper>
     )
 }
@@ -120,7 +117,7 @@ const TransactionsDisplay = ({ transactions, handleDelete, handleEdit }) => {
                 </Item>
                 <Accordion.Collapse eventKey={id}>
                     <div className='py-2 px-1' style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
-                        <div className='d-flex justify-content-around' style={{ marginTop: '1rem' }}>
+                        <div className='d-flex justify-content-around flex-wrap' style={{ marginTop: '1rem' }}>
                             {transaction.description && <InlineElement display={'Description:'} val={transaction.description} />}
                             <InlineElement display={'Category:'} val={transaction.category.category} />
                             {transaction.inferred_category && <div><InferredCategoryPill /></div>}
