@@ -84,9 +84,8 @@ const PlaidTransactionCard = ({ transaction }) => {
                                 <FontAwesomeIcon icon={faList} style={{ marginRight: '10px', color: '#007bff' }} />
                                 <h6 style={{ margin: 0 }}>Suggested Categories</h6>
                             </div>
-
                             <ul>
-                                {JSON.parse(transaction.category.replace(/'/g, '"')).map((category, index) => (
+                                {transaction.category.map((category, index) => (
                                     <li key={index}>{category}</li>
                                 ))}
                             </ul>
