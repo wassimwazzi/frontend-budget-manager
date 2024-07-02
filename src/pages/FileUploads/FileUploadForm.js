@@ -6,6 +6,7 @@ import { Form, Button, InputGroup } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse';
 
 const FileUploadForm = ({ onSubmit }) => {
     const [file, setFile] = useState(null);
@@ -31,7 +32,7 @@ const FileUploadForm = ({ onSubmit }) => {
                 onSubmit()
             })
             .catch((error) => {
-                showStatus('Error uploading file.', 'error');
+                showStatus(extractErrorMessageFromResponse(error), 'error');
                 setUploading(false);
                 console.error('Error uploading file:', error.response);
                 onSubmit()
