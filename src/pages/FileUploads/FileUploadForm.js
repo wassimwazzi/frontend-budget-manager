@@ -17,14 +17,18 @@ const FileUploadForm = ({ onSubmit }) => {
         setFile(e.target.files[0]);
     };
 
-    const handleUpload = async (e) => {
+    const handleUpload = (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('file', file);
         setUploading(true);
 
         api
-            .post('/api/uploads/', formData)
+            .post('/api/uploads/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
             .then((response) => {
                 showStatus('File uploaded successfully.', 'success');
                 setFile(null);
