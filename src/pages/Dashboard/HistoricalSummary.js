@@ -104,7 +104,6 @@ const TotalSpendPerCategoryPieChart = () => {
     useEffect(() => {
         fetchSpendByCategoryData()
             .then(response => {
-                console.debug("TotalSpendPerCategoryPieChart -> data", response.data)
                 setLabels(response.data.map(d => d.category))
                 setDatasets([{ data: response.data.map(d => d.total), label: 'Total' }])
             })
@@ -126,7 +125,6 @@ const AverageSpendPerCategoryPieChart = () => {
     useEffect(() => {
         fetchSpendByCategoryData({ avg: true, only_months_with_spend: onlyMonthsWithSpend })
             .then(response => {
-                console.debug("AverageSpendPerCategoryPieChart -> data", response.data)
                 setLabels(response.data.map(d => d.category))
                 setDatasets([{ data: response.data.map(d => d.average), label: 'Average' }])
             }

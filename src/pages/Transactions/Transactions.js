@@ -7,9 +7,10 @@ import { Modal } from 'react-bootstrap'
 import TransactionsDisplay from './TransactionsDisplay'
 import TableNavigator from '../../components/table/TableNavigator'
 import SearchTable from '../../components/table/SearchTable'
-import AddButton, { buttonStyle } from './ControlButton'
+import { AddButton, SyncItemsButton, buttonStyle } from './ControlButton'
 import PlaidLink, { generateToken } from '../Plaid/Plaid'
 import SortForm from './SortForm'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([])
@@ -22,6 +23,7 @@ const Transactions = () => {
   const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
   const [linkToken, setLinkToken] = useState(null)
   const { showStatus } = useStatus()
+  const [isSyncing, setIsSyncing] = useState(false)
 
   const fetchData = useCallback((params) => {
     api
@@ -128,16 +130,43 @@ const Transactions = () => {
       })
   }
 
-  const ControlButtons = () => {
+  const handleSync = () => {
+    setIsSyncing(true)
+    api
+      .post('/api/plaidtransactions/sync/')
+      .then(response => {
+        const added = response.data.added
+        const modified = response.data.modified
+        const deleted = response.data.removed
+        if (added.length > 0 || modified.length > 0 || deleted.length > 0) {
+          fetchData({ ...searchParams, ...sortParams })
+          showStatus(`Synced ${added.length} new, ${modified.length} modified, and ${deleted.length} deleted transactions`, 'success')
+        } else {
+          showStatus('No new transactions found', 'info')
+        }
+      })
+      .catch(error => {
+        console.error('Error syncing transactions:', error.response)
+        showStatus(extractErrorMessageFromResponse(error), 'error')
+      })
+      .finally(() => {
+        setIsSyncing(false)
+      })
+  }
 
+  const ControlButtons = () => {
     return (
       <div className='d-flex justify-content-around align-items-center flex-wrap my-2'>
         <div className='mt-2'>
           <AddButton onClick={handleAdd} />
         </div>
         <div className='ms-2 mt-2'>
-          <PlaidLink linkToken={linkToken} buttonText='Link New Account' style={buttonStyle} />
+          {/* <SyncItemsButton onClick={handleSync} /> */}
+          {isSyncing ? <LoadingSpinner /> : <SyncItemsButton onClick={handleSync} />}
         </div>
+        {/* <div className='ms-2 mt-2'>
+          <PlaidLink linkToken={linkToken} buttonText='Link New Account' style={buttonStyle} />
+        </div> */}
         <div className='ms-2 mt-2'>
           <SortForm cols={searchColumns} sortParams={sortParams} setSortParams={setSortParams} />
         </div>

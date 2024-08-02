@@ -21,7 +21,7 @@ export const hoverStyle = {
     backgroundImage: 'none'
 };
 
-const AddButton = ({ onClick }) => {
+export const AddButton = ({ onClick }) => {
     return (
         <Button
             variant="primary"
@@ -39,4 +39,20 @@ const AddButton = ({ onClick }) => {
     );
 };
 
-export default AddButton;
+export const SyncItemsButton = ({ onClick }) => {
+    return (
+        <Button
+            variant="primary"
+            onClick={onClick}
+            style={buttonStyle}
+            onMouseEnter={(e) => {
+                Object.assign(e.target.style, hoverStyle);
+            }}
+            onMouseLeave={(e) => {
+                Object.assign(e.target.style, buttonStyle);
+            }}
+        >
+            Sync Items
+        </Button>
+    );
+};
