@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { mockData } from './mockData';
+
 const baseURL = process.env.REACT_APP_SERVER_BASE_URL || 'http://localhost:8000';
 const api = axios.create({
   baseURL: baseURL,
@@ -20,10 +22,21 @@ export { nonAuthenticatedApi };
 // Add a request interceptor
 api.interceptors.request.use(
   (config) => {
-
     // Modify the request config here (if needed)
     const authToken = localStorage.getItem('authToken');
-    if (authToken) {
+    const isDemoUser = localStorage.getItem('username') === 'demo';
+    if (isDemoUser) {
+      // get mock data for demo user
+      const mockDataForEndpoint = mockData.find(entry => entry.pattern.test(config.url));
+      console.log('mock data for endpoint ', config.url, mockDataForEndpoint);
+      config.adapter = function (config) {
+        return new Promise(function (resolve, reject) {
+          resolve({
+            data: mockDataForEndpoint.response
+          });
+        });
+      }
+    } else if (authToken) {
       config.headers.Authorization = `Token ${authToken}`;
     }
     return config;

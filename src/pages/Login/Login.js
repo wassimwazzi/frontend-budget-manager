@@ -21,7 +21,12 @@ const Login = () => {
 
   const handleSubmit = e => {
     e.preventDefault()
-
+    if (formData.username === 'demo' && formData.password === 'demo') {
+      localStorage.setItem('authToken', 'demo')
+      localStorage.setItem('username', 'demo')
+      window.location.href = '/'
+      return
+    }
     api
       .post('/api/token/', formData)
       .then(response => {
