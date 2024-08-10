@@ -55,7 +55,7 @@ const Transactions = () => {
       })
 
     fetchData({ ...searchParams, ...sortParams })
-    generateToken(setLinkToken)
+    // generateToken(setLinkToken) disabled for demo
   }, [fetchData, searchParams, sortParams])
 
   const searchColumns = ['date', 'code', 'description', 'category', 'amount', 'currency']

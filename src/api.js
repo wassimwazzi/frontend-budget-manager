@@ -26,8 +26,30 @@ api.interceptors.request.use(
     const authToken = localStorage.getItem('authToken');
     const isDemoUser = localStorage.getItem('username') === 'demo';
     if (isDemoUser) {
+      // raise error for any request other than GET
+      if (config.method !== 'get') {
+        // return error that can be parsed by extractErrorMessageFromResponse
+        return Promise.reject({
+          response: {
+            status: 400,
+            data: {
+              detail: 'Demo users cannot perform this action'
+            }
+          }
+        });
+      }
       // get mock data for demo user
       const mockDataForEndpoint = mockData.find(entry => entry.pattern.test(config.url));
+      if (!mockDataForEndpoint) {
+        return Promise.reject({
+          response: {
+            status: 400,
+            data: {
+              detail: 'Mock data not found for this action'
+            }
+          }
+        });
+      }
       console.log('mock data for endpoint ', config.url, mockDataForEndpoint);
       config.adapter = function (config) {
         return new Promise(function (resolve, reject) {
