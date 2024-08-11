@@ -6,11 +6,13 @@ import Accordion from '../../components/accordion/Accordion'
 import api from '../../api'
 import getColorArray from '../../utils/getColorArray';
 import { Tabs, Tab, Form } from 'react-bootstrap';
-
+import { useStatus } from '../../components/Status';
+import extractErrorMessageFromResponse from '../../utils/extractErrorMessageFromResponse';
 
 const SpendVsIncomeLineChart = () => {
     const [labels, setLabels] = useState([])
     const [datasets, setDatasets] = useState([])
+    const { showStatus } = useStatus()
 
     useEffect(() => {
         api
@@ -52,7 +54,7 @@ const SpendVsIncomeLineChart = () => {
                 ])
             })
             .catch(error => {
-                console.error('Error fetching data:', error.response)
+                showStatus(extractErrorMessageFromResponse(error), 'error')
             })
     }, [])
 
@@ -94,7 +96,7 @@ const SpendVsIncomeLineChart = () => {
 }
 
 const fetchSpendByCategoryData = (params) => {
-    return api.get('/api/transactions/spend_by_category/', { params: params })
+    return api.get('/api/transactions/spend_by_category/', { params })
 }
 
 const TotalSpendPerCategoryPieChart = () => {
@@ -104,7 +106,6 @@ const TotalSpendPerCategoryPieChart = () => {
     useEffect(() => {
         fetchSpendByCategoryData()
             .then(response => {
-                console.debug("TotalSpendPerCategoryPieChart -> data", response.data)
                 setLabels(response.data.map(d => d.category))
                 setDatasets([{ data: response.data.map(d => d.total), label: 'Total' }])
             })
@@ -126,7 +127,6 @@ const AverageSpendPerCategoryPieChart = () => {
     useEffect(() => {
         fetchSpendByCategoryData({ avg: true, only_months_with_spend: onlyMonthsWithSpend })
             .then(response => {
-                console.debug("AverageSpendPerCategoryPieChart -> data", response.data)
                 setLabels(response.data.map(d => d.category))
                 setDatasets([{ data: response.data.map(d => d.average), label: 'Average' }])
             }
@@ -193,7 +193,6 @@ const MonthlySpendPerCategoryBarChart = () => {
                 }))
                 setLabels(months)
                 setDatasets(datasets)
-
             })
             .catch(error => {
                 console.error('Error fetching data:', error.response)

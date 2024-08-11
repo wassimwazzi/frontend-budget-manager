@@ -40,6 +40,7 @@ api.interceptors.request.use(
       }
       // get mock data for demo user
       const mockDataForEndpoint = mockData.find(entry => entry.pattern.test(config.url));
+      // console.log('mock data for endpoint ', config.url, mockDataForEndpoint);
       if (!mockDataForEndpoint) {
         return Promise.reject({
           response: {
@@ -50,7 +51,6 @@ api.interceptors.request.use(
           }
         });
       }
-      console.log('mock data for endpoint ', config.url, mockDataForEndpoint);
       config.adapter = function (config) {
         return new Promise(function (resolve, reject) {
           resolve({

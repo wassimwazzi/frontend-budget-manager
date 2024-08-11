@@ -1,7 +1,7 @@
 const budgetEndpoints = [
     // match /api/budgets/{id}
     {
-        pattern: /budgets/, method: 'get', response: {
+        pattern: /budgets\/?$/, method: 'get', response: {
             "count": 8,
             "next": null,
             "previous": null,
@@ -110,6 +110,19 @@ const budgetEndpoints = [
                     "currency": "CAD",
                     "start_date": "2023-01"
                 },
+                {
+                    "id": 17,
+                    "category": {
+                        "id": 17,
+                        "category": "Subscriptions",
+                        "income": false,
+                        "description": "Subscriptions",
+                        "is_default": false
+                    },
+                    "amount": "12",
+                    "currency": "CAD",
+                    "start_date": "2023-01"
+                }
             ],
             "total_pages": 1
         },
@@ -282,7 +295,7 @@ const currenciesEndpoints = [
 
 const goalsEndpoints = [
     {
-        pattern: /goals/, method: 'get', response: [
+        pattern: /goals\/?$/, method: 'get', response: [
             {
                 "id": 1,
                 "amount": "1000.00",
@@ -342,13 +355,131 @@ const goalsEndpoints = [
                     }
                 ]
             },
+        ],
+    },
+    {
+        pattern: /goals\/1\/?$/, method: 'get', response:
+        {
+            "id": 1,
+            "amount": "1000.00",
+            // set completion date to end of month dynamically
+            "expected_completion_date": '2024-08-31',
+            "actual_completion_date": null,
+            "progress": 50,
+            "total_contributed": 500,
+            "type": "SAVINGS",
+            "description": "save 1000$ a month",
+            "status": "IN_PROGRESS",
+            "start_date": null,
+            "recurring": "FIXED",
+            "recurring_frequency": 1,
+            "contributions": [
+                {
+                    "id": 1,
+                    "amount": "0.00",
+                    "goal": {
+                        "id": 1,
+                        "description": "save 1000$ a month",
+                        "status": "IN_PROGRESS",
+                        "is_finalized": false
+                    },
+                    "start_date": '2024-08-01',
+                    "end_date": '2024-08-31',
+                    "percentage": 100
+                }
+            ]
+        },
+    },
+    {
+        pattern: /goals\/2\/?$/, method: 'get', response:
+        {
+            "id": 2,
+            "amount": "1000.00",
+            "expected_completion_date": '2024-07-31',
+            "actual_completion_date": null,
+            "progress": 100,
+            "total_contributed": 1000,
+            "type": "SAVINGS",
+            "description": "Save 1000",
+            "status": "COMPLETED",
+            "start_date": '2024-07-01',
+            "recurring": "FIXED",
+            "recurring_frequency": 1,
+            "contributions": [
+                {
+                    "id": 2,
+                    "amount": "0.00",
+                    "goal": {
+                        "id": 2,
+                        "description": "Save 1000",
+                        "status": "FAILED",
+                        "is_finalized": true
+                    },
+                    "start_date": '2024-07-01',
+                    "end_date": '2024-07-31',
+                    "percentage": 100
+                }
+            ]
+        },
+    },
+]
+
+const goalsContributionRangesEndpoints = [
+    {
+        pattern: /goals\/1\/contribution_ranges/, method: 'get', response: [
+            {
+                "id": 1,
+                "start_date": "2024-08-01",
+                "end_date": "2024-08-31",
+                "user": 1,
+                "contributions": [
+                    {
+                        "id": 1,
+                        "amount": null,
+                        "goal": {
+                            "id": 4,
+                            "description": "Save 1000",
+                            "status": "IN_PROGRESS",
+                            "is_finalized": false
+                        },
+                        "start_date": "2024-08-01",
+                        "end_date": "2024-08-31",
+                        "percentage": 100
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        pattern: /goals\/2\/contribution_ranges/, method: 'get', response: [
+            {
+                "id": 2,
+                "start_date": "2024-07-01",
+                "end_date": "2024-07-31",
+                "user": 1,
+                "contributions": [
+                    {
+                        "id": 2,
+                        "amount": null,
+                        "goal": {
+                            "id": 4,
+                            "description": "Save 1000",
+                            "status": "COMPLETED",
+                            "is_finalized": true
+                        },
+                        "start_date": "2024-07-01",
+                        "end_date": "2024-07-31",
+                        "percentage": 100
+                    }
+                ]
+            }
         ]
     },
 ]
 
 const transactionsEndpoints = [
     {
-        pattern: /transactions/, method: 'get', response: {
+        pattern: /transactions\/?$/, method: 'get', response: {
             "count": 10,
             "next": null,
             "previous": null,
@@ -875,6 +1006,468 @@ const transactionsEndpoints = [
         }
     },
 ]
+
+const monthlySumamryEndpoints = [
+    {
+        pattern: /budgets\/summary/, method: 'get', response: [
+            {
+                "category": "Subscriptions",
+                "budget": 12.0,
+                "actual": 12.64,
+                "remaining": -0.64
+            },
+            {
+                category: "Restaurants",
+                budget: 300.0,
+                actual: 35.0,
+                remaining: 265.0
+            },
+            {
+                category: "Transportation",
+                budget: 40.0,
+                actual: 11.49,
+                remaining: 28.51
+            },
+            {
+                category: "Home",
+                budget: 1500.0,
+                actual: 1500.0,
+                remaining: 0.0
+            },
+            {
+                category: "Groceries",
+                budget: 300.0,
+                actual: 85.04,
+                remaining: 214.96
+            },
+            {
+                category: "Entertainment",
+                budget: 300.0,
+                actual: 50.0,
+                remaining: 250.0
+            },
+            {
+                category: "Utilities",
+                budget: 150.0,
+                actual: 0.0,
+                remaining: 150.0
+            },
+            {
+                category: "Sports",
+                budget: 100.0,
+                actual: 0.0,
+                remaining: 100.0
+            },
+            {
+                category: "Shopping",
+                budget: 50.0,
+                actual: 0.0,
+                remaining: 50.0
+            }
+        ]
+    },
+    {
+        pattern: /transactions\/summary/, method: 'get', response: {
+            monthly_average: {
+                income: 1475.55,
+                spend: 200.0
+            },
+            this_month: {
+                income: 2127.55,
+                spend: 230.0
+            },
+            last_month: {
+                income: 0.0,
+                spend: 161.64
+            }
+        }
+    },
+    {
+        pattern: /spend_by_category\/\?avg=true/, method: 'get', response: [
+            {
+                "category": "Subscriptions",
+                average: 12.64
+            },
+            {
+                "category": "Restaurants",
+                average: 35.0
+            },
+            {
+                "category": "Transportation",
+                average: 11.49
+            },
+            {
+                "category": "Home",
+                average: 1500.0
+            },
+            {
+                "category": "Groceries",
+                average: 85.04
+            },
+            {
+                "category": "Entertainment",
+                average: 50.0
+            },
+            {
+                "category": "Utilities",
+                average: 0.0
+            },
+            {
+                "category": "Sports",
+                average: 0.0
+            },
+            {
+                "category": "Shopping",
+                average: 0.0
+            }
+        ]
+    },
+    {
+        pattern: /spend_by_category\/\?monthly=true/, method: 'get', response: [
+            {
+                category: "Subscriptions",
+                amount: 12.64,
+                month: "2024-08"
+            },
+            {
+                category: "Restaurants",
+                amount: 35.0,
+                month: "2024-08"
+            },
+            {
+                category: "Transportation",
+                amount: 11.49,
+                month: "2024-08"
+            },
+            {
+                category: "Home",
+                amount: 1500.0,
+                month: "2024-08"
+            },
+            {
+                category: "Groceries",
+                amount: 85.04,
+                month: "2024-08"
+            },
+            {
+                category: "Entertainment",
+                amount: 50.0,
+                month: "2024-08"
+            },
+            {
+                category: "Utilities",
+                amount: 0.0,
+                month: "2024-08"
+            },
+            {
+                category: "Sports",
+                amount: 0.0,
+                month: "2024-08"
+            },
+            {
+                category: "Shopping",
+                amount: 0.0,
+                month: "2024-08"
+            }
+        ]
+    },
+]
+
+const historicalSummaryEndpoints = [
+    {
+        pattern: /spend_vs_income_by_month/, method: 'get', response: [
+            {
+                "month": "2024-04",
+                "spend": 3000.0,
+                "income": 3505.55
+            },
+            {
+                "month": "2024-05",
+                "spend": 3200,
+                "income": 3000.55
+            },
+            {
+                "month": "2024-06",
+                "spend": 5000.0,
+                "income": 3700.55
+            },
+            {
+                "month": "2024-07",
+                "spend": 2300.0,
+                "income": 2127.55
+            },
+            {
+                "month": "2024-08",
+                "spend": 1610.64,
+                "income": 3000.0
+            }
+        ]
+    },
+    {
+        pattern: /spend_by_category\/?$/, method: 'get', response: [
+            {
+                "category": "Subscriptions",
+                "amount": 12.64
+            },
+            {
+                "category": "Restaurants",
+                "amount": 35.0
+            },
+            {
+                "category": "Transportation",
+                "amount": 11.49
+            },
+            {
+                "category": "Home",
+                "amount": 1500.0
+            },
+            {
+                "category": "Groceries",
+                "amount": 85.04
+            },
+            {
+                "category": "Entertainment",
+                "amount": 50.0
+            },
+            {
+                "category": "Utilities",
+                "amount": 0.0
+            },
+            {
+                "category": "Sports",
+                "amount": 0.0
+            },
+            {
+                "category": "Shopping",
+                "amount": 0.0
+            }
+        ]
+    },
+    {
+        pattern: /spend_by_category\/?monthly=true/, method: 'get', response: [
+            {
+                "category": "Subscriptions",
+                "month": "2024-08",
+                "total": 12.64
+            },
+            {
+                "category": "Restaurants",
+                "month": "2024-08",
+                "total": 35.0
+            },
+            {
+                "category": "Transportation",
+                "month": "2024-08",
+                "total": 11.49
+            },
+            {
+                "category": "Home",
+                "month": "2024-08",
+                "total": 1500.0
+            },
+            {
+                "category": "Groceries",
+                "month": "2024-08",
+                "total": 85.04
+            },
+            {
+                "category": "Entertainment",
+                "month": "2024-08",
+                "total": 50.0
+            },
+            {
+                "category": "Utilities",
+                "month": "2024-08",
+                "total": 0.0
+            },
+            {
+                "category": "Sports",
+                "month": "2024-08",
+                "total": 0.0
+            },
+            {
+                "category": "Shopping",
+                "month": "2024-08",
+                "total": 0.0
+            },
+            {
+                "category": "Subscriptions",
+                "month": "2024-07",
+                "total": 20.64
+            },
+            // invent some data for previous months
+            {
+                "category": "Restaurants",
+                "month": "2024-07",
+                "total": 35.0
+            },
+            {
+                "category": "Transportation",
+                "month": "2024-07",
+                "total": 11.49
+            },
+            {
+                "category": "Home",
+                "month": "2024-07",
+                "total": 1500.0
+            },
+            {
+                "category": "Groceries",
+                "month": "2024-07",
+                "total": 85.04
+            },
+            {
+                "category": "Entertainment",
+                "month": "2024-07",
+                "total": 50.0
+            },
+            {
+                "category": "Utilities",
+                "month": "2024-07",
+                "total": 0.0
+            },
+            {
+                "category": "Sports",
+                "month": "2024-07",
+                "total": 0.0
+            },
+            {
+                "category": "Shopping",
+                "month": "2024-07",
+                "total": 0.0
+            },
+            {
+                "category": "Subscriptions",
+                "month": "2024-06",
+                "total": 12.64
+            },
+            {
+                "category": "Restaurants",
+                "month": "2024-06",
+                "total": 35.0
+            },
+            {
+                "category": "Transportation",
+                "month": "2024-06",
+                "total": 11.49
+            },
+            {
+                "category": "Home",
+                "month": "2024-06",
+                "total": 1500.0
+            },
+            {
+                "category": "Groceries",
+                "month": "2024-06",
+                "total": 85.04
+            },
+            {
+                "category": "Entertainment",
+                "month": "2024-06",
+                "total": 50.0
+            },
+            {
+                "category": "Utilities",
+                "month": "2024-06",
+                "total": 0.0
+            },
+            {
+                "category": "Sports",
+                "month": "2024-06",
+                "total": 0.0
+            },
+            {
+                "category": "Shopping",
+                "month": "2024-06",
+                "total": 0.0
+            },
+            {
+                "category": "Subscriptions",
+                "month": "2024-05",
+                "total": 12.64
+            },
+            {
+                "category": "Restaurants",
+                "month": "2024-05",
+                "total": 35.0
+            },
+            {
+                "category": "Transportation",
+                "month": "2024-05",
+                "total": 11.49
+            },
+            {
+                "category": "Home",
+                "month": "2024-05",
+                "total": 1500.0
+            },
+            {
+                "category": "Groceries",
+                "month": "2024-05",
+                "total": 85.04
+            },
+            {
+                "category": "Entertainment",
+                "month": "2024-05",
+                "total": 50.0
+            },
+            {
+                "category": "Utilities",
+                "month": "2024-05",
+                "total": 0.0
+            },
+            {
+                "category": "Sports",
+                "month": "2024-05",
+                "total": 0.0
+            },
+            {
+                "category": "Shopping",
+                "month": "2024-05",
+                "total": 0.0
+            },
+            {
+                "category": "Subscriptions",
+                "month": "2024-04",
+                "total": 12.64
+            },
+            {
+                "category": "Restaurants",
+                "month": "2024-04",
+                "total": 35.0
+            },
+            {
+                "category": "Transportation",
+                "month": "2024-04",
+                "total": 11.49
+            },
+            {
+                "category": "Home",
+                "month": "2024-04",
+                "total": 1500.0
+            },
+            {
+                "category": "Groceries",
+                "month": "2024-04",
+                "total": 85.04
+            },
+            {
+                "category": "Entertainment",
+                "month": "2024-04",
+                "total": 50.0
+            },
+            {
+                "category": "Utilities",
+                "month": "2024-04",
+                "total": 0.0
+            },
+            {
+                "category": "Sports",
+            }
+        ]
+    }
+]
+
 // Mock data for demo user for each endpoint
 export const mockData = [
     ...budgetEndpoints,
@@ -882,4 +1475,7 @@ export const mockData = [
     ...currenciesEndpoints,
     ...goalsEndpoints,
     ...transactionsEndpoints,
+    ...goalsContributionRangesEndpoints,
+    ...monthlySumamryEndpoints,
+    ...historicalSummaryEndpoints,
 ]

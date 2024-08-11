@@ -5,12 +5,15 @@ import BackLink from "../../components/BackLink";
 import GoalSummary from "./GoalSummary";
 import GoalContributionRangesForm from "./GoalContributionRangeForm";
 import api from "../../api";
+import { useStatus } from '../../components/Status'
 import Accordion from "../../components/accordion/Accordion";
+import extractErrorMessageFromResponse from "../../utils/extractErrorMessageFromResponse";
 
 const GoalDetails = () => {
     const [goal, setGoal] = useState({});
     const [goalContributionRanges, setGoalContributionRanges] = useState([]);
     const { goalId } = useParams();
+    const { showStatus } = useStatus();
 
     const fetchGoal = useCallback(() => {
         api
@@ -19,7 +22,7 @@ const GoalDetails = () => {
                 setGoal(response.data);
             })
             .catch((error) => {
-                console.error("Error:", error.response);
+                showStatus(extractErrorMessageFromResponse(error), 'error')
             });
     }, [goalId]);
 
@@ -30,7 +33,7 @@ const GoalDetails = () => {
                 setGoalContributionRanges(response.data);
             })
             .catch((error) => {
-                console.error("Error:", error.response);
+                showStatus(extractErrorMessageFromResponse(error), 'error')
             });
     }, [goalId]);
 

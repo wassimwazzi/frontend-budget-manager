@@ -1,5 +1,4 @@
 const extractErrorMessageFromResponse = (error, fields = {}, defaultMessage) => {
-    console.log('error', error)
     if (error.response?.status === 400) {
         // make error message bullet list
         const errors = []
