@@ -53,6 +53,24 @@ const Layout = () => {
     );
   };
 
+  const Banner = () => (
+    <div id="mobile-notice" style={{
+      display: 'block',
+      position: 'fixed',
+      bottom: '0',
+      left: '0',
+      width: '100%',
+      background: 'rgba(0, 0, 0, 0.8)',
+      color: '#fff',
+      textAlign: 'center',
+      padding: '10px',
+      zIndex: '1',
+      fontSize: '1.2rem',
+    }}>
+      <p style={{ margin: 0 }}>This is a demo site with fake data. Features such as searching and creating/updating data do not work.</p>
+    </div >
+  )
+
   return (
     <Container>
       <Navbar expand="lg" variant="light" className="mb-4 border-bottom">
@@ -91,6 +109,7 @@ const Layout = () => {
       </Navbar>
 
       <Container fluid className="p-4">
+        <Banner />
         <Outlet />
       </Container>
     </Container>
