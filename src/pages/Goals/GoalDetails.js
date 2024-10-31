@@ -24,7 +24,7 @@ const GoalDetails = () => {
             .catch((error) => {
                 showStatus(extractErrorMessageFromResponse(error), 'error')
             });
-    }, [goalId]);
+    }, [goalId, showStatus]);
 
     const fetchContributions = useCallback(() => {
         api
@@ -35,7 +35,7 @@ const GoalDetails = () => {
             .catch((error) => {
                 showStatus(extractErrorMessageFromResponse(error), 'error')
             });
-    }, [goalId]);
+    }, [goalId, showStatus]);
 
 
     useEffect(() => {
