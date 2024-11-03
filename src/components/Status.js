@@ -1,50 +1,4 @@
-// import { Fade } from "react-bootstrap";
 import React, { createContext, useState, useContext } from "react";
-
-// const FadeOut = ({ children, delay = 10_000 }) => {
-//     const [show, setShow] = React.useState(true);
-
-//     useEffect(() => {
-//         const timeout = setTimeout(() => {
-//             setShow(false);
-//         }, delay);
-//         return () => clearTimeout(timeout);
-//     }, [delay]);
-
-//     return (
-//         <Fade in={show} unmountOnExit={true}>
-//             <div>{children}</div>
-//         </Fade>
-//     );
-// };
-
-// const Status = ({ loading, successMessage, errorMessage }) => {
-//     if (loading) {
-//         return <LoadingSpinner loading={loading} />
-//     }
-//     if (successMessage) {
-//         return (
-//             <FadeOut>
-//                 <div className='alert alert-success' role='alert'>
-//                     {successMessage}
-//                 </div>
-//             </FadeOut>
-//         )
-//     }
-//     if (errorMessage) {
-//         return (
-//             <FadeOut>
-//                 <div className='alert alert-danger' role='alert'>
-//                     {errorMessage}
-//                 </div>
-//             </FadeOut>
-//         )
-//     }
-//     return <></>
-// };
-
-// export default Status;
-
 
 const StatusContext = createContext();
 
@@ -55,11 +9,15 @@ export const StatusProvider = ({ children }) => {
         setStatus({ message: '', type: '' });
     }
 
-    const showStatus = (message, type) => {
+    const showStatus = (message, type, duration) => {
         setStatus({ message, type });
-        setTimeout(() => {
-            hideStatus();
-        }, 10_000);
+        duration = duration || 1_000
+        if (duration !== 'permanent') {
+            const timeoutId = setTimeout(() => {
+                hideStatus();
+            }, duration);
+            return () => clearTimeout(timeoutId); // Cleanup timeout on component unmount
+        }
     };
 
     return (
@@ -83,6 +41,8 @@ const Status = () => {
                 return 'alert alert-success';
             case 'error':
                 return 'alert alert-danger';
+            case 'warning':
+                return 'alert alert-warning';
             default:
                 return 'alert alert-info';
         }
@@ -96,10 +56,10 @@ const Status = () => {
                 minWidth: '300px',
                 width: '50%',
                 textAlign: 'center',
-                padding: '1rem',
-                display: status.message ? 'block' : 'none',
-                zIndex: 1000, // Ensure this is on top of other content
-                // center the div
+                display: status.message ? 'flex' : 'none',
+                justifyContent: 'center',
+                borderRadius: '1rem',
+                zIndex: 1000,
                 transform: 'translateX(-50%)',
                 left: '50%',
             }}
@@ -121,8 +81,10 @@ const Status = () => {
             >
                 &times;
             </button>
-            {status.message}
-        </div >
+            <div style={{ maxWidth: '80%' }}>
+                {status.message}
+            </div>
+        </div>
     );
 };
 

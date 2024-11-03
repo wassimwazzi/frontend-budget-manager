@@ -3,10 +3,12 @@ import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
 import { useEffect } from 'react';
+import { useStatus } from '../components/Status'
 import api from '../api';
 
 const Layout = () => {
   const location = useLocation();
+  const { showStatus } = useStatus()
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -21,10 +23,18 @@ const Layout = () => {
     // only update if last update was more than 1 day ago
     const shouldUpdate = lastUpdate === null || now - new Date(lastUpdate) > 1000 * 60 * 60 * 24;
     if (isAuthenticated && shouldUpdate) {
-      api.post('/api/goals/update_goals/');
+      api.post('/api/goals/update_goals/')
+      .catch(error => {
+        console.error('error updating goals:', error.response)
+      });
       localStorage.setItem('lastUpdate', now);
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!getUserName === 'demo') return;
+    showStatus('This is a demo site with fake data. Features such as searching and creating/updating data do not work.', 'warning', 'permanent')
+  }, [showStatus])
 
   const getUserName = () => {
     return localStorage.getItem('username');
@@ -52,24 +62,6 @@ const Layout = () => {
       </Nav.Link>
     );
   };
-
-  const Banner = () => (
-    <div id="mobile-notice" style={{
-      display: 'block',
-      position: 'fixed',
-      bottom: '0',
-      left: '0',
-      width: '100%',
-      background: 'rgba(0, 0, 0, 0.8)',
-      color: '#fff',
-      textAlign: 'center',
-      padding: '10px',
-      zIndex: '1',
-      fontSize: '1.2rem',
-    }}>
-      <p style={{ margin: 0 }}>This is a demo site with fake data. Features such as searching and creating/updating data do not work.</p>
-    </div >
-  )
 
   return (
     <Container>
@@ -109,7 +101,6 @@ const Layout = () => {
       </Navbar>
 
       <Container fluid className="p-4">
-        <Banner />
         <Outlet />
       </Container>
     </Container>
