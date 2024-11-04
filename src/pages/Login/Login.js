@@ -2,13 +2,14 @@ import { nonAuthenticatedApi as api } from '../../api'
 import { Form, Button, Container } from 'react-bootstrap'
 import { useState } from 'react'
 import { useStatus } from '../../components/Status'
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   })
-
+  const navigate = useNavigate();
   const { showStatus } = useStatus()
 
   const handleChange = e => {
@@ -24,7 +25,8 @@ const Login = () => {
     if (formData.username === 'demo' && formData.password === 'demo') {
       localStorage.setItem('authToken', 'demo')
       localStorage.setItem('username', 'demo')
-      window.location.href = '/'
+      navigate('/')
+      showStatus('This is a demo site with fake data. Features such as searching and creating/updating data do not work.', 'warning', 'permanent')   
       return
     }
     api
@@ -32,7 +34,7 @@ const Login = () => {
       .then(response => {
         localStorage.setItem('authToken', response.data.token)
         localStorage.setItem('username', formData.username)
-        window.location.href = '/'
+        navigate('/')
       })
       .catch(error => {
         console.error('Error:', error.response)
