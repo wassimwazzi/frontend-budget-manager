@@ -3,10 +3,12 @@ import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons'; // Import the user icon
 import { useEffect } from 'react';
+import { useStatus } from '../components/Status'
 import api from '../api';
 
 const Layout = () => {
   const location = useLocation();
+  const { showStatus } = useStatus()
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -21,10 +23,18 @@ const Layout = () => {
     // only update if last update was more than 1 day ago
     const shouldUpdate = lastUpdate === null || now - new Date(lastUpdate) > 1000 * 60 * 60 * 24;
     if (isAuthenticated && shouldUpdate) {
-      api.post('/api/goals/update_goals/');
+      api.post('/api/goals/update_goals/')
+      .catch(error => {
+        console.error('error updating goals:', error.response)
+      });
       localStorage.setItem('lastUpdate', now);
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!getUserName === 'demo') return;
+    showStatus('This is a demo site with fake data. Features such as searching and creating/updating data do not work.', 'warning', 'permanent')
+  }, [showStatus])
 
   const getUserName = () => {
     return localStorage.getItem('username');

@@ -7,8 +7,8 @@ import { Modal } from 'react-bootstrap'
 import TransactionsDisplay from './TransactionsDisplay'
 import TableNavigator from '../../components/table/TableNavigator'
 import SearchTable from '../../components/table/SearchTable'
-import AddButton, { buttonStyle } from './ControlButton'
-import PlaidLink, { generateToken } from '../Plaid/Plaid'
+import AddButton from './ControlButton'
+// import PlaidLink from '../Plaid/Plaid'
 import SortForm from './SortForm'
 
 const Transactions = () => {
@@ -20,7 +20,7 @@ const Transactions = () => {
   const [showModal, setShowModal] = useState(false)
   const [searchParams, setSearchParams] = useState({ page: 1 })
   const [sortParams, setSortParams] = useState({ sort: 'date', order: 'desc' })
-  const [linkToken, setLinkToken] = useState(null)
+  // const [linkToken, _] = useState(null)
   const { showStatus } = useStatus()
 
   const fetchData = useCallback((params) => {
@@ -135,9 +135,9 @@ const Transactions = () => {
         <div className='mt-2'>
           <AddButton onClick={handleAdd} />
         </div>
-        <div className='ms-2 mt-2'>
+        {/* <div className='ms-2 mt-2'>
           <PlaidLink linkToken={linkToken} buttonText='Link New Account' style={buttonStyle} />
-        </div>
+        </div> */}
         <div className='ms-2 mt-2'>
           <SortForm cols={searchColumns} sortParams={sortParams} setSortParams={setSortParams} />
         </div>

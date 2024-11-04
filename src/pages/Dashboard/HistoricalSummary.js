@@ -56,7 +56,7 @@ const SpendVsIncomeLineChart = () => {
             .catch(error => {
                 showStatus(extractErrorMessageFromResponse(error), 'error')
             })
-    }, [])
+    }, [showStatus])
 
     const annotation = {
         type: 'line',
