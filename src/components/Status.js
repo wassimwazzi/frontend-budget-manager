@@ -11,7 +11,7 @@ export const StatusProvider = ({ children }) => {
 
     const showStatus = (message, type, duration) => {
         setStatus({ message, type });
-        duration = duration || 1_000
+        duration = duration || 10_000
         if (duration !== 'permanent') {
             const timeoutId = setTimeout(() => {
                 hideStatus();
