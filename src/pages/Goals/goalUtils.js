@@ -25,7 +25,8 @@ export function getGoalRanking(goal) {
     if (goal.progress === 100 && goal.status === GoalStatusTypes.IN_PROGRESS) return 5;
     if (goal.status === GoalStatusTypes.IN_PROGRESS) return 4;
     if (!currentlyContributingTo(goal)) return 3;
-    if (goal.status === GoalStatusTypes.PENDING) return 2;
-    if (goal.status === GoalStatusTypes.COMPLETED) return 1;
-    if (goal.status === GoalStatusTypes.FAILED) return 0;
+    return 0;
+    // if (goal.status === GoalStatusTypes.PENDING) return 2;
+    // if (goal.status === GoalStatusTypes.COMPLETED) return 1;
+    // if (goal.status === GoalStatusTypes.FAILED) return 0;
 }

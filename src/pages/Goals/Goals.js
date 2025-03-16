@@ -6,7 +6,13 @@ import api from "../../api";
 
 function sortGoals(goals) {
     return goals.sort((goal1, goal2) => {
-        return getGoalRanking(goal2) - getGoalRanking(goal1);
+        let r1 = getGoalRanking(goal1);
+        let r2 = getGoalRanking(goal2);
+        if (r1 !== r2) {
+            return r2 - r1;
+        }
+        // sort by expected end date in descending order
+        return new Date(goal2.expected_completion_date) - new Date(goal1.expected_completion_date);
     });
 }
 
